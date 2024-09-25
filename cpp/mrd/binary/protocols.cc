@@ -43,6 +43,7 @@ struct IsTriviallySerializable<mrd::Acquisition> {
     IsTriviallySerializable<decltype(__T__::measurement_uid)>::value &&
     IsTriviallySerializable<decltype(__T__::scan_counter)>::value &&
     IsTriviallySerializable<decltype(__T__::acquisition_time_stamp)>::value &&
+    IsTriviallySerializable<decltype(__T__::our_acquisition_time_stamp)>::value &&
     IsTriviallySerializable<decltype(__T__::physiology_time_stamp)>::value &&
     IsTriviallySerializable<decltype(__T__::channel_order)>::value &&
     IsTriviallySerializable<decltype(__T__::discard_pre)>::value &&
@@ -59,8 +60,8 @@ struct IsTriviallySerializable<mrd::Acquisition> {
     IsTriviallySerializable<decltype(__T__::user_float)>::value &&
     IsTriviallySerializable<decltype(__T__::data)>::value &&
     IsTriviallySerializable<decltype(__T__::trajectory)>::value &&
-    (sizeof(__T__) == (sizeof(__T__::flags) + sizeof(__T__::idx) + sizeof(__T__::measurement_uid) + sizeof(__T__::scan_counter) + sizeof(__T__::acquisition_time_stamp) + sizeof(__T__::physiology_time_stamp) + sizeof(__T__::channel_order) + sizeof(__T__::discard_pre) + sizeof(__T__::discard_post) + sizeof(__T__::center_sample) + sizeof(__T__::encoding_space_ref) + sizeof(__T__::sample_time_us) + sizeof(__T__::position) + sizeof(__T__::read_dir) + sizeof(__T__::phase_dir) + sizeof(__T__::slice_dir) + sizeof(__T__::patient_table_position) + sizeof(__T__::user_int) + sizeof(__T__::user_float) + sizeof(__T__::data) + sizeof(__T__::trajectory))) &&
-    offsetof(__T__, flags) < offsetof(__T__, idx) && offsetof(__T__, idx) < offsetof(__T__, measurement_uid) && offsetof(__T__, measurement_uid) < offsetof(__T__, scan_counter) && offsetof(__T__, scan_counter) < offsetof(__T__, acquisition_time_stamp) && offsetof(__T__, acquisition_time_stamp) < offsetof(__T__, physiology_time_stamp) && offsetof(__T__, physiology_time_stamp) < offsetof(__T__, channel_order) && offsetof(__T__, channel_order) < offsetof(__T__, discard_pre) && offsetof(__T__, discard_pre) < offsetof(__T__, discard_post) && offsetof(__T__, discard_post) < offsetof(__T__, center_sample) && offsetof(__T__, center_sample) < offsetof(__T__, encoding_space_ref) && offsetof(__T__, encoding_space_ref) < offsetof(__T__, sample_time_us) && offsetof(__T__, sample_time_us) < offsetof(__T__, position) && offsetof(__T__, position) < offsetof(__T__, read_dir) && offsetof(__T__, read_dir) < offsetof(__T__, phase_dir) && offsetof(__T__, phase_dir) < offsetof(__T__, slice_dir) && offsetof(__T__, slice_dir) < offsetof(__T__, patient_table_position) && offsetof(__T__, patient_table_position) < offsetof(__T__, user_int) && offsetof(__T__, user_int) < offsetof(__T__, user_float) && offsetof(__T__, user_float) < offsetof(__T__, data) && offsetof(__T__, data) < offsetof(__T__, trajectory);
+    (sizeof(__T__) == (sizeof(__T__::flags) + sizeof(__T__::idx) + sizeof(__T__::measurement_uid) + sizeof(__T__::scan_counter) + sizeof(__T__::acquisition_time_stamp) + sizeof(__T__::our_acquisition_time_stamp) + sizeof(__T__::physiology_time_stamp) + sizeof(__T__::channel_order) + sizeof(__T__::discard_pre) + sizeof(__T__::discard_post) + sizeof(__T__::center_sample) + sizeof(__T__::encoding_space_ref) + sizeof(__T__::sample_time_us) + sizeof(__T__::position) + sizeof(__T__::read_dir) + sizeof(__T__::phase_dir) + sizeof(__T__::slice_dir) + sizeof(__T__::patient_table_position) + sizeof(__T__::user_int) + sizeof(__T__::user_float) + sizeof(__T__::data) + sizeof(__T__::trajectory))) &&
+    offsetof(__T__, flags) < offsetof(__T__, idx) && offsetof(__T__, idx) < offsetof(__T__, measurement_uid) && offsetof(__T__, measurement_uid) < offsetof(__T__, scan_counter) && offsetof(__T__, scan_counter) < offsetof(__T__, acquisition_time_stamp) && offsetof(__T__, acquisition_time_stamp) < offsetof(__T__, our_acquisition_time_stamp) && offsetof(__T__, our_acquisition_time_stamp) < offsetof(__T__, physiology_time_stamp) && offsetof(__T__, physiology_time_stamp) < offsetof(__T__, channel_order) && offsetof(__T__, channel_order) < offsetof(__T__, discard_pre) && offsetof(__T__, discard_pre) < offsetof(__T__, discard_post) && offsetof(__T__, discard_post) < offsetof(__T__, center_sample) && offsetof(__T__, center_sample) < offsetof(__T__, encoding_space_ref) && offsetof(__T__, encoding_space_ref) < offsetof(__T__, sample_time_us) && offsetof(__T__, sample_time_us) < offsetof(__T__, position) && offsetof(__T__, position) < offsetof(__T__, read_dir) && offsetof(__T__, read_dir) < offsetof(__T__, phase_dir) && offsetof(__T__, phase_dir) < offsetof(__T__, slice_dir) && offsetof(__T__, slice_dir) < offsetof(__T__, patient_table_position) && offsetof(__T__, patient_table_position) < offsetof(__T__, user_int) && offsetof(__T__, user_int) < offsetof(__T__, user_float) && offsetof(__T__, user_float) < offsetof(__T__, data) && offsetof(__T__, data) < offsetof(__T__, trajectory);
 };
 
 template <>
@@ -746,6 +747,7 @@ namespace {
   yardl::binary::WriteInteger(stream, value.measurement_uid);
   yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.scan_counter);
   yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.acquisition_time_stamp);
+  yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.our_acquisition_time_stamp);
   yardl::binary::WriteVector<uint32_t, yardl::binary::WriteInteger>(stream, value.physiology_time_stamp);
   yardl::binary::WriteVector<uint32_t, yardl::binary::WriteInteger>(stream, value.channel_order);
   yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.discard_pre);
@@ -775,6 +777,7 @@ namespace {
   yardl::binary::ReadInteger(stream, value.measurement_uid);
   yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.scan_counter);
   yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.acquisition_time_stamp);
+  yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.our_acquisition_time_stamp);
   yardl::binary::ReadVector<uint32_t, yardl::binary::ReadInteger>(stream, value.physiology_time_stamp);
   yardl::binary::ReadVector<uint32_t, yardl::binary::ReadInteger>(stream, value.channel_order);
   yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.discard_pre);

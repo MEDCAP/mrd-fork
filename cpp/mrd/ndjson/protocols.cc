@@ -637,6 +637,9 @@ void to_json(ordered_json& j, mrd::Acquisition const& value) {
   if (yardl::ndjson::ShouldSerializeFieldValue(value.acquisition_time_stamp)) {
     j.push_back({"acquisitionTimeStamp", value.acquisition_time_stamp});
   }
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.our_acquisition_time_stamp)) {
+    j.push_back({"ourAcquisitionTimeStamp", value.our_acquisition_time_stamp});
+  }
   if (yardl::ndjson::ShouldSerializeFieldValue(value.physiology_time_stamp)) {
     j.push_back({"physiologyTimeStamp", value.physiology_time_stamp});
   }
@@ -702,6 +705,9 @@ void from_json(ordered_json const& j, mrd::Acquisition& value) {
   }
   if (auto it = j.find("acquisitionTimeStamp"); it != j.end()) {
     it->get_to(value.acquisition_time_stamp);
+  }
+  if (auto it = j.find("ourAcquisitionTimeStamp"); it != j.end()) {
+    it->get_to(value.our_acquisition_time_stamp);
   }
   if (auto it = j.find("physiologyTimeStamp"); it != j.end()) {
     it->get_to(value.physiology_time_stamp);

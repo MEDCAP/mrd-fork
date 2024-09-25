@@ -433,6 +433,7 @@ struct _Inner_Acquisition {
       measurement_uid(o.measurement_uid),
       scan_counter(o.scan_counter),
       acquisition_time_stamp(o.acquisition_time_stamp),
+      our_acquisition_time_stamp(o.our_acquisition_time_stamp),
       physiology_time_stamp(o.physiology_time_stamp),
       channel_order(o.channel_order),
       discard_pre(o.discard_pre),
@@ -457,6 +458,7 @@ struct _Inner_Acquisition {
     yardl::hdf5::ToOuter(measurement_uid, o.measurement_uid);
     yardl::hdf5::ToOuter(scan_counter, o.scan_counter);
     yardl::hdf5::ToOuter(acquisition_time_stamp, o.acquisition_time_stamp);
+    yardl::hdf5::ToOuter(our_acquisition_time_stamp, o.our_acquisition_time_stamp);
     yardl::hdf5::ToOuter(physiology_time_stamp, o.physiology_time_stamp);
     yardl::hdf5::ToOuter(channel_order, o.channel_order);
     yardl::hdf5::ToOuter(discard_pre, o.discard_pre);
@@ -480,6 +482,7 @@ struct _Inner_Acquisition {
   uint32_t measurement_uid;
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> scan_counter;
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> acquisition_time_stamp;
+  yardl::hdf5::InnerOptional<uint32_t, uint32_t> our_acquisition_time_stamp;
   yardl::hdf5::InnerVlen<uint32_t, uint32_t> physiology_time_stamp;
   yardl::hdf5::InnerVlen<uint32_t, uint32_t> channel_order;
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> discard_pre;
@@ -1208,6 +1211,7 @@ struct _Inner_Waveform {
   t.insertMember("measurementUid", HOFFSET(RecordType, measurement_uid), H5::PredType::NATIVE_UINT32);
   t.insertMember("scanCounter", HOFFSET(RecordType, scan_counter), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
   t.insertMember("acquisitionTimeStamp", HOFFSET(RecordType, acquisition_time_stamp), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
+  t.insertMember("ourAcquisitionTimeStamp", HOFFSET(RecordType, our_acquisition_time_stamp), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
   t.insertMember("physiologyTimeStamp", HOFFSET(RecordType, physiology_time_stamp), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_UINT32));
   t.insertMember("channelOrder", HOFFSET(RecordType, channel_order), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_UINT32));
   t.insertMember("discardPre", HOFFSET(RecordType, discard_pre), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));

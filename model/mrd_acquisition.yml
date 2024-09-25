@@ -80,6 +80,8 @@ Acquisition: !record
     scanCounter: uint?
     # Clock time stamp (e.g. milliseconds since midnight)
     acquisitionTimeStamp: uint?
+    # Our method with microseconds since midnight
+    ourAcquisitionTimeStamp: uint?
     # Time stamps relative to physiological triggering
     physiologyTimeStamp: uint*
     # Channel numbers
