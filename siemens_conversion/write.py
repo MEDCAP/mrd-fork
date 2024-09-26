@@ -1,15 +1,22 @@
 import sys
 sys.path.append('..')
-from mrd import (
+from python.mrd import (
     BinaryMrdReader,
     BinaryMrdWriter,
     StreamItem,
     Acquisition,
     AcquisitionFlags,
+    Waveform,
+    Image,
     Header)
-from typing import Iterable
+from typing import (
+    Iterable, 
+    Generator,
+    cast)
+import numpy as np
 
-filename = 'modified_siemens_mrd.bin'
+read_filename = 'siemens_mrd.bin'
+write_filename = 'modified_siemens_mrd.bin'
 
 '''
 - yardl requires you to read and write every field in the order as defined in
@@ -26,12 +33,27 @@ def acquisition_reader(input: Iterable[StreamItem]) -> Iterable[Acquisition]:
             continue
         yield item.value
 
+def generate_data() -> Generator[StreamItem, None, None]:
+    # We'll reuse this Acquisition object
+    acq = Acquisition()
+    yield StreamItem.Acquisition(acq)
 
-# with BinaryMrdWriter(filename) as w:
-#     h = Header()
-#     w.write_header(h)
-#     # w.write_data(acquisition_reader(r.read_data()))
+def generate_image() -> Generator[StreamItem, None, None]:
+    image = Image()
+    yield StreamItem.ImageUint(image)
 
+def generate_waveform() -> Generator[StreamItem, None, None]:
+    for i in range(10):
+        waveform_data = np.array([[1, 2, 3],[4, 5, 6]], dtype=float)
+        waveform_time_stamp = i
+        waveform = Waveform[float](data=waveform_data, time_stamp=waveform_time_stamp)
+        yield StreamItem.WaveformUint32(waveform)
 
-with BinaryMrdReader(filename) as r:
-    print('header', r.read_header())
+# with BinaryMrdReader(read_filename) as r:
+#     existing_header = r.read_header()
+#     existing_data = r.read_data()
+with BinaryMrdWriter(write_filename) as w:
+    empty_header = Header()
+    w.write_header(empty_header)
+    w.write_data(generate_data())
+    w.write_data(generate_waveform())
