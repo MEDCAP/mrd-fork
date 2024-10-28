@@ -16,7 +16,7 @@ from typing import (
 import numpy as np
 
 read_filename = 'siemens_mrd.bin'
-write_filename = 'modified_siemens_mrd.bin'
+write_filename = 'test_file.bin'
 
 '''
 - yardl requires you to read and write every field in the order as defined in
@@ -44,9 +44,9 @@ def generate_image() -> Generator[StreamItem, None, None]:
 
 def generate_waveform() -> Generator[StreamItem, None, None]:
     for i in range(10):
-        waveform_data = np.array([[1, 2, 3],[4, 5, 6]], dtype=float)
+        waveform_data = np.array([[1, 2, 3],[4, 5, 6]], dtype=np.uint32)
         waveform_time_stamp = i
-        waveform = Waveform[float](data=waveform_data, time_stamp=waveform_time_stamp)
+        waveform = Waveform[np.uint32](data=waveform_data, time_stamp=waveform_time_stamp)
         yield StreamItem.WaveformUint32(waveform)
 
 # with BinaryMrdReader(read_filename) as r:
@@ -55,5 +55,5 @@ def generate_waveform() -> Generator[StreamItem, None, None]:
 with BinaryMrdWriter(write_filename) as w:
     empty_header = Header()
     w.write_header(empty_header)
-    w.write_data(generate_data())
+    # w.write_data(generate_image())
     w.write_data(generate_waveform())
