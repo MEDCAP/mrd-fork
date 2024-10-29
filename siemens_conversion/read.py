@@ -5,16 +5,16 @@ from python.mrd import (
     StreamItem,
     MrdReaderBase)
 
-# filename = 'empty_mrd.bin'
-filename = 'siemens_mrd.bin'
+# change filename below to read different files
+# filename = 'empty_mrd.bin'      # mrd file with empty fields
+filename = 'siemens_mrd.bin'    # mrd file converted from siemens raw data
+# filename = 'simulated_mrd.bin'  # mrd file with simulated data
+
 with BinaryMrdReader(filename) as r:
     # read header values
     head = r.read_header()
     if head is None:
         raise Exception("Could not read header")
-
-    # print('header value', head.sequence_parameters.t_r)
-
 
     print('fields: ', head.__dict__.keys())
     # field-key-value-param
@@ -45,19 +45,19 @@ with BinaryMrdReader(filename) as r:
     print('\n Data Stream:')
     data_stream = r.read_data()
     counter = 0
-    # # waveform data
-    # for item in data_stream:
-    #     if isinstance(item, StreamItem.WaveformUint32):
-    #         for k in item.value.__dict__.keys():
-    #             if k[0] == '_':
-    #                 continue
-    #             elif k=='data':
-    #                 print('key:', k, ' -data:', item.value.__dict__[k])
-    #                 # print shape of data
-    #                 # print('key:', k, ' -shape:', item.value.__dict__[k].shape)
-    #                 continue
-    #             elif k=='time_stamp':
-    #                 print('key:', k, ' -value:', item.value.__dict__[k])
+    # waveform data
+    for item in data_stream:
+        if isinstance(item, StreamItem.WaveformUint32):
+            for k in item.value.__dict__.keys():
+                if k[0] == '_':
+                    continue
+                elif k=='data':
+                    print('key:', k, ' -data:', item.value.__dict__[k])
+                    # print shape of data
+                    # print('key:', k, ' -shape:', item.value.__dict__[k].shape)
+                    continue
+                elif k=='time_stamp':
+                    print('key:', k, ' -value:', item.value.__dict__[k])
 
 #     # image data but does not exist yet as this is pre-reconstruction
 #     # for item in data_stream:
