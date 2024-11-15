@@ -1,5 +1,10 @@
 import mrd
 import datetime
+import numpy as np
+import os
+
+from quantization import quantize, dequantize
+import h5py # only to read from simulated h5 file
 
 '''
 Generate header and acquisition data
@@ -7,18 +12,18 @@ input:
     write_filename: name of the file to write to
 '''
 def generate(write_filename):
-    ms = 64                 # matrix size
-    fov = 30.0              # field of view in cm
-    slice_thickness = 1     # slice thickness in cm
-    oversampling = 1.3      # oversampling factor
-    nkx = ms                # number of kx
-    nky = oversampling * ms # number of ky: phase oversampling
+    ms = 64                        # matrix size
+    fov = 30.0                     # field of view in cm
+    slice_thickness = 1            # slice thickness in cm
+    oversampling = 1.3             # oversampling factor 
+    nkx = ms                       # number of kx
+    nky = round(oversampling * ms) # number of ky: phase oversampling
 
     # Header object
     h = mrd.Header()
     '''
-    * Values are optional. If not set, they will be set to None
-    * Some values are extracted from Siemens scanner as sample data
+    * Values can be set to None
+    * Non-zero values are extracted from Siemens scanner as sample data
     '''
     # subject_information schema defined at @types.py 249
     subject_info = mrd.SubjectInformationType()
@@ -33,7 +38,7 @@ def generate(write_filename):
     # study_information schema defined at @types.py 290
     study_info = mrd.StudyInformationType()
     study_info.study_date = datetime.date(2024, 10, 29)     # datetime
-    study_info.study_time = mrd.Time(hours=10, minutes=30)  # Time defined in @yardl_types.py 120
+    study_info.study_time = mrd.Time(100000000)             # nanoseconds_since_midnight Time defined in @yardl_types.py 120
     study_info.study_id = None                              # string
     study_info.accession_number = None                      # int64
     study_info.referring_physician_name = None              # string
@@ -46,7 +51,7 @@ def generate(write_filename):
     meas_info = mrd.MeasurementInformationType()
     meas_info.measurement_id = "57146_95876468_95876477_173"    # string
     meas_info.series_date = datetime.date(2024, 10, 29)         # datetime
-    meas_info.series_time = mrd.Time(hours=10, minutes=30)      # Time defined in @yardl_types.py 120
+    meas_info.series_time = mrd.Time(100000000)                 # Time defined in @yardl_types.py 120
     meas_info.patient_position = mrd.PatientPosition.H_FS       # PatientPosition class defined at @types.py 339
     meas_info.relative_table_position = mrd.ThreeDimensionalFloat(x=0.0, y=0.0, z=0.0) # ThreeDimensionalFloat defined at @types.py 349
     meas_info.initial_series_number = 1                         # int64
@@ -55,7 +60,7 @@ def generate(write_filename):
     meas_info.measurement_dependency = [mrd.MeasurementDependencyType(dependency_type='', measurement_id='')]     # MeasurmentDependencyType defined at @types.py 378
     meas_info.series_instance_uid_root = None                   # string
     meas_info.frame_of_reference_uid = None                     # string
-    meas_info.reference_image_sequence = mrd.ReferenceImageSequenceType(reference_sop_instance_uid=None) # ReferenceImageSequenceType defined at @types.py 403
+    meas_info.reference_image_sequence = mrd.ReferencedImageSequenceType(referenced_sop_instance_uid=None) # ReferenceImageSequenceType defined at @types.py 403
     h.measurement_information = meas_info
 
     # acquisition_system_information schema defined at @types.py 518
@@ -65,7 +70,8 @@ def generate(write_filename):
     sys_info.system_field_strength_t = 1.5          # float32
     sys_info.relative_receiver_noise_bandwidth = 0.8# float32
     sys_info.receiver_channels = 1                  # uint32
-    sys_info.coil_label = mrd.CoilLabel(coilNumber=3, coilName="XnoneCP2:1:Xe") # CoilLabel defined at @types.py 493
+    sys_info.coil_label = [mrd.CoilLabelType(coil_number=3,
+                                             coil_name="XnoneCP2:1:Xe")] # CoilLabel defined at @types.py 493
     sys_info.institution_name = "HUP"               # string
     sys_info.station_name = None                    # string
     sys_info.device_id = "57146"                    # string
@@ -80,7 +86,7 @@ def generate(write_filename):
     # encoded_space
     e = mrd.EncodingSpaceType()
     e.matrix_size = mrd.MatrixSizeType(x=nkx, y=nky, z=1) # MatrixSizeType defined at @types.py 596
-    e.field_of_view_mm = mrd.FieldOfViewMm(x=oversampling*fov, y=fov, z=slice_thickness) # FieldOfViewMm defined at @types.py 605
+    e.field_of_view_mm = mrd.FieldOfViewMm(x=round(oversampling*fov), y=fov, z=slice_thickness) # FieldOfViewMm defined at @types.py 605
     # recon_space
     r = mrd.EncodingSpaceType()
     r.matrix_size = mrd.MatrixSizeType(x=ms, y=ms, z=1) # MatrixSizeType defined at @types.py 596
@@ -116,17 +122,17 @@ def generate(write_filename):
     limit_phs.maximum = 0  
     limit_phs.center = 0
     # repetition
-    limit_rep = mrd.limittype()
+    limit_rep = mrd.LimitType()
     limit_rep.minimum = 0  
     limit_rep.maximum = 2024  
     limit_rep.center = 0
     # set
-    limit_set = mrd.limittype()
+    limit_set = mrd.LimitType()
     limit_set.minimum = 0  
     limit_set.maximum = 0  
     limit_set.center = 0
     # segment
-    limit_sgm = mrd.limittype()
+    limit_sgm = mrd.LimitType()
     limit_sgm.minimum = 0  
     limit_sgm.maximum = 0  
     limit_sgm.center = 0
@@ -157,11 +163,11 @@ def generate(write_filename):
     enc.encoding_limits = limits
     enc.trajectory = mrd.Trajectory.SPIRAL # Trajectory defined at @types.py 797
     enc.trajectory_description = None      # TrajectoryDescriptionType defined at @types.py 880
-    enc.parallel_imaging = mrd.ParallelImagingType(acceleration_factor=mrd.AccelerationFactorType(kspace_encoding_step_1=1,
-                                                                                                  kspace_encoding_step_2=1),
-                                                   calibration_mode=mrd.CalibrationMode.OTHER,
-                                                   interleaving_dimension=None,
-                                                   multiband=None) # ParallelImagingType defined at @types.py 819
+    enc.parallel_imaging = mrd.ParallelImagingType(     # ParallelImagingType defined at @types.py 819
+                            acceleration_factor=mrd.AccelerationFactorType(kspace_encoding_step_1=1, kspace_encoding_step_2=1),
+                            calibration_mode=mrd.CalibrationMode.OTHER,
+                            interleaving_dimension=None,
+                            multiband=None) 
     enc.echo_train_length = None           # int64
     h.encoding.append(enc)  # h.encoding is a list of EncodingType
     
@@ -190,11 +196,109 @@ def generate(write_filename):
                                                        user_parameter_double=[], # name: str, value: float64
                                                        user_parameter_string=[], # name: str, value: str
                                                        user_parameter_base64=[]) # name: str, value: str
-    h.waveform_information.append(wave_info)
+    h.waveform_information.append(wave_info)    
 
-    # write to header
+    # generate pulse shape as waveform data
+    def generate_pulse_shape():
+        waveform_data = np.array([[1.0],[1.0]])       # waveform raw data as float64
+        waveform_data, s, z, norm = quantize(waveform_data)        # quantize waveform data
+        # store pulse shape header information
+        pulse_shape_wave_info = mrd.WaveformInformationType()
+        pulse_shape_wave_info.waveform_name = 'pulse_shape'
+        pulse_shape_wave_info.waveform_type = mrd.WaveformType.OTHER
+        pulse_shape_wave_info.user_parameters = mrd.UserParametersType(
+                                                user_parameter_string=[
+                                                    mrd.UserParameterStringType(
+                                                        name='shape', value='hard')],
+                                                user_parameter_double=[
+                                                    mrd.UserParameterDoubleType(
+                                                        name='scale_factor', value=s),
+                                                    mrd.UserParameterDoubleType(
+                                                        name='zero_point', value=z),
+                                                    mrd.UserParameterDoubleType(
+                                                        name='array_norm', value=norm)])
+        h.waveform_information.append(pulse_shape_wave_info)
+        return mrd.Waveform(data=waveform_data, 
+                            waveform_id=pulse_shape_wave_info.waveform_type.value)  # store waveform id
+
+    def store_pulse_shape(pulse_shape_waveform):
+        yield mrd.StreamItem.WaveformUint32(pulse_shape_waveform)
+
+    def generate_gradient():
+        # temporarly code to read from simulated h5 file
+        filepath = 'data/gre-hard.h5'
+        with h5py.File(filepath, 'r') as f:
+            # read gradient
+            grad_packed = f['grad'][()]
+            grad_min = f['grad'].attrs['grad_min']
+            grad_step = f['grad'].attrs['grad_step']
+            grad = (grad_packed * grad_step + grad_min).astype(np.float32)
+            waveform_data = grad.T.reshape(3, -1)
+            waveform_data, s, z, norm = quantize(waveform_data)
+            # store gradient header information
+            grad_wave_info = mrd.WaveformInformationType()
+            grad_wave_info.waveform_name = 'gradient'
+            grad_wave_info.waveform_type = mrd.WaveformType.GRADIENTWAVEFORM
+            grad_wave_info.user_parameters = mrd.UserParametersType(
+                                                user_parameter_double=[
+                                                    mrd.UserParameterDoubleType(
+                                                        name='scale_factor', value=s),
+                                                    mrd.UserParameterDoubleType(
+                                                        name='zero_point', value=z),
+                                                    mrd.UserParameterDoubleType(
+                                                        name='array_norm', value=norm)])
+            h.waveform_information.append(grad_wave_info)   # append grad header information
+        return mrd.Waveform(data=waveform_data,
+                            waveform_id=grad_wave_info.waveform_type.value)
+
+    def store_gradient(gradient_waveform):
+        yield mrd.StreamItem.WaveformUint32(gradient_waveform)
+
+    def generate_B1():
+        filepath = 'data/gre-hard.h5'
+        with h5py.File(filepath, 'r') as f:
+            # read B1
+            B1x_V_packed = f['B1x_V'][()]
+            B1x_min = f['B1x_V'].attrs['B1x_min']
+            B1x_step = f['B1x_V'].attrs['B1x_step']
+            B1x_V = (B1x_V_packed * B1x_step + B1x_min).astype(np.float32)
+
+            B1y_V_packed = f['B1y_V'][()]
+            B1y_min = f['B1y_V'].attrs['B1y_min']
+            B1y_step = f['B1y_V'].attrs['B1y_step']
+            B1y_V = (B1y_V_packed * B1y_step + B1y_min).astype(np.float32)
+
+            B1_V = np.vstack((B1x_V, B1y_V))
+            waveform_data, s, z, norm = quantize(B1_V)
+            # store B1 header information
+            B1x_wave_info = mrd.WaveformInformationType()
+            B1x_wave_info.waveform_name = 'B1'
+            B1x_wave_info.waveform_type = mrd.WaveformType.TRIGGER
+            B1x_wave_info.user_parameters = mrd.UserParametersType(
+                                                user_parameter_double=[
+                                                    mrd.UserParameterDoubleType(
+                                                        name='scale_factor', value=s),
+                                                    mrd.UserParameterDoubleType(
+                                                        name='zero_point', value=z),
+                                                    mrd.UserParameterDoubleType(
+                                                        name='array_norm', value=norm)]) 
+            h.waveform_information.append(B1x_wave_info)    # append B1 header information
+        return mrd.Waveform(data=waveform_data,
+                            waveform_id=B1x_wave_info.waveform_type.value)
+
+    def store_B1(B1_waveform):
+        yield mrd.StreamItem.WaveformUint32(B1_waveform)
+        
     with mrd.BinaryMrdWriter(write_filename) as w:
-        w.write_header(h)
+        # generate data and store header information
+        pulse_shape_waveform = generate_pulse_shape()  
+        grad_waveform = generate_gradient()
+        B1_waveform = generate_B1()
+        w.write_header(h)   # save header information before write_data
+        # save waveform data as a stream
+        w.write_data(store_pulse_shape(pulse_shape_waveform))
+        w.write_data(store_gradient(grad_waveform))
+        w.write_data(store_B1(B1_waveform))
 
 
 # def generate_data() -> Generator[StreamItem, None, None]:
@@ -205,17 +309,16 @@ def generate(write_filename):
 #     image = Image()
 #     yield StreamItem.ImageUint(image)
 
-# def generate_waveform() -> Generator[StreamItem, None, None]:
-#     for i in range(10):
-#         waveform_data = np.array([[1, 2, 3],[4, 5, 6]], dtype=np.uint32)
-#         waveform_time_stamp = i
-#         waveform = Waveform[np.uint32](data=waveform_data, time_stamp=waveform_time_stamp)
-#         yield StreamItem.WaveformUint32(waveform)
+# def generate_waveform() -> Generator[mrd.StreamItem, None, None]:
+#     # store hard pulse shape
+#     waveform_data = np.array([[1, 2, 3],[4, 5, 6]], dtype=np.uint32)
+#     waveform_time_stamp = i
+#     waveform = Waveform[np.uint32](data=waveform_data, time_stamp=waveform_time_stamp)
+#     yield StreamItem.WaveformUint32(waveform)
 
-
-def main():
-    write_filename = 'simulated_mrd.bin'
-    generate(write_filename)
 
 if __name__ == '__main__':
-    main()
+    dir = 'data'
+    write_filename = 'simulated_mrd.bin'
+    write_filename = os.path.join(dir, write_filename)    
+    generate(write_filename)
