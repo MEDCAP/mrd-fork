@@ -2,6 +2,7 @@
 
 classdef Acquisition < handle
   properties
+<<<<<<< HEAD
     flags
     idx
     measurement_uid
@@ -22,6 +23,11 @@ classdef Acquisition < handle
     patient_table_position
     user_int
     user_float
+=======
+    % Acquisition header
+    head
+    % Raw k-space samples array
+>>>>>>> upstream/main
     data
     trajectory
   end
@@ -29,6 +35,7 @@ classdef Acquisition < handle
   methods
     function self = Acquisition(kwargs)
       arguments
+<<<<<<< HEAD
         kwargs.flags = mrd.AcquisitionFlags(0);
         kwargs.idx = mrd.EncodingCounters();
         kwargs.measurement_uid = uint32(0);
@@ -72,6 +79,13 @@ classdef Acquisition < handle
       self.patient_table_position = kwargs.patient_table_position;
       self.user_int = kwargs.user_int;
       self.user_float = kwargs.user_float;
+=======
+        kwargs.head = mrd.AcquisitionHeader();
+        kwargs.data = single.empty(0, 0);
+        kwargs.trajectory = single.empty(0, 0);
+      end
+      self.head = kwargs.head;
+>>>>>>> upstream/main
       self.data = kwargs.data;
       self.trajectory = kwargs.trajectory;
     end
@@ -87,7 +101,7 @@ classdef Acquisition < handle
     end
 
     function res = active_channels(self)
-      res = length(self.channel_order);
+      res = length(self.head.channel_order);
       return
     end
 
@@ -105,6 +119,7 @@ classdef Acquisition < handle
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.Acquisition") && ...
+<<<<<<< HEAD
         isequal(self.flags, other.flags) && ...
         isequal(self.idx, other.idx) && ...
         isequal(self.measurement_uid, other.measurement_uid) && ...
@@ -125,6 +140,9 @@ classdef Acquisition < handle
         isequal(self.patient_table_position, other.patient_table_position) && ...
         isequal(self.user_int, other.user_int) && ...
         isequal(self.user_float, other.user_float) && ...
+=======
+        isequal(self.head, other.head) && ...
+>>>>>>> upstream/main
         isequal(self.data, other.data) && ...
         isequal(self.trajectory, other.trajectory);
     end

@@ -3,6 +3,7 @@
 classdef AcquisitionSerializer < yardl.binary.RecordSerializer
   methods
     function self = AcquisitionSerializer()
+<<<<<<< HEAD
       field_serializers{1} = yardl.binary.EnumSerializer('mrd.AcquisitionFlags', @mrd.AcquisitionFlags, yardl.binary.Uint64Serializer);
       field_serializers{2} = mrd.binary.EncodingCountersSerializer();
       field_serializers{3} = yardl.binary.Uint32Serializer;
@@ -25,6 +26,11 @@ classdef AcquisitionSerializer < yardl.binary.RecordSerializer
       field_serializers{20} = yardl.binary.VectorSerializer(yardl.binary.Float32Serializer);
       field_serializers{21} = yardl.binary.NDArraySerializer(yardl.binary.Complexfloat32Serializer, 2);
       field_serializers{22} = yardl.binary.NDArraySerializer(yardl.binary.Float32Serializer, 2);
+=======
+      field_serializers{1} = mrd.binary.AcquisitionHeaderSerializer();
+      field_serializers{2} = yardl.binary.NDArraySerializer(yardl.binary.Complexfloat32Serializer, 2);
+      field_serializers{3} = yardl.binary.NDArraySerializer(yardl.binary.Float32Serializer, 2);
+>>>>>>> upstream/main
       self@yardl.binary.RecordSerializer('mrd.Acquisition', field_serializers);
     end
 
@@ -34,12 +40,20 @@ classdef AcquisitionSerializer < yardl.binary.RecordSerializer
         outstream (1,1) yardl.binary.CodedOutputStream
         value (1,1) mrd.Acquisition
       end
+<<<<<<< HEAD
       self.write_(outstream, value.flags, value.idx, value.measurement_uid, value.scan_counter, value.acquisition_time_stamp, value.our_acquisition_time_stamp, value.physiology_time_stamp, value.channel_order, value.discard_pre, value.discard_post, value.center_sample, value.encoding_space_ref, value.sample_time_us, value.position, value.read_dir, value.phase_dir, value.slice_dir, value.patient_table_position, value.user_int, value.user_float, value.data, value.trajectory);
+=======
+      self.write_(outstream, value.head, value.data, value.trajectory);
+>>>>>>> upstream/main
     end
 
     function value = read(self, instream)
       fields = self.read_(instream);
+<<<<<<< HEAD
       value = mrd.Acquisition(flags=fields{1}, idx=fields{2}, measurement_uid=fields{3}, scan_counter=fields{4}, acquisition_time_stamp=fields{5}, our_acquisition_time_stamp=fields{6}, physiology_time_stamp=fields{7}, channel_order=fields{8}, discard_pre=fields{9}, discard_post=fields{10}, center_sample=fields{11}, encoding_space_ref=fields{12}, sample_time_us=fields{13}, position=fields{14}, read_dir=fields{15}, phase_dir=fields{16}, slice_dir=fields{17}, patient_table_position=fields{18}, user_int=fields{19}, user_float=fields{20}, data=fields{21}, trajectory=fields{22});
+=======
+      value = mrd.Acquisition(head=fields{1}, data=fields{2}, trajectory=fields{3});
+>>>>>>> upstream/main
     end
   end
 end
