@@ -147,7 +147,7 @@ def accumulate_fft(head: mrd.Header, input: Iterable[mrd.Acquisition]) -> Iterab
             # Reset buffer
             if acq.data.shape[-1] == eNx:
                 readout_length = eNx
-            else:
+            else: 
                 readout_length = rNx  # Readout oversampling has been removed upstream
 
             buffer = np.zeros((ncontrasts, nslices, ncoils, eNz, eNy, readout_length), dtype=np.complex64)
