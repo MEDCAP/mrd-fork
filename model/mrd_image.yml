@@ -19,12 +19,15 @@ ImageType: !enum
   values:
     magnitude: 1
     phase: 2
-    qT1: 3     # SKMOD 2/5/25
-    qT2star: 4 # SKMOD 2/5/25
-    qADC: 5    # SKMOD 2/5/25
-    real: 6   # SKMOD 2/5/25
-    imag: 7   # SKMOD 2/5/25
-    complex: 8 # SKMOD 2/5/25
+    real: 3
+    imag: 4
+    complex: 5
+    quantT1: 6          # in s SKMOD 2/5/25
+    quantT2star: 7      # in s SKMOD 2/5/25
+    quantADC: 8         # in s/m^2 SKMOD 2/5/25
+    quantSpinDensity: 9 # in mol/m^3 SKMOD 2/5/25
+    calB1map: 10        # in rad/s/V SKMOD 2/5/25
+
 
 ImageData<Y>: !array
   items: Y
