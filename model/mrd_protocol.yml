@@ -1,6 +1,7 @@
 # Union of all primary types that can be streamed in the MRD Protocol
 StreamItem:
   - Acquisition
+  - Pulse
   - WaveformUint32
   - ImageUint16
   - ImageInt16

@@ -1,0 +1,30 @@
+# SKADD 2/5/25
+# Samples are complex numbers, real part is amplitude and imaginary part is phase
+# Units are Volts and radians
+PulseData: !array
+  items: complexfloat
+  dimensions:
+    coils:
+    samples:
+
+PulseHeader: !record
+  fields:
+    # Clock time stamp 
+    pulseTimeStamp: time
+    # Channel numbers
+    channelOrder: uint*
+    # Sample time in microseconds
+    sampleTimeUs: uint
+    # Pulse calibration (rad/s/V) Need to expand this to coil calibration map
+    pulseCalibration: float*
+
+Pulse: !record
+  fields:
+    # Pulse header
+    head: PulseHeader
+    # Raw k-space samples array
+    data: PulseData
+  computedFields:
+    coils: size(data, "coils")
+    samples: size(data, "samples")
+    activeChannels: size(head.channelOrder)

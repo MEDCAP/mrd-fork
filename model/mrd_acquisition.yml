@@ -78,11 +78,9 @@ AcquisitionHeader: !record
     measurementUid: uint
     # Zero-indexed incrementing counter for readouts
     scanCounter: uint?
-    # Clock time stamp (e.g. milliseconds since midnight)
-    acquisitionTimeStamp: uint?
-    # Our method with microseconds since midnight
-    ourAcquisitionTimeStamp: uint?
-    # Time stamps relative to physiological triggering
+    # Clock time stamp 
+    acquisitionTimeStamp: time? # SKMOD 2/5/25, changed int? to time?
+    # Time stamps relative to physiological triggering SKMOD 2/5/25, what are units?
     physiologyTimeStamp: uint*
     # Channel numbers
     channelOrder: uint*
@@ -121,6 +119,7 @@ Acquisition: !record
     data: AcquisitionData
     # Trajectory array
     trajectory: TrajectoryData
+    measuredTrajectory: TrajectoryData? # SKMOD 2/5/25
   computedFields:
     coils: size(data, "coils")
     samples: size(data, "samples")
