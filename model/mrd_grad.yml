@@ -1,6 +1,13 @@
 # SKADD 2/19/25
+GradDataElem: !record
+  # Maybe make these all optional and include an optional rotation in the header for, e.g., oblique slices
+  fields:
+    gx: float 
+    gy: float
+    gz: float
+
 GradData: !array
-  items: float # in A, an arbitrary value calibrated to physical units as below
+  items: GradDataElem # in A, arbitrary values calibrated to physical units as below
   dimensions:
     samples:
 
