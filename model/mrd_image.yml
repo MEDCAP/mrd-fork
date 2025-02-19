@@ -26,7 +26,8 @@ ImageType: !enum
     quantT2star: 7      # in s SKMOD 2/5/25
     quantADC: 8         # in s/m^2 SKMOD 2/5/25
     quantSpinDensity: 9 # in mol/m^3 SKMOD 2/5/25
-    calB1map: 10        # in rad/s/V SKMOD 2/5/25
+    calB1Map: 10        # in rad/s/V SKMOD 2/5/25
+    calSensMap: 11      # in Vm^3/mol SKMOD 2/5/25
 
 
 ImageData<Y>: !array
@@ -43,6 +44,8 @@ ImageHeader: !record
     flags: ImageFlags
     # Unique ID corresponding to the image
     measurementUid: uint
+    # NMR frequency of this measurement (Hz) SKADD 2/7/25
+    measurementFreq: uint
     # Physical size (in mm) in each of the 3 dimensions in the image
     fieldOfView: float[3]
     # Center of the excited volume, in LPS coordinates relative to isocenter in millimeters
@@ -67,8 +70,8 @@ ImageHeader: !record
     repetition: uint?
     # Sets of different preparation, e.g. flow encoding, diffusion weighting
     set: uint?
-    # Clock time stamp (e.g. milliseconds since midnight)
-    acquisitionTimeStamp: time? # SKMOD 2/5/25
+    # Clock time stamp (e.g. ns since midnight, StudyTime or whatever you want. Same reference as raw data)
+    acquisitionTimeStamp: uint64? # SKMOD 2/5/25
     # Time stamps relative to physiological triggering, e.g. ECG, pulse oximetry, respiratory
     physiologyTimeStamp: uint*
     # Interpretation type of the image

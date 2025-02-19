@@ -117,11 +117,12 @@ Acquisition: !record
     head: AcquisitionHeader
     # Raw k-space samples array
     data: AcquisitionData
-    # Trajectory array SKMOD 2/19/25 
-    #trajectory: TrajectoryData
+    # Trajectory array
+    trajectory: TrajectoryData
+    measuredTrajectory: TrajectoryData? # SKMOD 2/5/25
   computedFields:
     coils: size(data, "coils")
     samples: size(data, "samples")
     activeChannels: size(head.channelOrder)
-    #trajectoryDimensions: size(trajectory, "basis")  # SKMOD 2/19/25
-    #trajectorySamples: size(trajectory, "samples")   # SKMOD 2/19/25
+    trajectoryDimensions: size(trajectory, "basis")
+    trajectorySamples: size(trajectory, "samples")

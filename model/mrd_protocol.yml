@@ -2,6 +2,7 @@
 StreamItem:
   - Acquisition
   - Pulse
+  - Grad
   - WaveformUint32
   - ImageUint16
   - ImageInt16

@@ -1,0 +1,25 @@
+# SKADD 2/19/25
+GradData: !array
+  items: float # in A, an arbitrary value calibrated to physical units as below
+  dimensions:
+    samples:
+
+GradHeader: !record
+  fields:
+    # Clock time stamp, ns since something
+    gradTimeStamp: uint64
+    # Sample time in ns
+    sampleTimeNs: uint
+    # Grad calibration (T/m/A). Can be here or as a calGradMap calibration image or neither
+    pulseCalibration: float*?
+
+Grad: !record
+  fields:
+    # Grad header
+    head: GradHeader
+    # Raw pulse amplitude/phase samples array
+    data: GradData
+  computedFields:
+    samples: size(data, "samples")
+    starttime: head.gradTimeStamp
+    endtime: head.gradTimeStamp + size(data, "samples") * head.sampleTimeNs

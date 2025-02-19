@@ -13,19 +13,19 @@ PulseData: !array
 PulseHeader: !record
   fields:
     # Clock time stamp 
-    pulseTimeStamp: time
+    pulseTimeStamp: uint64 # ns since StudyTime
     # Channel numbers
     channelOrder: uint*
-    # Sample time in microseconds
-    sampleTimeUs: uint
-    # Pulse calibration (rad/s/V) Need to expand this to coil calibration map
-    pulseCalibration: float*
+    # Sample time in ns
+    sampleTimeNs: uint
+    # Pulse calibration (rad/s/V). Can be here or as a calB1Map calibration image or neither
+    pulseCalibration: float*?
 
 Pulse: !record
   fields:
     # Pulse header
     head: PulseHeader
-    # Raw k-space samples array
+    # Raw pulse amplitude/phase samples array
     data: PulseData
   computedFields:
     coils: size(data, "coils")
