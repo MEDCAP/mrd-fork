@@ -1,11 +1,11 @@
 # SKADD 2/5/25
-PulseDataElem: !record
+PulseElement: !record
   fields:
     amplitude: float # in V
     phase: float     # in rad
 
 PulseData: !array
-  items: PulseDataElem
+  items: PulseElement
   dimensions:
     coils:
     samples:
@@ -13,11 +13,11 @@ PulseData: !array
 PulseHeader: !record
   fields:
     # Clock time stamp 
-    pulseTimeStamp: uint64 # ns since StudyTime
+    pulseTimeStampNs: uint # ns since StudyTime
     # Channel numbers
     channelOrder: uint*
-    # Sample time in ns
-    sampleTimeNs: uint
+    # Pulse sampling duration in ns
+    pulseStepLengthNs: uint
     # Pulse calibration (rad/s/V). Can be here or as a calB1Map calibration image or neither
     pulseCalibration: float*?
 

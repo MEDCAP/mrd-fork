@@ -78,10 +78,13 @@ AcquisitionHeader: !record
     measurementUid: uint
     # Zero-indexed incrementing counter for readouts
     scanCounter: uint?
-    # Clock time stamp 
-    acquisitionTimeStamp: uint64? # SKMOD 2/5/25, changed int? to uint64?. ns since StudyTime or desired refrence
-    # Time stamps relative to physiological triggering SKMOD 2/5/25, what are units?
+    # Clock time stamp (e.g. milliseconds since midnight)
+    acquisitionTimeStamp: uint? # Keep as uint to preserve the convention
+    # Time stamps relative to physiological triggering 
+    # CHECK: What are units?
     physiologyTimeStamp: uint*
+    # ADD: Offset time in microseconds since acquisitionTimeStamp for precision
+    offsetAcquisitionTimeUs: float?
     # Channel numbers
     channelOrder: uint*
     # Number of readout samples to be discarded at the beginning
@@ -94,8 +97,8 @@ AcquisitionHeader: !record
     centerSample: uint?
     # Indexed reference to the encoding spaces enumerated in the MRD Header
     encodingSpaceRef: uint?
-    # Readout bandwidth, as time between samples in ns
-    sampleTimeNs: uint?
+    # Readout bandwidth, as time between samples in microseconds
+    sampleTimeUs: float?
     # Center of the excited volume, in LPS coordinates relative to isocenter in millimeters
     position: float[3]
     # Directional cosine of readout/frequency encoding
@@ -117,11 +120,11 @@ Acquisition: !record
     head: AcquisitionHeader
     # Raw k-space samples array
     data: AcquisitionData
-    # Trajectory array SKMOD 2/19/25 
-    #trajectory: TrajectoryData
+    # REMOVE: Trajectory array to be replaced by pulse field  
+    trajectory: TrajectoryData
   computedFields:
     coils: size(data, "coils")
     samples: size(data, "samples")
     activeChannels: size(head.channelOrder)
-    #trajectoryDimensions: size(trajectory, "basis")  # SKMOD 2/19/25
-    #trajectorySamples: size(trajectory, "samples")   # SKMOD 2/19/25
+    trajectoryDimensions: size(trajectory, "basis")  # REMOVE
+    trajectorySamples: size(trajectory, "samples")   # REMOVE 
