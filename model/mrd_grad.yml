@@ -1,33 +1,31 @@
 # ADD: gradient field
 # similar to acquisition field, gradient shape described with timestamp
-# Alternative structure is optional rotation in the header for, e.g., oblique slices
-GradientElement: !record
-  fields:
-    gx: float # mT/m
-    gy: float 
-    gz: float
 
 # gradient xyz stored as 2D array with a shape of (samples, 3)
 GradientData: !array
-  items: GradientElement
-  dimension: samples
+  items: float
+  dimensions:
+    samples:
 
 GradientHeader: !record
   fields:
-    # Clock time stamp, microseconds since AcquisitionTimeStamp
-    gradientTimeStampUs: float
-    # Gradient sample duration in microseconds
-    gradientSampleTimeUs: float
+    # Clock time stamp, nanoseconds since AcquisitionTimeStamp
+    gradientTimeStampNs: uint64
+    # Gradient sample duration in nanoseconds
+    gradientSampleTimeNs: uint
     # Grad calibration (T/m/A). Can be here or as a calGradMap calibration image or neither
     pulseCalibration: float*?
 
-Grad: !record
+Gradient: !record
   fields:
     # Gradient header
     head: GradientHeader
     # Raw pulse amplitude/phase samples array
-    data: GradientData
+    gx: GradientData
+    gy: GradientData
+    gz: GradientData
   computedFields:
-    samples: size(data, "samples")
-    starttime: head.gradientTimeStampUs
-    endtime: head.gradientTimeStampUs + size(data, "samples") * head.gradientSampleTimeUs
+    # Assuming writer sets gx,gy,gz all have the same size  
+    samples: size(gx, "samples")
+    starttime: head.gradientTimeStampNs
+    endtime: head.gradientTimeStampNs + samples * head.gradientSampleTimeNs

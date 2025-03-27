@@ -78,13 +78,10 @@ AcquisitionHeader: !record
     measurementUid: uint
     # Zero-indexed incrementing counter for readouts
     scanCounter: uint?
-    # Clock time stamp (e.g. milliseconds since midnight)
-    acquisitionTimeStamp: uint? # Keep as uint to preserve the convention
+    # Clock time stamp (e.g. nanoseconds since midnight)
+    acquisitionTimeStampNs: uint64
     # Time stamps relative to physiological triggering 
-    # CHECK: What are units?
-    physiologyTimeStamp: uint*
-    # ADD: Offset time in microseconds since acquisitionTimeStamp for precision
-    offsetAcquisitionTimeUs: float?
+    physiologyTimeStampNs: uint
     # Channel numbers
     channelOrder: uint*
     # Number of readout samples to be discarded at the beginning
@@ -97,8 +94,8 @@ AcquisitionHeader: !record
     centerSample: uint?
     # Indexed reference to the encoding spaces enumerated in the MRD Header
     encodingSpaceRef: uint?
-    # Readout bandwidth, as time between samples in microseconds
-    sampleTimeUs: float?
+    # EDIT: Readout bandwidth, as time between samples in nanoseconds
+    sampleTimeNs: uint64
     # Center of the excited volume, in LPS coordinates relative to isocenter in millimeters
     position: float[3]
     # Directional cosine of readout/frequency encoding
@@ -113,6 +110,10 @@ AcquisitionHeader: !record
     userInt: int*
     # User-defined float parameters
     userFloat: float*
+  computedFields:
+    acquisitionTimeStamp: (acquisitionTimeStampNs/1000) as uint
+    physiologyTimeStamp: (physiologyTimeStampNs/1000) as uint
+    sampleTime: (sampleTimeNs/1000) as float
 
 Acquisition: !record
   fields:
