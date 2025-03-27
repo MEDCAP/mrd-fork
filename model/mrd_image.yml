@@ -26,13 +26,12 @@ ImageType: !enum
 # EDIT: Added new type
 ImageQuantitativeType: !enum
   values:
-    quantNone: 1
-    quantT1: 2               # in s
-    quantT2star: 3           # in s
-    quantADC: 4              # in s/m^2
-    quantSpinDensity: 5      # in mol/m^3
-    quantB1Map: 6            # in rad/s/V
-    quantSensitivityMap: 7   # in Vm^3/mol
+    quantT1: 1               # in s
+    quantT2star: 2           # in s
+    quantADC: 3              # in s/m^2
+    quantSpinDensity: 4      # in mol/m^3
+    quantB1Map: 5            # in rad/s/V
+    quantSensitivityMap: 6   # in Vm^3/mol
 
 ImageData<Y>: !array
   items: Y
@@ -81,7 +80,7 @@ ImageHeader: !record
     # Interpretation type of the image
     imageType: ImageType
     # Quantitative interpretation type of the image
-    imageQuantitativeType: ImageQuantitativeType
+    imageQuantitativeType: ImageQuantitativeType?
     # Image index number within a series of images, corresponding to DICOM InstanceNumber (0020,0013)
     imageIndex: uint?
     # Series index, used to separate images into different series, corresponding to DICOM SeriesNumber (0020,0011)
