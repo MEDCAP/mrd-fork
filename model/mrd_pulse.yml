@@ -1,19 +1,15 @@
-# SKADD 2/5/25
-PulseDataElem: !record
-  fields:
-    amplitude: float # in V
-    phase: float     # in rad
+# ADD: pulse field
 
 PulseData: !array
-  items: PulseDataElem
+  items: float
   dimensions:
     coils:
     samples:
 
 PulseHeader: !record
   fields:
-    # Clock time stamp 
-    pulseTimeStamp: uint64 # ns since StudyTime
+    # Clock time stamp nanoseconds since midnight
+    pulseTimeStampNs: uint64 
     # Channel numbers
     channelOrder: uint*
     # Sample time in ns
@@ -25,9 +21,11 @@ Pulse: !record
   fields:
     # Pulse header
     head: PulseHeader
-    # Raw pulse amplitude/phase samples array
-    data: PulseData
+    # Raw pulse amplitude/phase array
+    amplitude: PulseData
+    phase: PulseData
   computedFields:
-    coils: size(data, "coils")
-    samples: size(data, "samples")
+    # Assuming writer sets amp and phase array the same size
+    coils: size(amplitude, "coils")
+    samples: size(amplitude, "samples")
     activeChannels: size(head.channelOrder)
