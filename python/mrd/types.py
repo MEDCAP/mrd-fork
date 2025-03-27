@@ -66,35 +66,15 @@ class AcquisitionFlags(enum.IntFlag):
 
 class EncodingCounters:
     kspace_encode_step_1: typing.Optional[yardl.UInt32]
-    """Phase encoding line"""
-
     kspace_encode_step_2: typing.Optional[yardl.UInt32]
-    """Partition encoding"""
-
     average: typing.Optional[yardl.UInt32]
-    """Signal average"""
-
     slice: typing.Optional[yardl.UInt32]
-    """Slice number (multi-slice 2D)"""
-
     contrast: typing.Optional[yardl.UInt32]
-    """Echo number in multi-echo"""
-
     phase: typing.Optional[yardl.UInt32]
-    """Cardiac phase"""
-
     repetition: typing.Optional[yardl.UInt32]
-    """Counter in repeated/dynamic acquisitions"""
-
     set: typing.Optional[yardl.UInt32]
-    """Sets of different preparation, e.g. flow encoding, diffusion weighting"""
-
     segment: typing.Optional[yardl.UInt32]
-    """Counter for segmented acquisitions"""
-
     user: list[yardl.UInt32]
-    """User-defined counters"""
-
 
     def __init__(self, *,
         kspace_encode_step_1: typing.Optional[yardl.UInt32] = None,
@@ -147,80 +127,38 @@ TrajectoryData = npt.NDArray[np.float32]
 
 class AcquisitionHeader:
     flags: AcquisitionFlags
-    """A bit mask of common attributes applicable to individual acquisition"""
-
     idx: EncodingCounters
-    """Encoding loop counters"""
-
     measurement_uid: yardl.UInt32
-    """Unique ID corresponding to the readout"""
-
     scan_counter: typing.Optional[yardl.UInt32]
-    """Zero-indexed incrementing counter for readouts"""
-
-    acquisition_time_stamp: typing.Optional[yardl.UInt32]
-    """Clock time stamp (e.g. milliseconds since midnight)"""
-
-    physiology_time_stamp: list[yardl.UInt32]
-    """Time stamps relative to physiological triggering"""
-
+    acquisition_time_stamp_ns: yardl.UInt64
+    physiology_time_stamp_ns: yardl.UInt64
     channel_order: list[yardl.UInt32]
-    """Channel numbers"""
-
     discard_pre: typing.Optional[yardl.UInt32]
-    """Number of readout samples to be discarded at the beginning
-      (e.g. if the ADC is active during gradient events)
-    """
-
     discard_post: typing.Optional[yardl.UInt32]
-    """Number of readout samples to be discarded at the end
-      (e.g. if the ADC is active during gradient events)
-    """
-
     center_sample: typing.Optional[yardl.UInt32]
-    """Index of the readout sample corresponing to k-space center (zero indexed)"""
-
     encoding_space_ref: typing.Optional[yardl.UInt32]
-    """Indexed reference to the encoding spaces enumerated in the MRD Header"""
-
-    sample_time_us: typing.Optional[yardl.Float32]
-    """Readout bandwidth, as time between samples in microseconds"""
-
+    sample_time_ns: yardl.UInt64
     position: npt.NDArray[np.float32]
-    """Center of the excited volume, in LPS coordinates relative to isocenter in millimeters"""
-
     read_dir: npt.NDArray[np.float32]
-    """Directional cosine of readout/frequency encoding"""
-
     phase_dir: npt.NDArray[np.float32]
-    """Directional cosine of phase encoding (2D)"""
-
     slice_dir: npt.NDArray[np.float32]
-    """Directional cosine of slice normal, i.e. cross-product of read_dir and phase_dir"""
-
     patient_table_position: npt.NDArray[np.float32]
-    """Offset position of the patient table, in LPS coordinates"""
-
     user_int: list[yardl.Int32]
-    """User-defined integer parameters"""
-
     user_float: list[yardl.Float32]
-    """User-defined float parameters"""
-
 
     def __init__(self, *,
         flags: AcquisitionFlags = AcquisitionFlags(0),
         idx: typing.Optional[EncodingCounters] = None,
         measurement_uid: yardl.UInt32 = 0,
         scan_counter: typing.Optional[yardl.UInt32] = None,
-        acquisition_time_stamp: typing.Optional[yardl.UInt32] = None,
-        physiology_time_stamp: typing.Optional[list[yardl.UInt32]] = None,
+        acquisition_time_stamp_ns: yardl.UInt64 = 0,
+        physiology_time_stamp_ns: yardl.UInt64 = 0,
         channel_order: typing.Optional[list[yardl.UInt32]] = None,
         discard_pre: typing.Optional[yardl.UInt32] = None,
         discard_post: typing.Optional[yardl.UInt32] = None,
         center_sample: typing.Optional[yardl.UInt32] = None,
         encoding_space_ref: typing.Optional[yardl.UInt32] = None,
-        sample_time_us: typing.Optional[yardl.Float32] = None,
+        sample_time_ns: yardl.UInt64 = 0,
         position: typing.Optional[npt.NDArray[np.float32]] = None,
         read_dir: typing.Optional[npt.NDArray[np.float32]] = None,
         phase_dir: typing.Optional[npt.NDArray[np.float32]] = None,
@@ -233,14 +171,14 @@ class AcquisitionHeader:
         self.idx = idx if idx is not None else EncodingCounters()
         self.measurement_uid = measurement_uid
         self.scan_counter = scan_counter
-        self.acquisition_time_stamp = acquisition_time_stamp
-        self.physiology_time_stamp = physiology_time_stamp if physiology_time_stamp is not None else []
+        self.acquisition_time_stamp_ns = acquisition_time_stamp_ns
+        self.physiology_time_stamp_ns = physiology_time_stamp_ns
         self.channel_order = channel_order if channel_order is not None else []
         self.discard_pre = discard_pre
         self.discard_post = discard_post
         self.center_sample = center_sample
         self.encoding_space_ref = encoding_space_ref
-        self.sample_time_us = sample_time_us
+        self.sample_time_ns = sample_time_ns
         self.position = position if position is not None else np.zeros((3,), dtype=np.dtype(np.float32))
         self.read_dir = read_dir if read_dir is not None else np.zeros((3,), dtype=np.dtype(np.float32))
         self.phase_dir = phase_dir if phase_dir is not None else np.zeros((3,), dtype=np.dtype(np.float32))
@@ -249,6 +187,15 @@ class AcquisitionHeader:
         self.user_int = user_int if user_int is not None else []
         self.user_float = user_float if user_float is not None else []
 
+    def acquisition_time_stamp(self) -> yardl.UInt32:
+        return int(float(self.acquisition_time_stamp_ns) // 1e6)
+
+    def physiology_time_stamp(self) -> yardl.UInt32:
+        return int(float(self.physiology_time_stamp_ns) // 1e6)
+
+    def sample_time(self) -> yardl.Float32:
+        return float(float(self.sample_time_ns) // 1e6)
+
     def __eq__(self, other: object) -> bool:
         return (
             isinstance(other, AcquisitionHeader)
@@ -256,14 +203,14 @@ class AcquisitionHeader:
             and self.idx == other.idx
             and self.measurement_uid == other.measurement_uid
             and self.scan_counter == other.scan_counter
-            and self.acquisition_time_stamp == other.acquisition_time_stamp
-            and self.physiology_time_stamp == other.physiology_time_stamp
+            and self.acquisition_time_stamp_ns == other.acquisition_time_stamp_ns
+            and self.physiology_time_stamp_ns == other.physiology_time_stamp_ns
             and self.channel_order == other.channel_order
             and self.discard_pre == other.discard_pre
             and self.discard_post == other.discard_post
             and self.center_sample == other.center_sample
             and self.encoding_space_ref == other.encoding_space_ref
-            and self.sample_time_us == other.sample_time_us
+            and self.sample_time_ns == other.sample_time_ns
             and yardl.structural_equal(self.position, other.position)
             and yardl.structural_equal(self.read_dir, other.read_dir)
             and yardl.structural_equal(self.phase_dir, other.phase_dir)
@@ -274,31 +221,22 @@ class AcquisitionHeader:
         )
 
     def __str__(self) -> str:
-        return f"AcquisitionHeader(flags={self.flags}, idx={self.idx}, measurementUid={self.measurement_uid}, scanCounter={self.scan_counter}, acquisitionTimeStamp={self.acquisition_time_stamp}, physiologyTimeStamp={self.physiology_time_stamp}, channelOrder={self.channel_order}, discardPre={self.discard_pre}, discardPost={self.discard_post}, centerSample={self.center_sample}, encodingSpaceRef={self.encoding_space_ref}, sampleTimeUs={self.sample_time_us}, position={self.position}, readDir={self.read_dir}, phaseDir={self.phase_dir}, sliceDir={self.slice_dir}, patientTablePosition={self.patient_table_position}, userInt={self.user_int}, userFloat={self.user_float})"
+        return f"AcquisitionHeader(flags={self.flags}, idx={self.idx}, measurementUid={self.measurement_uid}, scanCounter={self.scan_counter}, acquisitionTimeStampNs={self.acquisition_time_stamp_ns}, physiologyTimeStampNs={self.physiology_time_stamp_ns}, channelOrder={self.channel_order}, discardPre={self.discard_pre}, discardPost={self.discard_post}, centerSample={self.center_sample}, encodingSpaceRef={self.encoding_space_ref}, sampleTimeNs={self.sample_time_ns}, position={self.position}, readDir={self.read_dir}, phaseDir={self.phase_dir}, sliceDir={self.slice_dir}, patientTablePosition={self.patient_table_position}, userInt={self.user_int}, userFloat={self.user_float})"
 
     def __repr__(self) -> str:
-        return f"AcquisitionHeader(flags={repr(self.flags)}, idx={repr(self.idx)}, measurementUid={repr(self.measurement_uid)}, scanCounter={repr(self.scan_counter)}, acquisitionTimeStamp={repr(self.acquisition_time_stamp)}, physiologyTimeStamp={repr(self.physiology_time_stamp)}, channelOrder={repr(self.channel_order)}, discardPre={repr(self.discard_pre)}, discardPost={repr(self.discard_post)}, centerSample={repr(self.center_sample)}, encodingSpaceRef={repr(self.encoding_space_ref)}, sampleTimeUs={repr(self.sample_time_us)}, position={repr(self.position)}, readDir={repr(self.read_dir)}, phaseDir={repr(self.phase_dir)}, sliceDir={repr(self.slice_dir)}, patientTablePosition={repr(self.patient_table_position)}, userInt={repr(self.user_int)}, userFloat={repr(self.user_float)})"
+        return f"AcquisitionHeader(flags={repr(self.flags)}, idx={repr(self.idx)}, measurementUid={repr(self.measurement_uid)}, scanCounter={repr(self.scan_counter)}, acquisitionTimeStampNs={repr(self.acquisition_time_stamp_ns)}, physiologyTimeStampNs={repr(self.physiology_time_stamp_ns)}, channelOrder={repr(self.channel_order)}, discardPre={repr(self.discard_pre)}, discardPost={repr(self.discard_post)}, centerSample={repr(self.center_sample)}, encodingSpaceRef={repr(self.encoding_space_ref)}, sampleTimeNs={repr(self.sample_time_ns)}, position={repr(self.position)}, readDir={repr(self.read_dir)}, phaseDir={repr(self.phase_dir)}, sliceDir={repr(self.slice_dir)}, patientTablePosition={repr(self.patient_table_position)}, userInt={repr(self.user_int)}, userFloat={repr(self.user_float)})"
 
 
 class Acquisition:
     head: AcquisitionHeader
-    """Acquisition header"""
-
     data: AcquisitionData
-    """Raw k-space samples array"""
-
-    trajectory: TrajectoryData
-    """Trajectory array"""
-
 
     def __init__(self, *,
         head: typing.Optional[AcquisitionHeader] = None,
         data: typing.Optional[AcquisitionData] = None,
-        trajectory: typing.Optional[TrajectoryData] = None,
     ):
         self.head = head if head is not None else AcquisitionHeader()
         self.data = data if data is not None else np.zeros((0, 0), dtype=np.dtype(np.complex64))
-        self.trajectory = trajectory if trajectory is not None else np.zeros((0, 0), dtype=np.dtype(np.float32))
 
     def coils(self) -> yardl.Size:
         return self.data.shape[0]
@@ -309,25 +247,91 @@ class Acquisition:
     def active_channels(self) -> yardl.Size:
         return len(self.head.channel_order)
 
-    def trajectory_dimensions(self) -> yardl.Size:
-        return self.trajectory.shape[0]
-
-    def trajectory_samples(self) -> yardl.Size:
-        return self.trajectory.shape[1]
-
     def __eq__(self, other: object) -> bool:
         return (
             isinstance(other, Acquisition)
             and self.head == other.head
             and yardl.structural_equal(self.data, other.data)
-            and yardl.structural_equal(self.trajectory, other.trajectory)
         )
 
     def __str__(self) -> str:
-        return f"Acquisition(head={self.head}, data={self.data}, trajectory={self.trajectory})"
+        return f"Acquisition(head={self.head}, data={self.data})"
 
     def __repr__(self) -> str:
-        return f"Acquisition(head={repr(self.head)}, data={repr(self.data)}, trajectory={repr(self.trajectory)})"
+        return f"Acquisition(head={repr(self.head)}, data={repr(self.data)})"
+
+
+GradientData = npt.NDArray[np.float32]
+
+class GradHeader:
+    gradient_time_stamp_ns: yardl.UInt64
+    gradient_sample_time_ns: yardl.UInt32
+    pulse_calibration: typing.Optional[list[yardl.Float32]]
+
+    def __init__(self, *,
+        gradient_time_stamp_ns: yardl.UInt64 = 0,
+        gradient_sample_time_ns: yardl.UInt32 = 0,
+        pulse_calibration: typing.Optional[list[yardl.Float32]] = None,
+    ):
+        self.gradient_time_stamp_ns = gradient_time_stamp_ns
+        self.gradient_sample_time_ns = gradient_sample_time_ns
+        self.pulse_calibration = pulse_calibration
+
+    def __eq__(self, other: object) -> bool:
+        return (
+            isinstance(other, GradHeader)
+            and self.gradient_time_stamp_ns == other.gradient_time_stamp_ns
+            and self.gradient_sample_time_ns == other.gradient_sample_time_ns
+            and self.pulse_calibration == other.pulse_calibration
+        )
+
+    def __str__(self) -> str:
+        return f"GradHeader(gradientTimeStampNs={self.gradient_time_stamp_ns}, gradientSampleTimeNs={self.gradient_sample_time_ns}, pulseCalibration={self.pulse_calibration})"
+
+    def __repr__(self) -> str:
+        return f"GradHeader(gradientTimeStampNs={repr(self.gradient_time_stamp_ns)}, gradientSampleTimeNs={repr(self.gradient_sample_time_ns)}, pulseCalibration={repr(self.pulse_calibration)})"
+
+
+class Gradient:
+    head: GradHeader
+    rl: GradientData
+    ap: GradientData
+    fh: GradientData
+
+    def __init__(self, *,
+        head: typing.Optional[GradHeader] = None,
+        rl: typing.Optional[GradientData] = None,
+        ap: typing.Optional[GradientData] = None,
+        fh: typing.Optional[GradientData] = None,
+    ):
+        self.head = head if head is not None else GradHeader()
+        self.rl = rl if rl is not None else np.zeros((0), dtype=np.dtype(np.float32))
+        self.ap = ap if ap is not None else np.zeros((0), dtype=np.dtype(np.float32))
+        self.fh = fh if fh is not None else np.zeros((0), dtype=np.dtype(np.float32))
+
+    def samples(self) -> yardl.Size:
+        return self.rl.shape[0]
+
+    def starttime(self) -> yardl.UInt64:
+        return self.head.gradient_time_stamp_ns
+
+    def endtime(self) -> yardl.Size:
+        return self.head.gradient_time_stamp_ns + self.samples() * int(self.head.gradient_sample_time_ns)
+
+    def __eq__(self, other: object) -> bool:
+        return (
+            isinstance(other, Gradient)
+            and self.head == other.head
+            and yardl.structural_equal(self.rl, other.rl)
+            and yardl.structural_equal(self.ap, other.ap)
+            and yardl.structural_equal(self.fh, other.fh)
+        )
+
+    def __str__(self) -> str:
+        return f"Gradient(head={self.head}, rl={self.rl}, ap={self.ap}, fh={self.fh})"
+
+    def __repr__(self) -> str:
+        return f"Gradient(head={repr(self.head)}, rl={repr(self.rl)}, ap={repr(self.ap)}, fh={repr(self.fh)})"
 
 
 class PatientGender(yardl.OutOfRangeEnum):
@@ -377,8 +381,8 @@ class SubjectInformationType:
 
 
 class StudyInformationType:
-    study_date: typing.Optional[datetime.date]
-    study_time: typing.Optional[yardl.Time]
+    study_date: datetime.date
+    study_time: yardl.Time
     study_id: typing.Optional[str]
     accession_number: typing.Optional[yardl.Int64]
     referring_physician_name: typing.Optional[str]
@@ -387,8 +391,8 @@ class StudyInformationType:
     body_part_examined: typing.Optional[str]
 
     def __init__(self, *,
-        study_date: typing.Optional[datetime.date] = None,
-        study_time: typing.Optional[yardl.Time] = None,
+        study_date: datetime.date = datetime.date(1970, 1, 1),
+        study_time: yardl.Time = yardl.Time(),
         study_id: typing.Optional[str] = None,
         accession_number: typing.Optional[yardl.Int64] = None,
         referring_physician_name: typing.Optional[str] = None,
@@ -1489,76 +1493,45 @@ class ImageType(yardl.OutOfRangeEnum):
     IMAG = 4
     COMPLEX = 5
 
+class ImageQuantitativeType(yardl.OutOfRangeEnum):
+    QUANT_T1 = 1
+    QUANT_T2STAR = 2
+    QUANT_ADC = 3
+    QUANT_SPIN_DENSITY = 4
+    QUANT_B1_MAP = 5
+    QUANT_SENSITIVITY_MAP = 6
+
 ImageData = npt.NDArray[Y_NP]
 
 class ImageHeader:
     flags: ImageFlags
-    """A bit mask of common attributes applicable to individual images"""
-
     measurement_uid: yardl.UInt32
-    """Unique ID corresponding to the image"""
-
+    measurement_freq: yardl.UInt32
     field_of_view: npt.NDArray[np.float32]
-    """Physical size (in mm) in each of the 3 dimensions in the image"""
-
     position: npt.NDArray[np.float32]
-    """Center of the excited volume, in LPS coordinates relative to isocenter in millimeters"""
-
     col_dir: npt.NDArray[np.float32]
-    """Directional cosine of readout/frequency encoding"""
-
     line_dir: npt.NDArray[np.float32]
-    """Directional cosine of phase encoding (2D)"""
-
     slice_dir: npt.NDArray[np.float32]
-    """Directional cosine of 3D phase encoding direction"""
-
     patient_table_position: npt.NDArray[np.float32]
-    """Offset position of the patient table, in LPS coordinates"""
-
     average: typing.Optional[yardl.UInt32]
-    """Signal average"""
-
     slice: typing.Optional[yardl.UInt32]
-    """Slice number (multi-slice 2D)"""
-
     contrast: typing.Optional[yardl.UInt32]
-    """Echo number in multi-echo"""
-
     phase: typing.Optional[yardl.UInt32]
-    """Cardiac phase"""
-
     repetition: typing.Optional[yardl.UInt32]
-    """Counter in repeated/dynamic acquisitions"""
-
     set: typing.Optional[yardl.UInt32]
-    """Sets of different preparation, e.g. flow encoding, diffusion weighting"""
-
-    acquisition_time_stamp: typing.Optional[yardl.UInt32]
-    """Clock time stamp (e.g. milliseconds since midnight)"""
-
-    physiology_time_stamp: list[yardl.UInt32]
-    """Time stamps relative to physiological triggering, e.g. ECG, pulse oximetry, respiratory"""
-
+    acquisition_time_stamp_ns: yardl.UInt64
+    physiology_time_stamp_ns: yardl.UInt64
     image_type: ImageType
-    """Interpretation type of the image"""
-
+    image_quantitative_type: typing.Optional[ImageQuantitativeType]
     image_index: typing.Optional[yardl.UInt32]
-    """Image index number within a series of images, corresponding to DICOM InstanceNumber (0020,0013)"""
-
     image_series_index: typing.Optional[yardl.UInt32]
-    """Series index, used to separate images into different series, corresponding to DICOM SeriesNumber (0020,0011)"""
-
     user_int: list[yardl.Int32]
-    """User-defined int parameters"""
-
     user_float: list[yardl.Float32]
-    """User-defined float parameters"""
-
 
     def __init__(self, *,
         flags: ImageFlags = ImageFlags(0),
         measurement_uid: yardl.UInt32 = 0,
+        measurement_freq: yardl.UInt32 = 0,
         field_of_view: typing.Optional[npt.NDArray[np.float32]] = None,
         position: typing.Optional[npt.NDArray[np.float32]] = None,
         col_dir: typing.Optional[npt.NDArray[np.float32]] = None,
@@ -1571,9 +1544,10 @@ class ImageHeader:
         phase: typing.Optional[yardl.UInt32] = None,
         repetition: typing.Optional[yardl.UInt32] = None,
         set: typing.Optional[yardl.UInt32] = None,
-        acquisition_time_stamp: typing.Optional[yardl.UInt32] = None,
-        physiology_time_stamp: typing.Optional[list[yardl.UInt32]] = None,
+        acquisition_time_stamp_ns: yardl.UInt64 = 0,
+        physiology_time_stamp_ns: yardl.UInt64 = 0,
         image_type: ImageType,
+        image_quantitative_type: typing.Optional[ImageQuantitativeType] = None,
         image_index: typing.Optional[yardl.UInt32] = None,
         image_series_index: typing.Optional[yardl.UInt32] = None,
         user_int: typing.Optional[list[yardl.Int32]] = None,
@@ -1581,6 +1555,7 @@ class ImageHeader:
     ):
         self.flags = flags
         self.measurement_uid = measurement_uid
+        self.measurement_freq = measurement_freq
         self.field_of_view = field_of_view if field_of_view is not None else np.zeros((3,), dtype=np.dtype(np.float32))
         self.position = position if position is not None else np.zeros((3,), dtype=np.dtype(np.float32))
         self.col_dir = col_dir if col_dir is not None else np.zeros((3,), dtype=np.dtype(np.float32))
@@ -1593,19 +1568,27 @@ class ImageHeader:
         self.phase = phase
         self.repetition = repetition
         self.set = set
-        self.acquisition_time_stamp = acquisition_time_stamp
-        self.physiology_time_stamp = physiology_time_stamp if physiology_time_stamp is not None else []
+        self.acquisition_time_stamp_ns = acquisition_time_stamp_ns
+        self.physiology_time_stamp_ns = physiology_time_stamp_ns
         self.image_type = image_type
+        self.image_quantitative_type = image_quantitative_type
         self.image_index = image_index
         self.image_series_index = image_series_index
         self.user_int = user_int if user_int is not None else []
         self.user_float = user_float if user_float is not None else []
+
+    def acquisition_time_stamp(self) -> yardl.UInt32:
+        return int(float(self.acquisition_time_stamp_ns) // 1e6)
+
+    def physiology_time_stamp(self) -> yardl.Float64:
+        return float(self.physiology_time_stamp_ns) // 1e6
 
     def __eq__(self, other: object) -> bool:
         return (
             isinstance(other, ImageHeader)
             and self.flags == other.flags
             and self.measurement_uid == other.measurement_uid
+            and self.measurement_freq == other.measurement_freq
             and yardl.structural_equal(self.field_of_view, other.field_of_view)
             and yardl.structural_equal(self.position, other.position)
             and yardl.structural_equal(self.col_dir, other.col_dir)
@@ -1618,9 +1601,10 @@ class ImageHeader:
             and self.phase == other.phase
             and self.repetition == other.repetition
             and self.set == other.set
-            and self.acquisition_time_stamp == other.acquisition_time_stamp
-            and self.physiology_time_stamp == other.physiology_time_stamp
+            and self.acquisition_time_stamp_ns == other.acquisition_time_stamp_ns
+            and self.physiology_time_stamp_ns == other.physiology_time_stamp_ns
             and self.image_type == other.image_type
+            and self.image_quantitative_type == other.image_quantitative_type
             and self.image_index == other.image_index
             and self.image_series_index == other.image_series_index
             and self.user_int == other.user_int
@@ -1628,10 +1612,10 @@ class ImageHeader:
         )
 
     def __str__(self) -> str:
-        return f"ImageHeader(flags={self.flags}, measurementUid={self.measurement_uid}, fieldOfView={self.field_of_view}, position={self.position}, colDir={self.col_dir}, lineDir={self.line_dir}, sliceDir={self.slice_dir}, patientTablePosition={self.patient_table_position}, average={self.average}, slice={self.slice}, contrast={self.contrast}, phase={self.phase}, repetition={self.repetition}, set={self.set}, acquisitionTimeStamp={self.acquisition_time_stamp}, physiologyTimeStamp={self.physiology_time_stamp}, imageType={self.image_type}, imageIndex={self.image_index}, imageSeriesIndex={self.image_series_index}, userInt={self.user_int}, userFloat={self.user_float})"
+        return f"ImageHeader(flags={self.flags}, measurementUid={self.measurement_uid}, measurementFreq={self.measurement_freq}, fieldOfView={self.field_of_view}, position={self.position}, colDir={self.col_dir}, lineDir={self.line_dir}, sliceDir={self.slice_dir}, patientTablePosition={self.patient_table_position}, average={self.average}, slice={self.slice}, contrast={self.contrast}, phase={self.phase}, repetition={self.repetition}, set={self.set}, acquisitionTimeStampNs={self.acquisition_time_stamp_ns}, physiologyTimeStampNs={self.physiology_time_stamp_ns}, imageType={self.image_type}, imageQuantitativeType={self.image_quantitative_type}, imageIndex={self.image_index}, imageSeriesIndex={self.image_series_index}, userInt={self.user_int}, userFloat={self.user_float})"
 
     def __repr__(self) -> str:
-        return f"ImageHeader(flags={repr(self.flags)}, measurementUid={repr(self.measurement_uid)}, fieldOfView={repr(self.field_of_view)}, position={repr(self.position)}, colDir={repr(self.col_dir)}, lineDir={repr(self.line_dir)}, sliceDir={repr(self.slice_dir)}, patientTablePosition={repr(self.patient_table_position)}, average={repr(self.average)}, slice={repr(self.slice)}, contrast={repr(self.contrast)}, phase={repr(self.phase)}, repetition={repr(self.repetition)}, set={repr(self.set)}, acquisitionTimeStamp={repr(self.acquisition_time_stamp)}, physiologyTimeStamp={repr(self.physiology_time_stamp)}, imageType={repr(self.image_type)}, imageIndex={repr(self.image_index)}, imageSeriesIndex={repr(self.image_series_index)}, userInt={repr(self.user_int)}, userFloat={repr(self.user_float)})"
+        return f"ImageHeader(flags={repr(self.flags)}, measurementUid={repr(self.measurement_uid)}, measurementFreq={repr(self.measurement_freq)}, fieldOfView={repr(self.field_of_view)}, position={repr(self.position)}, colDir={repr(self.col_dir)}, lineDir={repr(self.line_dir)}, sliceDir={repr(self.slice_dir)}, patientTablePosition={repr(self.patient_table_position)}, average={repr(self.average)}, slice={repr(self.slice)}, contrast={repr(self.contrast)}, phase={repr(self.phase)}, repetition={repr(self.repetition)}, set={repr(self.set)}, acquisitionTimeStampNs={repr(self.acquisition_time_stamp_ns)}, physiologyTimeStampNs={repr(self.physiology_time_stamp_ns)}, imageType={repr(self.image_type)}, imageQuantitativeType={repr(self.image_quantitative_type)}, imageIndex={repr(self.image_index)}, imageSeriesIndex={repr(self.image_series_index)}, userInt={repr(self.user_int)}, userFloat={repr(self.user_float)})"
 
 
 _T = typing.TypeVar('_T')
@@ -1653,14 +1637,8 @@ ImageMeta = dict[str, list[ImageMetaValue]]
 
 class Image(typing.Generic[T_NP]):
     head: ImageHeader
-    """Image header"""
-
     data: ImageData[T_NP]
-    """Image data array"""
-
     meta: ImageMeta
-    """Meta attributes"""
-
 
     def __init__(self, *,
         head: ImageHeader,
@@ -1739,20 +1717,10 @@ del AnyImageUnionCase
 
 class NoiseCovariance:
     coil_labels: list[CoilLabelType]
-    """Comes from Header.acquisitionSystemInformation.coilLabel"""
-
     receiver_noise_bandwidth: yardl.Float32
-    """Comes from Header.acquisitionSystemInformation.relativeReceiverNoiseBandwidth"""
-
     noise_dwell_time_us: yardl.Float32
-    """Comes from Acquisition.sampleTimeUs"""
-
     sample_count: yardl.Size
-    """Number of samples used to compute matrix"""
-
     matrix: npt.NDArray[np.complex64]
-    """Noise covariance matrix with dimensions [coil, coil]"""
-
 
     def __init__(self, *,
         coil_labels: typing.Optional[list[CoilLabelType]] = None,
@@ -1788,41 +1756,27 @@ WaveformSamples = npt.NDArray[T_NP]
 
 class Waveform(typing.Generic[T_NP]):
     flags: yardl.UInt64
-    """Bit field of flags. Currently unused"""
-
     measurement_uid: yardl.UInt32
-    """Unique ID for this measurement"""
-
     scan_counter: yardl.UInt32
-    """Number of the acquisition after this waveform"""
-
-    time_stamp: yardl.UInt32
-    """Starting timestamp of this waveform"""
-
-    sample_time_us: yardl.Float32
-    """Time between samples in microseconds"""
-
+    time_stamp_ns: yardl.UInt64
+    sample_time_ns: yardl.UInt64
     waveform_id: yardl.UInt32
-    """ID matching the waveform in the MRD header"""
-
     data: WaveformSamples[T_NP]
-    """Waveform sample array"""
-
 
     def __init__(self, *,
         flags: yardl.UInt64 = 0,
         measurement_uid: yardl.UInt32 = 0,
         scan_counter: yardl.UInt32 = 0,
-        time_stamp: yardl.UInt32 = 0,
-        sample_time_us: yardl.Float32 = 0.0,
+        time_stamp_ns: yardl.UInt64 = 0,
+        sample_time_ns: yardl.UInt64 = 0,
         waveform_id: yardl.UInt32 = 0,
         data: WaveformSamples[T_NP],
     ):
         self.flags = flags
         self.measurement_uid = measurement_uid
         self.scan_counter = scan_counter
-        self.time_stamp = time_stamp
-        self.sample_time_us = sample_time_us
+        self.time_stamp_ns = time_stamp_ns
+        self.sample_time_ns = sample_time_ns
         self.waveform_id = waveform_id
         self.data = data
 
@@ -1832,23 +1786,29 @@ class Waveform(typing.Generic[T_NP]):
     def number_of_samples(self) -> yardl.Size:
         return self.data.shape[1]
 
+    def time_stamp(self) -> yardl.UInt32:
+        return int(self.time_stamp_ns // 1000)
+
+    def sample_time_us(self) -> yardl.Float32:
+        return float(self.sample_time_ns // 1000)
+
     def __eq__(self, other: object) -> bool:
         return (
             isinstance(other, Waveform)
             and self.flags == other.flags
             and self.measurement_uid == other.measurement_uid
             and self.scan_counter == other.scan_counter
-            and self.time_stamp == other.time_stamp
-            and self.sample_time_us == other.sample_time_us
+            and self.time_stamp_ns == other.time_stamp_ns
+            and self.sample_time_ns == other.sample_time_ns
             and self.waveform_id == other.waveform_id
             and yardl.structural_equal(self.data, other.data)
         )
 
     def __str__(self) -> str:
-        return f"Waveform(flags={self.flags}, measurementUid={self.measurement_uid}, scanCounter={self.scan_counter}, timeStamp={self.time_stamp}, sampleTimeUs={self.sample_time_us}, waveformId={self.waveform_id}, data={self.data})"
+        return f"Waveform(flags={self.flags}, measurementUid={self.measurement_uid}, scanCounter={self.scan_counter}, timeStampNs={self.time_stamp_ns}, sampleTimeNs={self.sample_time_ns}, waveformId={self.waveform_id}, data={self.data})"
 
     def __repr__(self) -> str:
-        return f"Waveform(flags={repr(self.flags)}, measurementUid={repr(self.measurement_uid)}, scanCounter={repr(self.scan_counter)}, timeStamp={repr(self.time_stamp)}, sampleTimeUs={repr(self.sample_time_us)}, waveformId={repr(self.waveform_id)}, data={repr(self.data)})"
+        return f"Waveform(flags={repr(self.flags)}, measurementUid={repr(self.measurement_uid)}, scanCounter={repr(self.scan_counter)}, timeStampNs={repr(self.time_stamp_ns)}, sampleTimeNs={repr(self.sample_time_ns)}, waveformId={repr(self.waveform_id)}, data={repr(self.data)})"
 
 
 WaveformUint32 = Waveform[np.uint32]
@@ -1891,8 +1851,6 @@ class AcquisitionBucket:
 
 
 class SamplingLimits:
-    """Sampled range along E0, E1, E2 (for asymmetric echo and partial fourier)"""
-
     kspace_encoding_step_0: LimitType
     kspace_encoding_step_1: LimitType
     kspace_encoding_step_2: LimitType
@@ -1960,20 +1918,10 @@ class SamplingDescription:
 
 class ReconBuffer:
     data: npt.NDArray[np.complex64]
-    """Buffered Acquisition data"""
-
     trajectory: npt.NDArray[np.float32]
-    """Buffered Trajectory data"""
-
     density: typing.Optional[npt.NDArray[np.float32]]
-    """Buffered Density weights"""
-
     headers: npt.NDArray[np.void]
-    """Buffered AcquisitionHeaders"""
-
     sampling: SamplingDescription
-    """Sampling details for these Acquisitions"""
-
 
     def __init__(self, *,
         data: typing.Optional[npt.NDArray[np.complex64]] = None,
@@ -2088,8 +2036,83 @@ Array = npt.NDArray[T_NP]
 
 ArrayComplexFloat = Array[np.complex64]
 
+class PulseHeader:
+    pulse_time_stamp_ns: yardl.UInt64
+    channel_order: list[yardl.UInt32]
+    sample_time_ns: yardl.UInt32
+    pulse_calibration: typing.Optional[list[yardl.Float32]]
+
+    def __init__(self, *,
+        pulse_time_stamp_ns: yardl.UInt64 = 0,
+        channel_order: typing.Optional[list[yardl.UInt32]] = None,
+        sample_time_ns: yardl.UInt32 = 0,
+        pulse_calibration: typing.Optional[list[yardl.Float32]] = None,
+    ):
+        self.pulse_time_stamp_ns = pulse_time_stamp_ns
+        self.channel_order = channel_order if channel_order is not None else []
+        self.sample_time_ns = sample_time_ns
+        self.pulse_calibration = pulse_calibration
+
+    def __eq__(self, other: object) -> bool:
+        return (
+            isinstance(other, PulseHeader)
+            and self.pulse_time_stamp_ns == other.pulse_time_stamp_ns
+            and self.channel_order == other.channel_order
+            and self.sample_time_ns == other.sample_time_ns
+            and self.pulse_calibration == other.pulse_calibration
+        )
+
+    def __str__(self) -> str:
+        return f"PulseHeader(pulseTimeStampNs={self.pulse_time_stamp_ns}, channelOrder={self.channel_order}, sampleTimeNs={self.sample_time_ns}, pulseCalibration={self.pulse_calibration})"
+
+    def __repr__(self) -> str:
+        return f"PulseHeader(pulseTimeStampNs={repr(self.pulse_time_stamp_ns)}, channelOrder={repr(self.channel_order)}, sampleTimeNs={repr(self.sample_time_ns)}, pulseCalibration={repr(self.pulse_calibration)})"
+
+
+PulseData = npt.NDArray[np.float32]
+
+class Pulse:
+    head: PulseHeader
+    amplitude: PulseData
+    phase: PulseData
+
+    def __init__(self, *,
+        head: typing.Optional[PulseHeader] = None,
+        amplitude: typing.Optional[PulseData] = None,
+        phase: typing.Optional[PulseData] = None,
+    ):
+        self.head = head if head is not None else PulseHeader()
+        self.amplitude = amplitude if amplitude is not None else np.zeros((0, 0), dtype=np.dtype(np.float32))
+        self.phase = phase if phase is not None else np.zeros((0, 0), dtype=np.dtype(np.float32))
+
+    def coils(self) -> yardl.Size:
+        return self.amplitude.shape[0]
+
+    def samples(self) -> yardl.Size:
+        return self.amplitude.shape[1]
+
+    def active_channels(self) -> yardl.Size:
+        return len(self.head.channel_order)
+
+    def __eq__(self, other: object) -> bool:
+        return (
+            isinstance(other, Pulse)
+            and self.head == other.head
+            and yardl.structural_equal(self.amplitude, other.amplitude)
+            and yardl.structural_equal(self.phase, other.phase)
+        )
+
+    def __str__(self) -> str:
+        return f"Pulse(head={self.head}, amplitude={self.amplitude}, phase={self.phase})"
+
+    def __repr__(self) -> str:
+        return f"Pulse(head={repr(self.head)}, amplitude={repr(self.amplitude)}, phase={repr(self.phase)})"
+
+
 class StreamItem:
     Acquisition: typing.ClassVar[type["StreamItemUnionCase[Acquisition]"]]
+    Pulse: typing.ClassVar[type["StreamItemUnionCase[Pulse]"]]
+    Gradient: typing.ClassVar[type["StreamItemUnionCase[Gradient]"]]
     WaveformUint32: typing.ClassVar[type["StreamItemUnionCase[WaveformUint32]"]]
     ImageUint16: typing.ClassVar[type["StreamItemUnionCase[ImageUint16]"]]
     ImageInt16: typing.ClassVar[type["StreamItemUnionCase[ImageInt16]"]]
@@ -2108,19 +2131,21 @@ class StreamItemUnionCase(StreamItem, yardl.UnionCase[_T]):
     pass
 
 StreamItem.Acquisition = type("StreamItem.Acquisition", (StreamItemUnionCase,), {"index": 0, "tag": "Acquisition"})
-StreamItem.WaveformUint32 = type("StreamItem.WaveformUint32", (StreamItemUnionCase,), {"index": 1, "tag": "WaveformUint32"})
-StreamItem.ImageUint16 = type("StreamItem.ImageUint16", (StreamItemUnionCase,), {"index": 2, "tag": "ImageUint16"})
-StreamItem.ImageInt16 = type("StreamItem.ImageInt16", (StreamItemUnionCase,), {"index": 3, "tag": "ImageInt16"})
-StreamItem.ImageUint32 = type("StreamItem.ImageUint32", (StreamItemUnionCase,), {"index": 4, "tag": "ImageUint32"})
-StreamItem.ImageInt32 = type("StreamItem.ImageInt32", (StreamItemUnionCase,), {"index": 5, "tag": "ImageInt32"})
-StreamItem.ImageFloat = type("StreamItem.ImageFloat", (StreamItemUnionCase,), {"index": 6, "tag": "ImageFloat"})
-StreamItem.ImageDouble = type("StreamItem.ImageDouble", (StreamItemUnionCase,), {"index": 7, "tag": "ImageDouble"})
-StreamItem.ImageComplexFloat = type("StreamItem.ImageComplexFloat", (StreamItemUnionCase,), {"index": 8, "tag": "ImageComplexFloat"})
-StreamItem.ImageComplexDouble = type("StreamItem.ImageComplexDouble", (StreamItemUnionCase,), {"index": 9, "tag": "ImageComplexDouble"})
-StreamItem.AcquisitionBucket = type("StreamItem.AcquisitionBucket", (StreamItemUnionCase,), {"index": 10, "tag": "AcquisitionBucket"})
-StreamItem.ReconData = type("StreamItem.ReconData", (StreamItemUnionCase,), {"index": 11, "tag": "ReconData"})
-StreamItem.ArrayComplexFloat = type("StreamItem.ArrayComplexFloat", (StreamItemUnionCase,), {"index": 12, "tag": "ArrayComplexFloat"})
-StreamItem.ImageArray = type("StreamItem.ImageArray", (StreamItemUnionCase,), {"index": 13, "tag": "ImageArray"})
+StreamItem.Pulse = type("StreamItem.Pulse", (StreamItemUnionCase,), {"index": 1, "tag": "Pulse"})
+StreamItem.Gradient = type("StreamItem.Gradient", (StreamItemUnionCase,), {"index": 2, "tag": "Gradient"})
+StreamItem.WaveformUint32 = type("StreamItem.WaveformUint32", (StreamItemUnionCase,), {"index": 3, "tag": "WaveformUint32"})
+StreamItem.ImageUint16 = type("StreamItem.ImageUint16", (StreamItemUnionCase,), {"index": 4, "tag": "ImageUint16"})
+StreamItem.ImageInt16 = type("StreamItem.ImageInt16", (StreamItemUnionCase,), {"index": 5, "tag": "ImageInt16"})
+StreamItem.ImageUint32 = type("StreamItem.ImageUint32", (StreamItemUnionCase,), {"index": 6, "tag": "ImageUint32"})
+StreamItem.ImageInt32 = type("StreamItem.ImageInt32", (StreamItemUnionCase,), {"index": 7, "tag": "ImageInt32"})
+StreamItem.ImageFloat = type("StreamItem.ImageFloat", (StreamItemUnionCase,), {"index": 8, "tag": "ImageFloat"})
+StreamItem.ImageDouble = type("StreamItem.ImageDouble", (StreamItemUnionCase,), {"index": 9, "tag": "ImageDouble"})
+StreamItem.ImageComplexFloat = type("StreamItem.ImageComplexFloat", (StreamItemUnionCase,), {"index": 10, "tag": "ImageComplexFloat"})
+StreamItem.ImageComplexDouble = type("StreamItem.ImageComplexDouble", (StreamItemUnionCase,), {"index": 11, "tag": "ImageComplexDouble"})
+StreamItem.AcquisitionBucket = type("StreamItem.AcquisitionBucket", (StreamItemUnionCase,), {"index": 12, "tag": "AcquisitionBucket"})
+StreamItem.ReconData = type("StreamItem.ReconData", (StreamItemUnionCase,), {"index": 13, "tag": "ReconData"})
+StreamItem.ArrayComplexFloat = type("StreamItem.ArrayComplexFloat", (StreamItemUnionCase,), {"index": 14, "tag": "ArrayComplexFloat"})
+StreamItem.ImageArray = type("StreamItem.ImageArray", (StreamItemUnionCase,), {"index": 15, "tag": "ImageArray"})
 del StreamItemUnionCase
 
 def _mk_get_dtype():
@@ -2129,11 +2154,13 @@ def _mk_get_dtype():
 
     dtype_map.setdefault(AcquisitionFlags, np.dtype(np.uint64))
     dtype_map.setdefault(EncodingCounters, np.dtype([('kspace_encode_step_1', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('kspace_encode_step_2', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('average', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('slice', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('contrast', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('phase', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('repetition', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('set', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('segment', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('user', np.dtype(np.object_))], align=True))
-    dtype_map.setdefault(AcquisitionHeader, np.dtype([('flags', get_dtype(AcquisitionFlags)), ('idx', get_dtype(EncodingCounters)), ('measurement_uid', np.dtype(np.uint32)), ('scan_counter', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('acquisition_time_stamp', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('physiology_time_stamp', np.dtype(np.object_)), ('channel_order', np.dtype(np.object_)), ('discard_pre', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('discard_post', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('center_sample', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('encoding_space_ref', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('sample_time_us', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.float32))], align=True)), ('position', np.dtype(np.float32), (3,)), ('read_dir', np.dtype(np.float32), (3,)), ('phase_dir', np.dtype(np.float32), (3,)), ('slice_dir', np.dtype(np.float32), (3,)), ('patient_table_position', np.dtype(np.float32), (3,)), ('user_int', np.dtype(np.object_)), ('user_float', np.dtype(np.object_))], align=True))
-    dtype_map.setdefault(Acquisition, np.dtype([('head', get_dtype(AcquisitionHeader)), ('data', np.dtype(np.object_)), ('trajectory', np.dtype(np.object_))], align=True))
+    dtype_map.setdefault(AcquisitionHeader, np.dtype([('flags', get_dtype(AcquisitionFlags)), ('idx', get_dtype(EncodingCounters)), ('measurement_uid', np.dtype(np.uint32)), ('scan_counter', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('acquisition_time_stamp_ns', np.dtype(np.uint64)), ('physiology_time_stamp_ns', np.dtype(np.uint64)), ('channel_order', np.dtype(np.object_)), ('discard_pre', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('discard_post', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('center_sample', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('encoding_space_ref', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('sample_time_ns', np.dtype(np.uint64)), ('position', np.dtype(np.float32), (3,)), ('read_dir', np.dtype(np.float32), (3,)), ('phase_dir', np.dtype(np.float32), (3,)), ('slice_dir', np.dtype(np.float32), (3,)), ('patient_table_position', np.dtype(np.float32), (3,)), ('user_int', np.dtype(np.object_)), ('user_float', np.dtype(np.object_))], align=True))
+    dtype_map.setdefault(Acquisition, np.dtype([('head', get_dtype(AcquisitionHeader)), ('data', np.dtype(np.object_))], align=True))
+    dtype_map.setdefault(GradHeader, np.dtype([('gradient_time_stamp_ns', np.dtype(np.uint64)), ('gradient_sample_time_ns', np.dtype(np.uint32)), ('pulse_calibration', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True))], align=True))
+    dtype_map.setdefault(Gradient, np.dtype([('head', get_dtype(GradHeader)), ('rl', np.dtype(np.object_)), ('ap', np.dtype(np.object_)), ('fh', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(PatientGender, np.dtype(np.int32))
     dtype_map.setdefault(SubjectInformationType, np.dtype([('patient_name', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('patient_weight_kg', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.float32))], align=True)), ('patient_height_m', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.float32))], align=True)), ('patient_id', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('patient_birthdate', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.datetime64))], align=True)), ('patient_gender', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(PatientGender))], align=True))], align=True))
-    dtype_map.setdefault(StudyInformationType, np.dtype([('study_date', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.datetime64))], align=True)), ('study_time', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.timedelta64))], align=True)), ('study_id', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('accession_number', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.int64))], align=True)), ('referring_physician_name', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('study_description', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('study_instance_uid', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('body_part_examined', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True))], align=True))
+    dtype_map.setdefault(StudyInformationType, np.dtype([('study_date', np.dtype(np.datetime64)), ('study_time', np.dtype(np.timedelta64)), ('study_id', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('accession_number', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.int64))], align=True)), ('referring_physician_name', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('study_description', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('study_instance_uid', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('body_part_examined', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True))], align=True))
     dtype_map.setdefault(PatientPosition, np.dtype(np.int32))
     dtype_map.setdefault(ThreeDimensionalFloat, np.dtype([('x', np.dtype(np.float32)), ('y', np.dtype(np.float32)), ('z', np.dtype(np.float32))], align=True))
     dtype_map.setdefault(MeasurementDependencyType, np.dtype([('dependency_type', np.dtype(np.object_)), ('measurement_id', np.dtype(np.object_))], align=True))
@@ -2171,7 +2198,8 @@ def _mk_get_dtype():
     dtype_map.setdefault(Header, np.dtype([('version', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.int64))], align=True)), ('subject_information', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(SubjectInformationType))], align=True)), ('study_information', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(StudyInformationType))], align=True)), ('measurement_information', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(MeasurementInformationType))], align=True)), ('acquisition_system_information', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(AcquisitionSystemInformationType))], align=True)), ('experimental_conditions', get_dtype(ExperimentalConditionsType)), ('encoding', np.dtype(np.object_)), ('sequence_parameters', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(SequenceParametersType))], align=True)), ('user_parameters', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(UserParametersType))], align=True)), ('waveform_information', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(ImageFlags, np.dtype(np.uint64))
     dtype_map.setdefault(ImageType, np.dtype(np.int32))
-    dtype_map.setdefault(ImageHeader, np.dtype([('flags', get_dtype(ImageFlags)), ('measurement_uid', np.dtype(np.uint32)), ('field_of_view', np.dtype(np.float32), (3,)), ('position', np.dtype(np.float32), (3,)), ('col_dir', np.dtype(np.float32), (3,)), ('line_dir', np.dtype(np.float32), (3,)), ('slice_dir', np.dtype(np.float32), (3,)), ('patient_table_position', np.dtype(np.float32), (3,)), ('average', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('slice', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('contrast', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('phase', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('repetition', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('set', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('acquisition_time_stamp', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('physiology_time_stamp', np.dtype(np.object_)), ('image_type', get_dtype(ImageType)), ('image_index', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('image_series_index', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('user_int', np.dtype(np.object_)), ('user_float', np.dtype(np.object_))], align=True))
+    dtype_map.setdefault(ImageQuantitativeType, np.dtype(np.int32))
+    dtype_map.setdefault(ImageHeader, np.dtype([('flags', get_dtype(ImageFlags)), ('measurement_uid', np.dtype(np.uint32)), ('measurement_freq', np.dtype(np.uint32)), ('field_of_view', np.dtype(np.float32), (3,)), ('position', np.dtype(np.float32), (3,)), ('col_dir', np.dtype(np.float32), (3,)), ('line_dir', np.dtype(np.float32), (3,)), ('slice_dir', np.dtype(np.float32), (3,)), ('patient_table_position', np.dtype(np.float32), (3,)), ('average', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('slice', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('contrast', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('phase', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('repetition', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('set', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('acquisition_time_stamp_ns', np.dtype(np.uint64)), ('physiology_time_stamp_ns', np.dtype(np.uint64)), ('image_type', get_dtype(ImageType)), ('image_quantitative_type', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(ImageQuantitativeType))], align=True)), ('image_index', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('image_series_index', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('user_int', np.dtype(np.object_)), ('user_float', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(ImageMetaValue, np.dtype(np.object_))
     dtype_map.setdefault(Image, lambda type_args: np.dtype([('head', get_dtype(ImageHeader)), ('data', np.dtype(np.object_)), ('meta', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(ImageUint16, get_dtype(types.GenericAlias(Image, (yardl.UInt16,))))
@@ -2184,7 +2212,7 @@ def _mk_get_dtype():
     dtype_map.setdefault(ImageComplexDouble, get_dtype(types.GenericAlias(Image, (yardl.ComplexDouble,))))
     dtype_map.setdefault(AnyImage, np.dtype(np.object_))
     dtype_map.setdefault(NoiseCovariance, np.dtype([('coil_labels', np.dtype(np.object_)), ('receiver_noise_bandwidth', np.dtype(np.float32)), ('noise_dwell_time_us', np.dtype(np.float32)), ('sample_count', np.dtype(np.uint64)), ('matrix', np.dtype(np.object_))], align=True))
-    dtype_map.setdefault(Waveform, lambda type_args: np.dtype([('flags', np.dtype(np.uint64)), ('measurement_uid', np.dtype(np.uint32)), ('scan_counter', np.dtype(np.uint32)), ('time_stamp', np.dtype(np.uint32)), ('sample_time_us', np.dtype(np.float32)), ('waveform_id', np.dtype(np.uint32)), ('data', np.dtype(np.object_))], align=True))
+    dtype_map.setdefault(Waveform, lambda type_args: np.dtype([('flags', np.dtype(np.uint64)), ('measurement_uid', np.dtype(np.uint32)), ('scan_counter', np.dtype(np.uint32)), ('time_stamp_ns', np.dtype(np.uint64)), ('sample_time_ns', np.dtype(np.uint64)), ('waveform_id', np.dtype(np.uint32)), ('data', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(WaveformUint32, get_dtype(types.GenericAlias(Waveform, (yardl.UInt32,))))
     dtype_map.setdefault(AcquisitionBucket, np.dtype([('data', np.dtype(np.object_)), ('ref', np.dtype(np.object_)), ('datastats', np.dtype(np.object_)), ('refstats', np.dtype(np.object_)), ('waveforms', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(SamplingLimits, np.dtype([('kspace_encoding_step_0', get_dtype(LimitType)), ('kspace_encoding_step_1', get_dtype(LimitType)), ('kspace_encoding_step_2', get_dtype(LimitType))], align=True))
@@ -2193,6 +2221,8 @@ def _mk_get_dtype():
     dtype_map.setdefault(ReconAssembly, np.dtype([('data', get_dtype(ReconBuffer)), ('ref', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(ReconBuffer))], align=True))], align=True))
     dtype_map.setdefault(ReconData, np.dtype([('buffers', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(ImageArray, np.dtype([('data', np.dtype(np.object_)), ('headers', np.dtype(np.object_)), ('meta', np.dtype(np.object_)), ('waveforms', np.dtype(np.object_))], align=True))
+    dtype_map.setdefault(PulseHeader, np.dtype([('pulse_time_stamp_ns', np.dtype(np.uint64)), ('channel_order', np.dtype(np.object_)), ('sample_time_ns', np.dtype(np.uint32)), ('pulse_calibration', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True))], align=True))
+    dtype_map.setdefault(Pulse, np.dtype([('head', get_dtype(PulseHeader)), ('amplitude', np.dtype(np.object_)), ('phase', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(StreamItem, np.dtype(np.object_))
 
     return get_dtype

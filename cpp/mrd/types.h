@@ -80,25 +80,19 @@ using AcquisitionData = yardl::NDArray<std::complex<float>, 2>;
 
 using TrajectoryData = yardl::NDArray<float, 2>;
 
-<<<<<<< HEAD
-struct Acquisition {
-=======
 struct AcquisitionHeader {
-  // A bit mask of common attributes applicable to individual acquisition
->>>>>>> upstream/main
   mrd::AcquisitionFlags flags{};
   mrd::EncodingCounters idx{};
   uint32_t measurement_uid{};
   std::optional<uint32_t> scan_counter{};
-  std::optional<uint32_t> acquisition_time_stamp{};
-  std::optional<uint32_t> our_acquisition_time_stamp{};
-  std::vector<uint32_t> physiology_time_stamp{};
+  uint64_t acquisition_time_stamp_ns{};
+  uint64_t physiology_time_stamp_ns{};
   std::vector<uint32_t> channel_order{};
   std::optional<uint32_t> discard_pre{};
   std::optional<uint32_t> discard_post{};
   std::optional<uint32_t> center_sample{};
   std::optional<uint32_t> encoding_space_ref{};
-  std::optional<float> sample_time_us{};
+  uint64_t sample_time_ns{};
   yardl::FixedNDArray<float, 3> position{};
   yardl::FixedNDArray<float, 3> read_dir{};
   yardl::FixedNDArray<float, 3> phase_dir{};
@@ -106,26 +100,32 @@ struct AcquisitionHeader {
   yardl::FixedNDArray<float, 3> patient_table_position{};
   std::vector<int32_t> user_int{};
   std::vector<float> user_float{};
-<<<<<<< HEAD
-  mrd::AcquisitionData data{};
-  mrd::TrajectoryData trajectory{};
-=======
->>>>>>> upstream/main
+
+  uint32_t AcquisitionTimeStamp() const {
+    return static_cast<uint32_t>(static_cast<double>(acquisition_time_stamp_ns) / 1e6);
+  }
+
+  uint32_t PhysiologyTimeStamp() const {
+    return static_cast<uint32_t>(static_cast<double>(physiology_time_stamp_ns) / 1e6);
+  }
+
+  float SampleTime() const {
+    return static_cast<float>(static_cast<double>(sample_time_ns) / 1e6);
+  }
 
   bool operator==(const AcquisitionHeader& other) const {
     return flags == other.flags &&
       idx == other.idx &&
       measurement_uid == other.measurement_uid &&
       scan_counter == other.scan_counter &&
-      acquisition_time_stamp == other.acquisition_time_stamp &&
-      our_acquisition_time_stamp == other.our_acquisition_time_stamp &&
-      physiology_time_stamp == other.physiology_time_stamp &&
+      acquisition_time_stamp_ns == other.acquisition_time_stamp_ns &&
+      physiology_time_stamp_ns == other.physiology_time_stamp_ns &&
       channel_order == other.channel_order &&
       discard_pre == other.discard_pre &&
       discard_post == other.discard_post &&
       center_sample == other.center_sample &&
       encoding_space_ref == other.encoding_space_ref &&
-      sample_time_us == other.sample_time_us &&
+      sample_time_ns == other.sample_time_ns &&
       position == other.position &&
       read_dir == other.read_dir &&
       phase_dir == other.phase_dir &&
@@ -141,12 +141,8 @@ struct AcquisitionHeader {
 };
 
 struct Acquisition {
-  // Acquisition header
   mrd::AcquisitionHeader head{};
-  // Raw k-space samples array
   mrd::AcquisitionData data{};
-  // Trajectory array
-  mrd::TrajectoryData trajectory{};
 
   yardl::Size Coils() const {
     return yardl::shape(data, 0);
@@ -160,21 +156,64 @@ struct Acquisition {
     return head.channel_order.size();
   }
 
-  yardl::Size TrajectoryDimensions() const {
-    return yardl::shape(trajectory, 0);
-  }
-
-  yardl::Size TrajectorySamples() const {
-    return yardl::shape(trajectory, 1);
-  }
-
   bool operator==(const Acquisition& other) const {
     return head == other.head &&
-      data == other.data &&
-      trajectory == other.trajectory;
+      data == other.data;
   }
 
   bool operator!=(const Acquisition& other) const {
+    return !(*this == other);
+  }
+};
+
+using GradientData = yardl::NDArray<float, 1>;
+
+struct GradHeader {
+  uint64_t gradient_time_stamp_ns{};
+  uint32_t gradient_sample_time_ns{};
+  std::optional<std::vector<float>> pulse_calibration{};
+
+  bool operator==(const GradHeader& other) const {
+    return gradient_time_stamp_ns == other.gradient_time_stamp_ns &&
+      gradient_sample_time_ns == other.gradient_sample_time_ns &&
+      pulse_calibration == other.pulse_calibration;
+  }
+
+  bool operator!=(const GradHeader& other) const {
+    return !(*this == other);
+  }
+};
+
+struct Gradient {
+  mrd::GradHeader head{};
+  mrd::GradientData rl{};
+  mrd::GradientData ap{};
+  mrd::GradientData fh{};
+
+  yardl::Size Samples() const {
+    return yardl::shape(rl, 0);
+  }
+
+  uint64_t const& Starttime() const {
+    return head.gradient_time_stamp_ns;
+  }
+
+  uint64_t& Starttime() {
+    return const_cast<uint64_t&>(std::as_const(*this).Starttime());
+  }
+
+  yardl::Size Endtime() const {
+    return head.gradient_time_stamp_ns + Samples() * static_cast<yardl::Size>(head.gradient_sample_time_ns);
+  }
+
+  bool operator==(const Gradient& other) const {
+    return head == other.head &&
+      rl == other.rl &&
+      ap == other.ap &&
+      fh == other.fh;
+  }
+
+  bool operator!=(const Gradient& other) const {
     return !(*this == other);
   }
 };
@@ -208,8 +247,8 @@ struct SubjectInformationType {
 };
 
 struct StudyInformationType {
-  std::optional<yardl::Date> study_date{};
-  std::optional<yardl::Time> study_time{};
+  yardl::Date study_date{};
+  yardl::Time study_time{};
   std::optional<std::string> study_id{};
   std::optional<int64_t> accession_number{};
   std::optional<std::string> referring_physician_name{};
@@ -855,32 +894,22 @@ enum class ImageType {
   kComplex = 5,
 };
 
+enum class ImageQuantitativeType {
+  kQuantT1 = 1,
+  kQuantT2star = 2,
+  kQuantADC = 3,
+  kQuantSpinDensity = 4,
+  kQuantB1Map = 5,
+  kQuantSensitivityMap = 6,
+};
+
 template <typename Y>
 using ImageData = yardl::NDArray<Y, 4>;
 
-<<<<<<< HEAD
-struct ImageMetaData {
-  std::string name{};
-  std::string value{};
-
-  bool operator==(const ImageMetaData& other) const {
-    return name == other.name &&
-      value == other.value;
-  }
-
-  bool operator!=(const ImageMetaData& other) const {
-    return !(*this == other);
-  }
-};
-
-template <typename T>
-struct Image {
-=======
 struct ImageHeader {
-  // A bit mask of common attributes applicable to individual images
->>>>>>> upstream/main
   mrd::ImageFlags flags{};
   uint32_t measurement_uid{};
+  uint32_t measurement_freq{};
   yardl::FixedNDArray<float, 3> field_of_view{};
   yardl::FixedNDArray<float, 3> position{};
   yardl::FixedNDArray<float, 3> col_dir{};
@@ -893,22 +922,27 @@ struct ImageHeader {
   std::optional<uint32_t> phase{};
   std::optional<uint32_t> repetition{};
   std::optional<uint32_t> set{};
-  std::optional<uint32_t> acquisition_time_stamp{};
-  std::vector<uint32_t> physiology_time_stamp{};
+  uint64_t acquisition_time_stamp_ns{};
+  uint64_t physiology_time_stamp_ns{};
   mrd::ImageType image_type{};
+  std::optional<mrd::ImageQuantitativeType> image_quantitative_type{};
   std::optional<uint32_t> image_index{};
   std::optional<uint32_t> image_series_index{};
   std::vector<int32_t> user_int{};
   std::vector<float> user_float{};
-<<<<<<< HEAD
-  mrd::ImageData<T> data{};
-  std::unordered_map<std::string, std::vector<std::string>> meta{};
-=======
->>>>>>> upstream/main
+
+  uint32_t AcquisitionTimeStamp() const {
+    return static_cast<uint32_t>(static_cast<double>(acquisition_time_stamp_ns) / 1e6);
+  }
+
+  double PhysiologyTimeStamp() const {
+    return static_cast<double>(physiology_time_stamp_ns) / 1e6;
+  }
 
   bool operator==(const ImageHeader& other) const {
     return flags == other.flags &&
       measurement_uid == other.measurement_uid &&
+      measurement_freq == other.measurement_freq &&
       field_of_view == other.field_of_view &&
       position == other.position &&
       col_dir == other.col_dir &&
@@ -921,9 +955,10 @@ struct ImageHeader {
       phase == other.phase &&
       repetition == other.repetition &&
       set == other.set &&
-      acquisition_time_stamp == other.acquisition_time_stamp &&
-      physiology_time_stamp == other.physiology_time_stamp &&
+      acquisition_time_stamp_ns == other.acquisition_time_stamp_ns &&
+      physiology_time_stamp_ns == other.physiology_time_stamp_ns &&
       image_type == other.image_type &&
+      image_quantitative_type == other.image_quantitative_type &&
       image_index == other.image_index &&
       image_series_index == other.image_series_index &&
       user_int == other.user_int &&
@@ -941,11 +976,8 @@ using ImageMeta = std::unordered_map<std::string, std::vector<mrd::ImageMetaValu
 
 template <typename T>
 struct Image {
-  // Image header
   mrd::ImageHeader head{};
-  // Image data array
   mrd::ImageData<T> data{};
-  // Meta attributes
   mrd::ImageMeta meta{};
 
   yardl::Size Channels() const {
@@ -991,19 +1023,13 @@ using ImageComplexFloat = mrd::Image<std::complex<float>>;
 
 using ImageComplexDouble = mrd::Image<std::complex<double>>;
 
-// Union of all MRD Image types
 using AnyImage = std::variant<mrd::ImageUint16, mrd::ImageInt16, mrd::ImageUint32, mrd::ImageInt32, mrd::ImageFloat, mrd::ImageDouble, mrd::ImageComplexFloat, mrd::ImageComplexDouble>;
 
 struct NoiseCovariance {
-  // Comes from Header.acquisitionSystemInformation.coilLabel
   std::vector<mrd::CoilLabelType> coil_labels{};
-  // Comes from Header.acquisitionSystemInformation.relativeReceiverNoiseBandwidth
   float receiver_noise_bandwidth{};
-  // Comes from Acquisition.sampleTimeUs
   float noise_dwell_time_us{};
-  // Number of samples used to compute matrix
   yardl::Size sample_count{};
-  // Noise covariance matrix with dimensions [coil, coil]
   yardl::NDArray<std::complex<float>, 2> matrix{};
 
   bool operator==(const NoiseCovariance& other) const {
@@ -1027,8 +1053,8 @@ struct Waveform {
   uint64_t flags{};
   uint32_t measurement_uid{};
   uint32_t scan_counter{};
-  uint32_t time_stamp{};
-  float sample_time_us{};
+  uint64_t time_stamp_ns{};
+  uint64_t sample_time_ns{};
   uint32_t waveform_id{};
   mrd::WaveformSamples<T> data{};
 
@@ -1040,12 +1066,20 @@ struct Waveform {
     return yardl::shape(data, 1);
   }
 
+  uint32_t TimeStamp() const {
+    return static_cast<uint32_t>(time_stamp_ns / 1000ULL);
+  }
+
+  float SampleTimeUs() const {
+    return static_cast<float>(sample_time_ns / 1000ULL);
+  }
+
   bool operator==(const Waveform& other) const {
     return flags == other.flags &&
       measurement_uid == other.measurement_uid &&
       scan_counter == other.scan_counter &&
-      time_stamp == other.time_stamp &&
-      sample_time_us == other.sample_time_us &&
+      time_stamp_ns == other.time_stamp_ns &&
+      sample_time_ns == other.sample_time_ns &&
       waveform_id == other.waveform_id &&
       data == other.data;
   }
@@ -1077,7 +1111,6 @@ struct AcquisitionBucket {
   }
 };
 
-// Sampled range along E0, E1, E2 (for asymmetric echo and partial fourier)
 struct SamplingLimits {
   mrd::LimitType kspace_encoding_step_0{};
   mrd::LimitType kspace_encoding_step_1{};
@@ -1115,15 +1148,10 @@ struct SamplingDescription {
 };
 
 struct ReconBuffer {
-  // Buffered Acquisition data
   yardl::NDArray<std::complex<float>, 7> data{};
-  // Buffered Trajectory data
   yardl::NDArray<float, 7> trajectory{};
-  // Buffered Density weights
   std::optional<yardl::NDArray<float, 6>> density{};
-  // Buffered AcquisitionHeaders
   yardl::NDArray<mrd::AcquisitionHeader, 5> headers{};
-  // Sampling details for these Acquisitions
   mrd::SamplingDescription sampling{};
 
   bool operator==(const ReconBuffer& other) const {
@@ -1188,8 +1216,55 @@ using Array = yardl::DynamicNDArray<T>;
 
 using ArrayComplexFloat = mrd::Array<std::complex<float>>;
 
-// Union of all primary types that can be streamed in the MRD Protocol
-using StreamItem = std::variant<mrd::Acquisition, mrd::WaveformUint32, mrd::ImageUint16, mrd::ImageInt16, mrd::ImageUint32, mrd::ImageInt32, mrd::ImageFloat, mrd::ImageDouble, mrd::ImageComplexFloat, mrd::ImageComplexDouble, mrd::AcquisitionBucket, mrd::ReconData, mrd::ArrayComplexFloat, mrd::ImageArray>;
+struct PulseHeader {
+  uint64_t pulse_time_stamp_ns{};
+  std::vector<uint32_t> channel_order{};
+  uint32_t sample_time_ns{};
+  std::optional<std::vector<float>> pulse_calibration{};
+
+  bool operator==(const PulseHeader& other) const {
+    return pulse_time_stamp_ns == other.pulse_time_stamp_ns &&
+      channel_order == other.channel_order &&
+      sample_time_ns == other.sample_time_ns &&
+      pulse_calibration == other.pulse_calibration;
+  }
+
+  bool operator!=(const PulseHeader& other) const {
+    return !(*this == other);
+  }
+};
+
+using PulseData = yardl::NDArray<float, 2>;
+
+struct Pulse {
+  mrd::PulseHeader head{};
+  mrd::PulseData amplitude{};
+  mrd::PulseData phase{};
+
+  yardl::Size Coils() const {
+    return yardl::shape(amplitude, 0);
+  }
+
+  yardl::Size Samples() const {
+    return yardl::shape(amplitude, 1);
+  }
+
+  yardl::Size ActiveChannels() const {
+    return head.channel_order.size();
+  }
+
+  bool operator==(const Pulse& other) const {
+    return head == other.head &&
+      amplitude == other.amplitude &&
+      phase == other.phase;
+  }
+
+  bool operator!=(const Pulse& other) const {
+    return !(*this == other);
+  }
+};
+
+using StreamItem = std::variant<mrd::Acquisition, mrd::Pulse, mrd::Gradient, mrd::WaveformUint32, mrd::ImageUint16, mrd::ImageInt16, mrd::ImageUint32, mrd::ImageInt32, mrd::ImageFloat, mrd::ImageDouble, mrd::ImageComplexFloat, mrd::ImageComplexDouble, mrd::AcquisitionBucket, mrd::ReconData, mrd::ArrayComplexFloat, mrd::ImageArray>;
 
 } // namespace mrd
 

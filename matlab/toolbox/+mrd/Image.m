@@ -2,33 +2,7 @@
 
 classdef Image < handle
   properties
-<<<<<<< HEAD
-    flags
-    measurement_uid
-    field_of_view
-    position
-    col_dir
-    line_dir
-    slice_dir
-    patient_table_position
-    average
-    slice
-    contrast
-    phase
-    repetition
-    set
-    acquisition_time_stamp
-    physiology_time_stamp
-    image_type
-    image_index
-    image_series_index
-    user_int
-    user_float
-=======
-    % Image header
     head
-    % Image data array
->>>>>>> upstream/main
     data
     meta
   end
@@ -38,7 +12,7 @@ classdef Image < handle
       arguments
         kwargs.head;
         kwargs.data;
-        kwargs.meta = dictionary;
+        kwargs.meta = yardl.Map;
       end
       if ~isfield(kwargs, "head")
         throw(yardl.TypeError("Missing required keyword argument 'head'"))
@@ -75,14 +49,32 @@ classdef Image < handle
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.Image") && ...
-        isequal(self.head, other.head) && ...
-        isequal(self.data, other.data) && ...
-        isequal(self.meta, other.meta);
+        isequal({self.head}, {other.head}) && ...
+        isequal({self.data}, {other.data}) && ...
+        isequal({self.meta}, {other.meta});
     end
 
     function res = ne(self, other)
       res = ~self.eq(other);
     end
+
+    function res = isequal(self, other)
+      res = all(eq(self, other));
+    end
   end
 
+  methods (Static)
+    function z = zeros(varargin)
+      elem = mrd.Image(head=yardl.None, data=yardl.None);
+      if nargin == 0
+        z = elem;
+        return;
+      end
+      sz = [varargin{:}];
+      if isscalar(sz)
+        sz = [sz, sz];
+      end
+      z = reshape(repelem(elem, prod(sz)), sz);
+    end
+  end
 end

@@ -3,8 +3,8 @@
 classdef StudyInformationTypeSerializer < yardl.binary.RecordSerializer
   methods
     function self = StudyInformationTypeSerializer()
-      field_serializers{1} = yardl.binary.OptionalSerializer(yardl.binary.DateSerializer);
-      field_serializers{2} = yardl.binary.OptionalSerializer(yardl.binary.TimeSerializer);
+      field_serializers{1} = yardl.binary.DateSerializer;
+      field_serializers{2} = yardl.binary.TimeSerializer;
       field_serializers{3} = yardl.binary.OptionalSerializer(yardl.binary.StringSerializer);
       field_serializers{4} = yardl.binary.OptionalSerializer(yardl.binary.Int64Serializer);
       field_serializers{5} = yardl.binary.OptionalSerializer(yardl.binary.StringSerializer);

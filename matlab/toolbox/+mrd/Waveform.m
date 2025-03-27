@@ -5,8 +5,8 @@ classdef Waveform < handle
     flags
     measurement_uid
     scan_counter
-    time_stamp
-    sample_time_us
+    time_stamp_ns
+    sample_time_ns
     waveform_id
     data
   end
@@ -17,16 +17,16 @@ classdef Waveform < handle
         kwargs.flags = uint64(0);
         kwargs.measurement_uid = uint32(0);
         kwargs.scan_counter = uint32(0);
-        kwargs.time_stamp = uint32(0);
-        kwargs.sample_time_us = single(0);
+        kwargs.time_stamp_ns = uint64(0);
+        kwargs.sample_time_ns = uint64(0);
         kwargs.waveform_id = uint32(0);
         kwargs.data;
       end
       self.flags = kwargs.flags;
       self.measurement_uid = kwargs.measurement_uid;
       self.scan_counter = kwargs.scan_counter;
-      self.time_stamp = kwargs.time_stamp;
-      self.sample_time_us = kwargs.sample_time_us;
+      self.time_stamp_ns = kwargs.time_stamp_ns;
+      self.sample_time_ns = kwargs.sample_time_ns;
       self.waveform_id = kwargs.waveform_id;
       if ~isfield(kwargs, "data")
         throw(yardl.TypeError("Missing required keyword argument 'data'"))
@@ -44,22 +44,50 @@ classdef Waveform < handle
       return
     end
 
+    function res = time_stamp(self)
+      res = uint32(self.time_stamp_ns ./ 1000);
+      return
+    end
+
+    function res = sample_time_us(self)
+      res = single(self.sample_time_ns ./ 1000);
+      return
+    end
+
 
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.Waveform") && ...
-        isequal(self.flags, other.flags) && ...
-        isequal(self.measurement_uid, other.measurement_uid) && ...
-        isequal(self.scan_counter, other.scan_counter) && ...
-        isequal(self.time_stamp, other.time_stamp) && ...
-        isequal(self.sample_time_us, other.sample_time_us) && ...
-        isequal(self.waveform_id, other.waveform_id) && ...
-        isequal(self.data, other.data);
+        isequal({self.flags}, {other.flags}) && ...
+        isequal({self.measurement_uid}, {other.measurement_uid}) && ...
+        isequal({self.scan_counter}, {other.scan_counter}) && ...
+        isequal({self.time_stamp_ns}, {other.time_stamp_ns}) && ...
+        isequal({self.sample_time_ns}, {other.sample_time_ns}) && ...
+        isequal({self.waveform_id}, {other.waveform_id}) && ...
+        isequal({self.data}, {other.data});
     end
 
     function res = ne(self, other)
       res = ~self.eq(other);
     end
+
+    function res = isequal(self, other)
+      res = all(eq(self, other));
+    end
   end
 
+  methods (Static)
+    function z = zeros(varargin)
+      elem = mrd.Waveform(data=yardl.None);
+      if nargin == 0
+        z = elem;
+        return;
+      end
+      sz = [varargin{:}];
+      if isscalar(sz)
+        sz = [sz, sz];
+      end
+      z = reshape(repelem(elem, prod(sz)), sz);
+    end
+  end
 end
