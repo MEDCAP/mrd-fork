@@ -12,10 +12,10 @@ Waveform<T>: !record
     measurementUid: uint
     # Number of the acquisition after this waveform
     scanCounter: uint
-    # EDIT: Starting timestamp of this waveform (e.g. nanoseconds since midnight)
-    timeStampNs: uint64
+    # EDIT: Starting timestamp of this waveform, nanoseconds since midnight
+    timeStampNs: time
     # Time between samples in nanoseconds
-    sampleTimeNs: uint
+    sampleTimeNs: uint64
     # ID matching the waveform in the MRD header
     waveformId: uint
     # Waveform sample array

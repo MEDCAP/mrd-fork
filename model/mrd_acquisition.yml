@@ -78,10 +78,10 @@ AcquisitionHeader: !record
     measurementUid: uint
     # Zero-indexed incrementing counter for readouts
     scanCounter: uint?
-    # Clock time stamp (e.g. nanoseconds since midnight)
-    acquisitionTimeStampNs: uint64
-    # Time stamps relative to physiological triggering 
-    physiologyTimeStampNs: uint
+    # Clock time stamp EDIT: nanoseconds since midnight
+    acquisitionTimeStampNs: time
+    # Time stamp relative to physiological triggering in ns EDIT: unsure of use of vector previously
+    physiologyTimeStampNs: uint64
     # Channel numbers
     channelOrder: uint*
     # Number of readout samples to be discarded at the beginning
@@ -121,11 +121,11 @@ Acquisition: !record
     head: AcquisitionHeader
     # Raw k-space samples array
     data: AcquisitionData
-    # Trajectory array SKMOD 2/19/25 
+    # Trajectory array EDIT: REMOVED
     #trajectory: TrajectoryData
   computedFields:
     coils: size(data, "coils")
     samples: size(data, "samples")
     activeChannels: size(head.channelOrder)
-    #trajectoryDimensions: size(trajectory, "basis")  # SKMOD 2/19/25
-    #trajectorySamples: size(trajectory, "samples")   # SKMOD 2/19/25
+    #trajectoryDimensions: size(trajectory, "basis")  # EDIT: REMOVED
+    #trajectorySamples: size(trajectory, "samples")   # EDIT: REMOVED

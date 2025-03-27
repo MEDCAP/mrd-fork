@@ -9,8 +9,8 @@ GradientData: !array
 
 GradHeader: !record
   fields:
-    # Clock time stamp, nanoseconds since AcquisitionTimeStamp
-    gradientTimeStampNs: uint64
+    # Clock time stamp, nanoseconds since midnight
+    gradientTimeStampNs: time
     # Gradient sample duration in nanoseconds
     gradientSampleTimeNs: uint
     # Grad calibration (T/m/A). Can be here or as a calGradMap calibration image or neither
