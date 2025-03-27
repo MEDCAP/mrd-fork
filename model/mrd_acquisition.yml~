@@ -79,7 +79,7 @@ AcquisitionHeader: !record
     # Zero-indexed incrementing counter for readouts
     scanCounter: uint?
     # Clock time stamp EDIT: nanoseconds since midnight
-    acquisitionTimeStampNs: uint64
+    acquisitionTimeStampNs: time
     # Time stamp relative to physiological triggering in ns EDIT: unsure of use of vector previously
     physiologyTimeStampNs: uint64
     # Channel numbers

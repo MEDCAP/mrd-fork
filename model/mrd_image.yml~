@@ -26,13 +26,13 @@ ImageType: !enum
 # EDIT: Added new type
 ImageQuantitativeType: !enum
   values:
-    quantNone: 1
-    quantT1: 2               # in s
-    quantT2star: 3           # in s
-    quantADC: 4              # in s/m^2
-    quantSpinDensity: 5      # in mol/m^3
-    quantB1Map: 6            # in rad/s/V
-    quantSensitivityMap: 7   # in Vm^3/mol
+    None: 1
+    T1: 2               # in s
+    T2star: 3           # in s
+    ADC: 4              # in s/m^2
+    SpinDensity: 5      # in mol/m^3
+    B1Map: 6            # in rad/s/V
+    SensitivityMap: 7   # in Vm^3/mol
 
 ImageData<Y>: !array
   items: Y

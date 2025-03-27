@@ -26,6 +26,6 @@ Gradient: !record
     fh: GradientData
   computedFields:
     # EDIT: Assuming writer sets rl,ap,fh gradients, all have the same size. Computed fields are in ns
-    samples: size(rl, "samples")
+    samples: size(gx, "samples")
     starttime: head.gradientTimeStampNs
     endtime: head.gradientTimeStampNs + samples * head.gradientSampleTimeNs

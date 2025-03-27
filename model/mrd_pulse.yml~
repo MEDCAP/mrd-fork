@@ -9,7 +9,7 @@ PulseData: !array
 PulseHeader: !record
   fields:
     # Clock time stamp nanoseconds since midnight
-    pulseTimeStampNs: uint64 
+    pulseTimeStampNs: time 
     # Channel numbers
     channelOrder: uint*
     # Sample time in ns
