@@ -1,7 +1,7 @@
 # ADD: gradient field
 # similar to acquisition field, gradient shape described with timestamp
 
-# gradient xyz stored as 2D array with a shape of (samples, 3)
+# gradient xyz stored as 1D array shape (samples)
 GradientData: !array
   items: float
   dimensions:
@@ -20,7 +20,7 @@ Gradient: !record
   fields:
     # Grad header
     head: GradHeader
-    # Raw pulse amplitude/phase samples array
+    # gradient directions
     rl: GradientData
     ap: GradientData
     fh: GradientData

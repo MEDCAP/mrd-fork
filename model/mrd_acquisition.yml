@@ -62,11 +62,12 @@ AcquisitionData: !array
     coils:
     samples:
 
-TrajectoryData: !array
-  items: float
-  dimensions:
-    basis:
-    samples:
+# REMOVED: replaced by gradient and pulse field
+# TrajectoryData: !array
+#   items: float
+#   dimensions:
+#     basis:
+#     samples:
 
 AcquisitionHeader: !record
   fields:
@@ -112,7 +113,7 @@ AcquisitionHeader: !record
     userFloat: float*
   computedFields:
     # EDIT: conversion to legacy names and ns
-    acquisitionTimeStamp: ((acquisitionTimeStampNs as uint64) / 1e6) as uint
+    acquisitionTimeStamp: (acquisitionTimeStampNs / 1e6) as uint
     physiologyTimeStamp: (physiologyTimeStampNs/1e6) as uint
     sampleTime: (sampleTimeNs/1e6) as float
 
@@ -128,5 +129,5 @@ Acquisition: !record
     coils: size(data, "coils")
     samples: size(data, "samples")
     activeChannels: size(head.channelOrder)
-    #trajectoryDimensions: size(trajectory, "basis")  # EDIT: REMOVED
-    #trajectorySamples: size(trajectory, "samples")   # EDIT: REMOVED
+    # trajectoryDimensions: size(trajectory, "basis")  # EDIT: REMOVED
+    # trajectorySamples: size(trajectory, "samples")   # EDIT: REMOVED

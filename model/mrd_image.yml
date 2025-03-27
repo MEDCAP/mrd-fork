@@ -92,7 +92,7 @@ ImageHeader: !record
   computedFields:
     # ADD: original acquisitionTimeStamp in ms
     acquisitionTimeStamp: (acquisitionTimeStampNs/1e6) as uint
-    physiologyTimeStamp: (physiologyTimeStampNs/1e6) 
+    physiologyTimeStamp: (physiologyTimeStampNs/1e6) as uint
     
 
 ImageMetaValue: [string, long, double]
