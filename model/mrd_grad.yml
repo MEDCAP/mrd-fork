@@ -21,9 +21,9 @@ Gradient: !record
     # Grad header
     head: GradHeader
     # Raw pulse amplitude/phase samples array
-    gx: GradientData
-    gy: GradientData
-    gz: GradientData
+    rl: GradientData
+    ap: GradientData
+    fh: GradientData
   computedFields:
     # Assuming writer sets gx,gy,gz all have the same size  
     samples: size(gx, "samples")
