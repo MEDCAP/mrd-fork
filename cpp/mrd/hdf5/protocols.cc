@@ -896,7 +896,7 @@ struct _Inner_AcquisitionHeader {
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> discard_post;
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> center_sample;
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> encoding_space_ref;
-  uint64_t sample_time_ns;
+  yardl::hdf5::InnerOptional<uint64_t, uint64_t> sample_time_ns;
   yardl::FixedNDArray<float, 3> position;
   yardl::FixedNDArray<float, 3> read_dir;
   yardl::FixedNDArray<float, 3> phase_dir;
@@ -910,16 +910,19 @@ struct _Inner_Acquisition {
   _Inner_Acquisition() {} 
   _Inner_Acquisition(mrd::Acquisition const& o) 
       : head(o.head),
-      data(o.data) {
+      data(o.data),
+      trajectory(o.trajectory) {
   }
 
   void ToOuter (mrd::Acquisition& o) const {
     yardl::hdf5::ToOuter(head, o.head);
     yardl::hdf5::ToOuter(data, o.data);
+    yardl::hdf5::ToOuter(trajectory, o.trajectory);
   }
 
   mrd::hdf5::_Inner_AcquisitionHeader head;
   yardl::hdf5::InnerNdArray<std::complex<float>, std::complex<float>, 2> data;
+  yardl::hdf5::InnerNdArray<float, float, 2> trajectory;
 };
 
 struct _Inner_GradHeader {
@@ -1849,7 +1852,7 @@ struct _Inner_Pulse {
   t.insertMember("discardPost", HOFFSET(RecordType, discard_post), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
   t.insertMember("centerSample", HOFFSET(RecordType, center_sample), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
   t.insertMember("encodingSpaceRef", HOFFSET(RecordType, encoding_space_ref), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
-  t.insertMember("sampleTimeNs", HOFFSET(RecordType, sample_time_ns), H5::PredType::NATIVE_UINT64);
+  t.insertMember("sampleTimeNs", HOFFSET(RecordType, sample_time_ns), yardl::hdf5::OptionalTypeDdl<uint64_t, uint64_t>(H5::PredType::NATIVE_UINT64));
   t.insertMember("position", HOFFSET(RecordType, position), yardl::hdf5::FixedNDArrayDdl(H5::PredType::NATIVE_FLOAT, {3}));
   t.insertMember("readDir", HOFFSET(RecordType, read_dir), yardl::hdf5::FixedNDArrayDdl(H5::PredType::NATIVE_FLOAT, {3}));
   t.insertMember("phaseDir", HOFFSET(RecordType, phase_dir), yardl::hdf5::FixedNDArrayDdl(H5::PredType::NATIVE_FLOAT, {3}));
@@ -1865,6 +1868,7 @@ struct _Inner_Pulse {
   H5::CompType t(sizeof(RecordType));
   t.insertMember("head", HOFFSET(RecordType, head), mrd::hdf5::GetAcquisitionHeaderHdf5Ddl());
   t.insertMember("data", HOFFSET(RecordType, data), yardl::hdf5::NDArrayDdl<std::complex<float>, std::complex<float>, 2>(yardl::hdf5::ComplexTypeDdl<float>()));
+  t.insertMember("trajectory", HOFFSET(RecordType, trajectory), yardl::hdf5::NDArrayDdl<float, float, 2>(H5::PredType::NATIVE_FLOAT));
   return t;
 }
 

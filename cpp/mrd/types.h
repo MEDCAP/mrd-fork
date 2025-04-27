@@ -88,6 +88,8 @@ struct EncodingCounters {
 
 using AcquisitionData = yardl::NDArray<std::complex<float>, 2>;
 
+using TrajectoryData = yardl::NDArray<float, 2>;
+
 struct AcquisitionHeader {
   // A bit mask of common attributes applicable to individual acquisition
   mrd::AcquisitionFlags flags{};
@@ -97,9 +99,9 @@ struct AcquisitionHeader {
   uint32_t measurement_uid{};
   // Zero-indexed incrementing counter for readouts
   std::optional<uint32_t> scan_counter{};
-  // EDIT: nanoseconds since midnight
+  // Clock time stamp (e.g. nanoseconds since midnight)
   std::optional<uint64_t> acquisition_time_stamp_ns{};
-  // EDIT: nanoseconds relative to physiological triggering
+  // Time stamps relative to physiological triggering in nanoseconds
   std::vector<uint64_t> physiology_time_stamp_ns{};
   // Channel numbers
   std::vector<uint32_t> channel_order{};
@@ -113,8 +115,8 @@ struct AcquisitionHeader {
   std::optional<uint32_t> center_sample{};
   // Indexed reference to the encoding spaces enumerated in the MRD Header
   std::optional<uint32_t> encoding_space_ref{};
-  // EDIT: Readout bandwidth as time between samples in nanoseconds
-  uint64_t sample_time_ns{};
+  // Readout bandwidth, as time between samples in nanoseconds
+  std::optional<uint64_t> sample_time_ns{};
   // Center of the excited volume, in LPS coordinates relative to isocenter in millimeters
   yardl::FixedNDArray<float, 3> position{};
   // Directional cosine of readout/frequency encoding
@@ -162,6 +164,8 @@ struct Acquisition {
   mrd::AcquisitionHeader head{};
   // Raw k-space samples array
   mrd::AcquisitionData data{};
+  // Trajectory array
+  mrd::TrajectoryData trajectory{};
 
   yardl::Size Coils() const {
     return yardl::shape(data, 0);
@@ -175,9 +179,18 @@ struct Acquisition {
     return head.channel_order.size();
   }
 
+  yardl::Size TrajectoryDimensions() const {
+    return yardl::shape(trajectory, 0);
+  }
+
+  yardl::Size TrajectorySamples() const {
+    return yardl::shape(trajectory, 1);
+  }
+
   bool operator==(const Acquisition& other) const {
     return head == other.head &&
-      data == other.data;
+      data == other.data &&
+      trajectory == other.trajectory;
   }
 
   bool operator!=(const Acquisition& other) const {
@@ -980,15 +993,6 @@ struct ImageHeader {
   std::vector<int32_t> user_int{};
   // User-defined float parameters
   std::vector<float> user_float{};
-
-  // ADD: original acquisitionTimeStamp in ms
-  uint32_t AcquisitionTimeStamp() const {
-    return static_cast<uint32_t>(static_cast<double>(acquisition_time_stamp_ns) / 1e6);
-  }
-
-  uint32_t PhysiologyTimeStamp() const {
-    return static_cast<uint32_t>(static_cast<double>(physiology_time_stamp_ns) / 1e6);
-  }
 
   bool operator==(const ImageHeader& other) const {
     return flags == other.flags &&

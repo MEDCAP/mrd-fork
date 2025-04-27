@@ -177,7 +177,7 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
         self._discard_post_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
         self._center_sample_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
         self._encoding_space_ref_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
-        self._sample_time_ns_converter = _ndjson.uint64_converter
+        self._sample_time_ns_converter = _ndjson.OptionalConverter(_ndjson.uint64_converter)
         self._position_converter = _ndjson.FixedNDArrayConverter(_ndjson.float32_converter, (3,))
         self._read_dir_converter = _ndjson.FixedNDArrayConverter(_ndjson.float32_converter, (3,))
         self._phase_dir_converter = _ndjson.FixedNDArrayConverter(_ndjson.float32_converter, (3,))
@@ -229,7 +229,8 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
             json_object["centerSample"] = self._center_sample_converter.to_json(value.center_sample)
         if value.encoding_space_ref is not None:
             json_object["encodingSpaceRef"] = self._encoding_space_ref_converter.to_json(value.encoding_space_ref)
-        json_object["sampleTimeNs"] = self._sample_time_ns_converter.to_json(value.sample_time_ns)
+        if value.sample_time_ns is not None:
+            json_object["sampleTimeNs"] = self._sample_time_ns_converter.to_json(value.sample_time_ns)
         json_object["position"] = self._position_converter.to_json(value.position)
         json_object["readDir"] = self._read_dir_converter.to_json(value.read_dir)
         json_object["phaseDir"] = self._phase_dir_converter.to_json(value.phase_dir)
@@ -261,7 +262,8 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
             json_object["centerSample"] = self._center_sample_converter.numpy_to_json(field_val)
         if (field_val := value["encoding_space_ref"]) is not None:
             json_object["encodingSpaceRef"] = self._encoding_space_ref_converter.numpy_to_json(field_val)
-        json_object["sampleTimeNs"] = self._sample_time_ns_converter.numpy_to_json(value["sample_time_ns"])
+        if (field_val := value["sample_time_ns"]) is not None:
+            json_object["sampleTimeNs"] = self._sample_time_ns_converter.numpy_to_json(field_val)
         json_object["position"] = self._position_converter.numpy_to_json(value["position"])
         json_object["readDir"] = self._read_dir_converter.numpy_to_json(value["read_dir"])
         json_object["phaseDir"] = self._phase_dir_converter.numpy_to_json(value["phase_dir"])
@@ -286,7 +288,7 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
             discard_post=self._discard_post_converter.from_json(json_object.get("discardPost")),
             center_sample=self._center_sample_converter.from_json(json_object.get("centerSample")),
             encoding_space_ref=self._encoding_space_ref_converter.from_json(json_object.get("encodingSpaceRef")),
-            sample_time_ns=self._sample_time_ns_converter.from_json(json_object["sampleTimeNs"],),
+            sample_time_ns=self._sample_time_ns_converter.from_json(json_object.get("sampleTimeNs")),
             position=self._position_converter.from_json(json_object["position"],),
             read_dir=self._read_dir_converter.from_json(json_object["readDir"],),
             phase_dir=self._phase_dir_converter.from_json(json_object["phaseDir"],),
@@ -311,7 +313,7 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
             self._discard_post_converter.from_json_to_numpy(json_object.get("discardPost")),
             self._center_sample_converter.from_json_to_numpy(json_object.get("centerSample")),
             self._encoding_space_ref_converter.from_json_to_numpy(json_object.get("encodingSpaceRef")),
-            self._sample_time_ns_converter.from_json_to_numpy(json_object["sampleTimeNs"]),
+            self._sample_time_ns_converter.from_json_to_numpy(json_object.get("sampleTimeNs")),
             self._position_converter.from_json_to_numpy(json_object["position"]),
             self._read_dir_converter.from_json_to_numpy(json_object["readDir"]),
             self._phase_dir_converter.from_json_to_numpy(json_object["phaseDir"]),
@@ -326,9 +328,11 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
     def __init__(self) -> None:
         self._head_converter = AcquisitionHeaderConverter()
         self._data_converter = _ndjson.NDArrayConverter(_ndjson.complexfloat32_converter, 2)
+        self._trajectory_converter = _ndjson.NDArrayConverter(_ndjson.float32_converter, 2)
         super().__init__(np.dtype([
             ("head", self._head_converter.overall_dtype()),
             ("data", self._data_converter.overall_dtype()),
+            ("trajectory", self._trajectory_converter.overall_dtype()),
         ]))
 
     def to_json(self, value: Acquisition) -> object:
@@ -338,6 +342,7 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
 
         json_object["head"] = self._head_converter.to_json(value.head)
         json_object["data"] = self._data_converter.to_json(value.data)
+        json_object["trajectory"] = self._trajectory_converter.to_json(value.trajectory)
         return json_object
 
     def numpy_to_json(self, value: np.void) -> object:
@@ -347,6 +352,7 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
 
         json_object["head"] = self._head_converter.numpy_to_json(value["head"])
         json_object["data"] = self._data_converter.numpy_to_json(value["data"])
+        json_object["trajectory"] = self._trajectory_converter.numpy_to_json(value["trajectory"])
         return json_object
 
     def from_json(self, json_object: object) -> Acquisition:
@@ -355,6 +361,7 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
         return Acquisition(
             head=self._head_converter.from_json(json_object["head"],),
             data=self._data_converter.from_json(json_object["data"],),
+            trajectory=self._trajectory_converter.from_json(json_object["trajectory"],),
         )
 
     def from_json_to_numpy(self, json_object: object) -> np.void:
@@ -363,6 +370,7 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
         return (
             self._head_converter.from_json_to_numpy(json_object["head"]),
             self._data_converter.from_json_to_numpy(json_object["data"]),
+            self._trajectory_converter.from_json_to_numpy(json_object["trajectory"]),
         ) # type:ignore 
 
 

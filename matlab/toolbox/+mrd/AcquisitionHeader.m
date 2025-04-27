@@ -10,9 +10,9 @@ classdef AcquisitionHeader < handle
     measurement_uid
     % Zero-indexed incrementing counter for readouts
     scan_counter
-    % EDIT: nanoseconds since midnight
+    % Clock time stamp (e.g. nanoseconds since midnight)
     acquisition_time_stamp_ns
-    % EDIT: nanoseconds relative to physiological triggering
+    % Time stamps relative to physiological triggering in nanoseconds
     physiology_time_stamp_ns
     % Channel numbers
     channel_order
@@ -26,7 +26,7 @@ classdef AcquisitionHeader < handle
     center_sample
     % Indexed reference to the encoding spaces enumerated in the MRD Header
     encoding_space_ref
-    % EDIT: Readout bandwidth as time between samples in nanoseconds
+    % Readout bandwidth, as time between samples in nanoseconds
     sample_time_ns
     % Center of the excited volume, in LPS coordinates relative to isocenter in millimeters
     position
@@ -58,7 +58,7 @@ classdef AcquisitionHeader < handle
         kwargs.discard_post = yardl.None;
         kwargs.center_sample = yardl.None;
         kwargs.encoding_space_ref = yardl.None;
-        kwargs.sample_time_ns = uint64(0);
+        kwargs.sample_time_ns = yardl.None;
         kwargs.position = repelem(single(0), 3, 1);
         kwargs.read_dir = repelem(single(0), 3, 1);
         kwargs.phase_dir = repelem(single(0), 3, 1);

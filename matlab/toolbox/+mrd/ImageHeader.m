@@ -105,18 +105,6 @@ classdef ImageHeader < handle
       self.user_float = kwargs.user_float;
     end
 
-    function res = acquisition_time_stamp(self)
-      % ADD: original acquisitionTimeStamp in ms
-      res = uint32(double(self.acquisition_time_stamp_ns) ./ 1e6);
-      return
-    end
-
-    function res = physiology_time_stamp(self)
-      res = uint32(double(self.physiology_time_stamp_ns) ./ 1e6);
-      return
-    end
-
-
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.ImageHeader") && ...

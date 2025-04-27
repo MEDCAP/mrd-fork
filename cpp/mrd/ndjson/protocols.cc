@@ -940,6 +940,9 @@ void to_json(ordered_json& j, mrd::Acquisition const& value) {
   if (yardl::ndjson::ShouldSerializeFieldValue(value.data)) {
     j.push_back({"data", value.data});
   }
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.trajectory)) {
+    j.push_back({"trajectory", value.trajectory});
+  }
 }
 
 void from_json(ordered_json const& j, mrd::Acquisition& value) {
@@ -948,6 +951,9 @@ void from_json(ordered_json const& j, mrd::Acquisition& value) {
   }
   if (auto it = j.find("data"); it != j.end()) {
     it->get_to(value.data);
+  }
+  if (auto it = j.find("trajectory"); it != j.end()) {
+    it->get_to(value.trajectory);
   }
 }
 

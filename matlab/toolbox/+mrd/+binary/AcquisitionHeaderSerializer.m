@@ -14,7 +14,7 @@ classdef AcquisitionHeaderSerializer < yardl.binary.RecordSerializer
       field_serializers{9} = yardl.binary.OptionalSerializer(yardl.binary.Uint32Serializer);
       field_serializers{10} = yardl.binary.OptionalSerializer(yardl.binary.Uint32Serializer);
       field_serializers{11} = yardl.binary.OptionalSerializer(yardl.binary.Uint32Serializer);
-      field_serializers{12} = yardl.binary.Uint64Serializer;
+      field_serializers{12} = yardl.binary.OptionalSerializer(yardl.binary.Uint64Serializer);
       field_serializers{13} = yardl.binary.FixedNDArraySerializer(yardl.binary.Float32Serializer, [3]);
       field_serializers{14} = yardl.binary.FixedNDArraySerializer(yardl.binary.Float32Serializer, [3]);
       field_serializers{15} = yardl.binary.FixedNDArraySerializer(yardl.binary.Float32Serializer, [3]);
