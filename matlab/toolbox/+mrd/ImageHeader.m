@@ -2,10 +2,12 @@
 
 classdef ImageHeader < handle
   properties
-    % A bit mask of common attributes applicable to individual images
+    % A bit mask 9of common attributes applicable to individual images
     flags
     % Unique ID corresponding to the image
     measurement_uid
+    % NMR frequency of this measurement (Hz) SKADD 2/7/25
+    measurement_freq
     % Physical size (in mm) in each of the 3 dimensions in the image
     field_of_view
     % Center of the excited volume, in LPS coordinates relative to isocenter in millimeters
@@ -30,12 +32,14 @@ classdef ImageHeader < handle
     repetition
     % Sets of different preparation, e.g. flow encoding, diffusion weighting
     set
-    % Clock time stamp (e.g. nanoseconds since midnight)
+    % EDIT: Clock time stamp, ns since midnight
     acquisition_time_stamp_ns
-    % Time stamps relative to physiological triggering in nanoseconds, e.g. ECG, pulse oximetry, respiratory
+    % Time stamp ns relative to physiological triggering, e.g. ECG, pulse oximetry, respiratory
     physiology_time_stamp_ns
     % Interpretation type of the image
     image_type
+    % Quantitative interpretation type of the image
+    image_quantitative_type
     % Image index number within a series of images, corresponding to DICOM InstanceNumber (0020,0013)
     image_index
     % Series index, used to separate images into different series, corresponding to DICOM SeriesNumber (0020,0011)
@@ -51,6 +55,7 @@ classdef ImageHeader < handle
       arguments
         kwargs.flags = mrd.ImageFlags(0);
         kwargs.measurement_uid = uint32(0);
+        kwargs.measurement_freq = uint32(0);
         kwargs.field_of_view = repelem(single(0), 3, 1);
         kwargs.position = repelem(single(0), 3, 1);
         kwargs.col_dir = repelem(single(0), 3, 1);
@@ -63,9 +68,10 @@ classdef ImageHeader < handle
         kwargs.phase = yardl.None;
         kwargs.repetition = yardl.None;
         kwargs.set = yardl.None;
-        kwargs.acquisition_time_stamp_ns = yardl.None;
-        kwargs.physiology_time_stamp_ns = uint64.empty();
+        kwargs.acquisition_time_stamp_ns = uint64(0);
+        kwargs.physiology_time_stamp_ns = uint64(0);
         kwargs.image_type;
+        kwargs.image_quantitative_type = yardl.None;
         kwargs.image_index = yardl.None;
         kwargs.image_series_index = yardl.None;
         kwargs.user_int = int32.empty();
@@ -73,6 +79,7 @@ classdef ImageHeader < handle
       end
       self.flags = kwargs.flags;
       self.measurement_uid = kwargs.measurement_uid;
+      self.measurement_freq = kwargs.measurement_freq;
       self.field_of_view = kwargs.field_of_view;
       self.position = kwargs.position;
       self.col_dir = kwargs.col_dir;
@@ -91,17 +98,31 @@ classdef ImageHeader < handle
         throw(yardl.TypeError("Missing required keyword argument 'image_type'"))
       end
       self.image_type = kwargs.image_type;
+      self.image_quantitative_type = kwargs.image_quantitative_type;
       self.image_index = kwargs.image_index;
       self.image_series_index = kwargs.image_series_index;
       self.user_int = kwargs.user_int;
       self.user_float = kwargs.user_float;
     end
 
+    function res = acquisition_time_stamp(self)
+      % ADD: original acquisitionTimeStamp in ms
+      res = uint32(double(self.acquisition_time_stamp_ns) ./ 1e6);
+      return
+    end
+
+    function res = physiology_time_stamp(self)
+      res = uint32(double(self.physiology_time_stamp_ns) ./ 1e6);
+      return
+    end
+
+
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.ImageHeader") && ...
         isequal(self.flags, other.flags) && ...
         isequal(self.measurement_uid, other.measurement_uid) && ...
+        isequal(self.measurement_freq, other.measurement_freq) && ...
         isequal(self.field_of_view, other.field_of_view) && ...
         isequal(self.position, other.position) && ...
         isequal(self.col_dir, other.col_dir) && ...
@@ -117,6 +138,7 @@ classdef ImageHeader < handle
         isequal(self.acquisition_time_stamp_ns, other.acquisition_time_stamp_ns) && ...
         isequal(self.physiology_time_stamp_ns, other.physiology_time_stamp_ns) && ...
         isequal(self.image_type, other.image_type) && ...
+        isequal(self.image_quantitative_type, other.image_quantitative_type) && ...
         isequal(self.image_index, other.image_index) && ...
         isequal(self.image_series_index, other.image_series_index) && ...
         isequal(self.user_int, other.user_int) && ...

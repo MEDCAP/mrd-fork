@@ -34,7 +34,7 @@ class BinaryMrdWriter(_binary.BinaryProtocolWriter, MrdWriterBase):
         _binary.OptionalSerializer(HeaderSerializer()).write(self._stream, value)
 
     def _write_data(self, value: collections.abc.Iterable[StreamItem]) -> None:
-        _binary.StreamSerializer(_binary.UnionSerializer(StreamItem, [(StreamItem.Acquisition, AcquisitionSerializer()), (StreamItem.WaveformUint32, WaveformSerializer(_binary.uint32_serializer)), (StreamItem.ImageUint16, ImageSerializer(_binary.uint16_serializer)), (StreamItem.ImageInt16, ImageSerializer(_binary.int16_serializer)), (StreamItem.ImageUint32, ImageSerializer(_binary.uint32_serializer)), (StreamItem.ImageInt32, ImageSerializer(_binary.int32_serializer)), (StreamItem.ImageFloat, ImageSerializer(_binary.float32_serializer)), (StreamItem.ImageDouble, ImageSerializer(_binary.float64_serializer)), (StreamItem.ImageComplexFloat, ImageSerializer(_binary.complexfloat32_serializer)), (StreamItem.ImageComplexDouble, ImageSerializer(_binary.complexfloat64_serializer)), (StreamItem.AcquisitionBucket, AcquisitionBucketSerializer()), (StreamItem.ReconData, ReconDataSerializer()), (StreamItem.ArrayComplexFloat, _binary.DynamicNDArraySerializer(_binary.complexfloat32_serializer)), (StreamItem.ImageArray, ImageArraySerializer())])).write(self._stream, value)
+        _binary.StreamSerializer(_binary.UnionSerializer(StreamItem, [(StreamItem.Acquisition, AcquisitionSerializer()), (StreamItem.Pulse, PulseSerializer()), (StreamItem.Gradient, GradientSerializer()), (StreamItem.WaveformUint32, WaveformSerializer(_binary.uint32_serializer)), (StreamItem.ImageUint16, ImageSerializer(_binary.uint16_serializer)), (StreamItem.ImageInt16, ImageSerializer(_binary.int16_serializer)), (StreamItem.ImageUint32, ImageSerializer(_binary.uint32_serializer)), (StreamItem.ImageInt32, ImageSerializer(_binary.int32_serializer)), (StreamItem.ImageFloat, ImageSerializer(_binary.float32_serializer)), (StreamItem.ImageDouble, ImageSerializer(_binary.float64_serializer)), (StreamItem.ImageComplexFloat, ImageSerializer(_binary.complexfloat32_serializer)), (StreamItem.ImageComplexDouble, ImageSerializer(_binary.complexfloat64_serializer)), (StreamItem.AcquisitionBucket, AcquisitionBucketSerializer()), (StreamItem.ReconData, ReconDataSerializer()), (StreamItem.ArrayComplexFloat, _binary.DynamicNDArraySerializer(_binary.complexfloat32_serializer)), (StreamItem.ImageArray, ImageArraySerializer())])).write(self._stream, value)
 
 
 class BinaryMrdReader(_binary.BinaryProtocolReader, MrdReaderBase):
@@ -52,7 +52,7 @@ class BinaryMrdReader(_binary.BinaryProtocolReader, MrdReaderBase):
         return _binary.OptionalSerializer(HeaderSerializer()).read(self._stream)
 
     def _read_data(self) -> collections.abc.Iterable[StreamItem]:
-        return _binary.StreamSerializer(_binary.UnionSerializer(StreamItem, [(StreamItem.Acquisition, AcquisitionSerializer()), (StreamItem.WaveformUint32, WaveformSerializer(_binary.uint32_serializer)), (StreamItem.ImageUint16, ImageSerializer(_binary.uint16_serializer)), (StreamItem.ImageInt16, ImageSerializer(_binary.int16_serializer)), (StreamItem.ImageUint32, ImageSerializer(_binary.uint32_serializer)), (StreamItem.ImageInt32, ImageSerializer(_binary.int32_serializer)), (StreamItem.ImageFloat, ImageSerializer(_binary.float32_serializer)), (StreamItem.ImageDouble, ImageSerializer(_binary.float64_serializer)), (StreamItem.ImageComplexFloat, ImageSerializer(_binary.complexfloat32_serializer)), (StreamItem.ImageComplexDouble, ImageSerializer(_binary.complexfloat64_serializer)), (StreamItem.AcquisitionBucket, AcquisitionBucketSerializer()), (StreamItem.ReconData, ReconDataSerializer()), (StreamItem.ArrayComplexFloat, _binary.DynamicNDArraySerializer(_binary.complexfloat32_serializer)), (StreamItem.ImageArray, ImageArraySerializer())])).read(self._stream)
+        return _binary.StreamSerializer(_binary.UnionSerializer(StreamItem, [(StreamItem.Acquisition, AcquisitionSerializer()), (StreamItem.Pulse, PulseSerializer()), (StreamItem.Gradient, GradientSerializer()), (StreamItem.WaveformUint32, WaveformSerializer(_binary.uint32_serializer)), (StreamItem.ImageUint16, ImageSerializer(_binary.uint16_serializer)), (StreamItem.ImageInt16, ImageSerializer(_binary.int16_serializer)), (StreamItem.ImageUint32, ImageSerializer(_binary.uint32_serializer)), (StreamItem.ImageInt32, ImageSerializer(_binary.int32_serializer)), (StreamItem.ImageFloat, ImageSerializer(_binary.float32_serializer)), (StreamItem.ImageDouble, ImageSerializer(_binary.float64_serializer)), (StreamItem.ImageComplexFloat, ImageSerializer(_binary.complexfloat32_serializer)), (StreamItem.ImageComplexDouble, ImageSerializer(_binary.complexfloat64_serializer)), (StreamItem.AcquisitionBucket, AcquisitionBucketSerializer()), (StreamItem.ReconData, ReconDataSerializer()), (StreamItem.ArrayComplexFloat, _binary.DynamicNDArraySerializer(_binary.complexfloat32_serializer)), (StreamItem.ImageArray, ImageArraySerializer())])).read(self._stream)
 
 class BinaryMrdNoiseCovarianceWriter(_binary.BinaryProtocolWriter, MrdNoiseCovarianceWriterBase):
     """Binary writer for the MrdNoiseCovariance protocol.
@@ -103,7 +103,7 @@ class EncodingCountersSerializer(_binary.RecordSerializer[EncodingCounters]):
 
 class AcquisitionHeaderSerializer(_binary.RecordSerializer[AcquisitionHeader]):
     def __init__(self) -> None:
-        super().__init__([("flags", _binary.EnumSerializer(_binary.uint64_serializer, AcquisitionFlags)), ("idx", EncodingCountersSerializer()), ("measurement_uid", _binary.uint32_serializer), ("scan_counter", _binary.OptionalSerializer(_binary.uint32_serializer)), ("acquisition_time_stamp_ns", _binary.OptionalSerializer(_binary.uint64_serializer)), ("physiology_time_stamp_ns", _binary.VectorSerializer(_binary.uint64_serializer)), ("channel_order", _binary.VectorSerializer(_binary.uint32_serializer)), ("discard_pre", _binary.OptionalSerializer(_binary.uint32_serializer)), ("discard_post", _binary.OptionalSerializer(_binary.uint32_serializer)), ("center_sample", _binary.OptionalSerializer(_binary.uint32_serializer)), ("encoding_space_ref", _binary.OptionalSerializer(_binary.uint32_serializer)), ("sample_time_ns", _binary.OptionalSerializer(_binary.uint64_serializer)), ("position", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("read_dir", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("phase_dir", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("slice_dir", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("patient_table_position", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("user_int", _binary.VectorSerializer(_binary.int32_serializer)), ("user_float", _binary.VectorSerializer(_binary.float32_serializer))])
+        super().__init__([("flags", _binary.EnumSerializer(_binary.uint64_serializer, AcquisitionFlags)), ("idx", EncodingCountersSerializer()), ("measurement_uid", _binary.uint32_serializer), ("scan_counter", _binary.OptionalSerializer(_binary.uint32_serializer)), ("acquisition_time_stamp_ns", _binary.OptionalSerializer(_binary.uint64_serializer)), ("physiology_time_stamp_ns", _binary.VectorSerializer(_binary.uint64_serializer)), ("channel_order", _binary.VectorSerializer(_binary.uint32_serializer)), ("discard_pre", _binary.OptionalSerializer(_binary.uint32_serializer)), ("discard_post", _binary.OptionalSerializer(_binary.uint32_serializer)), ("center_sample", _binary.OptionalSerializer(_binary.uint32_serializer)), ("encoding_space_ref", _binary.OptionalSerializer(_binary.uint32_serializer)), ("sample_time_ns", _binary.uint64_serializer), ("position", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("read_dir", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("phase_dir", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("slice_dir", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("patient_table_position", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("user_int", _binary.VectorSerializer(_binary.int32_serializer)), ("user_float", _binary.VectorSerializer(_binary.float32_serializer))])
 
     def write(self, stream: _binary.CodedOutputStream, value: AcquisitionHeader) -> None:
         if isinstance(value, np.void):
@@ -121,20 +121,56 @@ class AcquisitionHeaderSerializer(_binary.RecordSerializer[AcquisitionHeader]):
 
 class AcquisitionSerializer(_binary.RecordSerializer[Acquisition]):
     def __init__(self) -> None:
-        super().__init__([("head", AcquisitionHeaderSerializer()), ("data", _binary.NDArraySerializer(_binary.complexfloat32_serializer, 2)), ("trajectory", _binary.NDArraySerializer(_binary.float32_serializer, 2))])
+        super().__init__([("head", AcquisitionHeaderSerializer()), ("data", _binary.NDArraySerializer(_binary.complexfloat32_serializer, 2))])
 
     def write(self, stream: _binary.CodedOutputStream, value: Acquisition) -> None:
         if isinstance(value, np.void):
             self.write_numpy(stream, value)
             return
-        self._write(stream, value.head, value.data, value.trajectory)
+        self._write(stream, value.head, value.data)
 
     def write_numpy(self, stream: _binary.CodedOutputStream, value: np.void) -> None:
-        self._write(stream, value['head'], value['data'], value['trajectory'])
+        self._write(stream, value['head'], value['data'])
 
     def read(self, stream: _binary.CodedInputStream) -> Acquisition:
         field_values = self._read(stream)
-        return Acquisition(head=field_values[0], data=field_values[1], trajectory=field_values[2])
+        return Acquisition(head=field_values[0], data=field_values[1])
+
+
+class GradHeaderSerializer(_binary.RecordSerializer[GradHeader]):
+    def __init__(self) -> None:
+        super().__init__([("gradient_time_stamp_ns", _binary.uint64_serializer), ("gradient_sample_time_ns", _binary.uint32_serializer), ("pulse_calibration", _binary.OptionalSerializer(_binary.VectorSerializer(_binary.float32_serializer)))])
+
+    def write(self, stream: _binary.CodedOutputStream, value: GradHeader) -> None:
+        if isinstance(value, np.void):
+            self.write_numpy(stream, value)
+            return
+        self._write(stream, value.gradient_time_stamp_ns, value.gradient_sample_time_ns, value.pulse_calibration)
+
+    def write_numpy(self, stream: _binary.CodedOutputStream, value: np.void) -> None:
+        self._write(stream, value['gradient_time_stamp_ns'], value['gradient_sample_time_ns'], value['pulse_calibration'])
+
+    def read(self, stream: _binary.CodedInputStream) -> GradHeader:
+        field_values = self._read(stream)
+        return GradHeader(gradient_time_stamp_ns=field_values[0], gradient_sample_time_ns=field_values[1], pulse_calibration=field_values[2])
+
+
+class GradientSerializer(_binary.RecordSerializer[Gradient]):
+    def __init__(self) -> None:
+        super().__init__([("head", GradHeaderSerializer()), ("rl", _binary.NDArraySerializer(_binary.float32_serializer, 1)), ("ap", _binary.NDArraySerializer(_binary.float32_serializer, 1)), ("fh", _binary.NDArraySerializer(_binary.float32_serializer, 1))])
+
+    def write(self, stream: _binary.CodedOutputStream, value: Gradient) -> None:
+        if isinstance(value, np.void):
+            self.write_numpy(stream, value)
+            return
+        self._write(stream, value.head, value.rl, value.ap, value.fh)
+
+    def write_numpy(self, stream: _binary.CodedOutputStream, value: np.void) -> None:
+        self._write(stream, value['head'], value['rl'], value['ap'], value['fh'])
+
+    def read(self, stream: _binary.CodedInputStream) -> Gradient:
+        field_values = self._read(stream)
+        return Gradient(head=field_values[0], rl=field_values[1], ap=field_values[2], fh=field_values[3])
 
 
 class SubjectInformationTypeSerializer(_binary.RecordSerializer[SubjectInformationType]):
@@ -157,7 +193,7 @@ class SubjectInformationTypeSerializer(_binary.RecordSerializer[SubjectInformati
 
 class StudyInformationTypeSerializer(_binary.RecordSerializer[StudyInformationType]):
     def __init__(self) -> None:
-        super().__init__([("study_date", _binary.OptionalSerializer(_binary.date_serializer)), ("study_time", _binary.OptionalSerializer(_binary.time_serializer)), ("study_id", _binary.OptionalSerializer(_binary.string_serializer)), ("accession_number", _binary.OptionalSerializer(_binary.int64_serializer)), ("referring_physician_name", _binary.OptionalSerializer(_binary.string_serializer)), ("study_description", _binary.OptionalSerializer(_binary.string_serializer)), ("study_instance_uid", _binary.OptionalSerializer(_binary.string_serializer)), ("body_part_examined", _binary.OptionalSerializer(_binary.string_serializer))])
+        super().__init__([("study_date", _binary.date_serializer), ("study_time", _binary.time_serializer), ("study_id", _binary.OptionalSerializer(_binary.string_serializer)), ("accession_number", _binary.OptionalSerializer(_binary.int64_serializer)), ("referring_physician_name", _binary.OptionalSerializer(_binary.string_serializer)), ("study_description", _binary.OptionalSerializer(_binary.string_serializer)), ("study_instance_uid", _binary.OptionalSerializer(_binary.string_serializer)), ("body_part_examined", _binary.OptionalSerializer(_binary.string_serializer))])
 
     def write(self, stream: _binary.CodedOutputStream, value: StudyInformationType) -> None:
         if isinstance(value, np.void):
@@ -679,20 +715,20 @@ class HeaderSerializer(_binary.RecordSerializer[Header]):
 
 class ImageHeaderSerializer(_binary.RecordSerializer[ImageHeader]):
     def __init__(self) -> None:
-        super().__init__([("flags", _binary.EnumSerializer(_binary.uint64_serializer, ImageFlags)), ("measurement_uid", _binary.uint32_serializer), ("field_of_view", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("position", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("col_dir", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("line_dir", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("slice_dir", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("patient_table_position", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("average", _binary.OptionalSerializer(_binary.uint32_serializer)), ("slice", _binary.OptionalSerializer(_binary.uint32_serializer)), ("contrast", _binary.OptionalSerializer(_binary.uint32_serializer)), ("phase", _binary.OptionalSerializer(_binary.uint32_serializer)), ("repetition", _binary.OptionalSerializer(_binary.uint32_serializer)), ("set", _binary.OptionalSerializer(_binary.uint32_serializer)), ("acquisition_time_stamp_ns", _binary.OptionalSerializer(_binary.uint64_serializer)), ("physiology_time_stamp_ns", _binary.VectorSerializer(_binary.uint64_serializer)), ("image_type", _binary.EnumSerializer(_binary.int32_serializer, ImageType)), ("image_index", _binary.OptionalSerializer(_binary.uint32_serializer)), ("image_series_index", _binary.OptionalSerializer(_binary.uint32_serializer)), ("user_int", _binary.VectorSerializer(_binary.int32_serializer)), ("user_float", _binary.VectorSerializer(_binary.float32_serializer))])
+        super().__init__([("flags", _binary.EnumSerializer(_binary.uint64_serializer, ImageFlags)), ("measurement_uid", _binary.uint32_serializer), ("measurement_freq", _binary.uint32_serializer), ("field_of_view", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("position", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("col_dir", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("line_dir", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("slice_dir", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("patient_table_position", _binary.FixedNDArraySerializer(_binary.float32_serializer, (3,))), ("average", _binary.OptionalSerializer(_binary.uint32_serializer)), ("slice", _binary.OptionalSerializer(_binary.uint32_serializer)), ("contrast", _binary.OptionalSerializer(_binary.uint32_serializer)), ("phase", _binary.OptionalSerializer(_binary.uint32_serializer)), ("repetition", _binary.OptionalSerializer(_binary.uint32_serializer)), ("set", _binary.OptionalSerializer(_binary.uint32_serializer)), ("acquisition_time_stamp_ns", _binary.uint64_serializer), ("physiology_time_stamp_ns", _binary.uint64_serializer), ("image_type", _binary.EnumSerializer(_binary.int32_serializer, ImageType)), ("image_quantitative_type", _binary.OptionalSerializer(_binary.EnumSerializer(_binary.int32_serializer, ImageQuantitativeType))), ("image_index", _binary.OptionalSerializer(_binary.uint32_serializer)), ("image_series_index", _binary.OptionalSerializer(_binary.uint32_serializer)), ("user_int", _binary.VectorSerializer(_binary.int32_serializer)), ("user_float", _binary.VectorSerializer(_binary.float32_serializer))])
 
     def write(self, stream: _binary.CodedOutputStream, value: ImageHeader) -> None:
         if isinstance(value, np.void):
             self.write_numpy(stream, value)
             return
-        self._write(stream, value.flags, value.measurement_uid, value.field_of_view, value.position, value.col_dir, value.line_dir, value.slice_dir, value.patient_table_position, value.average, value.slice, value.contrast, value.phase, value.repetition, value.set, value.acquisition_time_stamp_ns, value.physiology_time_stamp_ns, value.image_type, value.image_index, value.image_series_index, value.user_int, value.user_float)
+        self._write(stream, value.flags, value.measurement_uid, value.measurement_freq, value.field_of_view, value.position, value.col_dir, value.line_dir, value.slice_dir, value.patient_table_position, value.average, value.slice, value.contrast, value.phase, value.repetition, value.set, value.acquisition_time_stamp_ns, value.physiology_time_stamp_ns, value.image_type, value.image_quantitative_type, value.image_index, value.image_series_index, value.user_int, value.user_float)
 
     def write_numpy(self, stream: _binary.CodedOutputStream, value: np.void) -> None:
-        self._write(stream, value['flags'], value['measurement_uid'], value['field_of_view'], value['position'], value['col_dir'], value['line_dir'], value['slice_dir'], value['patient_table_position'], value['average'], value['slice'], value['contrast'], value['phase'], value['repetition'], value['set'], value['acquisition_time_stamp_ns'], value['physiology_time_stamp_ns'], value['image_type'], value['image_index'], value['image_series_index'], value['user_int'], value['user_float'])
+        self._write(stream, value['flags'], value['measurement_uid'], value['measurement_freq'], value['field_of_view'], value['position'], value['col_dir'], value['line_dir'], value['slice_dir'], value['patient_table_position'], value['average'], value['slice'], value['contrast'], value['phase'], value['repetition'], value['set'], value['acquisition_time_stamp_ns'], value['physiology_time_stamp_ns'], value['image_type'], value['image_quantitative_type'], value['image_index'], value['image_series_index'], value['user_int'], value['user_float'])
 
     def read(self, stream: _binary.CodedInputStream) -> ImageHeader:
         field_values = self._read(stream)
-        return ImageHeader(flags=field_values[0], measurement_uid=field_values[1], field_of_view=field_values[2], position=field_values[3], col_dir=field_values[4], line_dir=field_values[5], slice_dir=field_values[6], patient_table_position=field_values[7], average=field_values[8], slice=field_values[9], contrast=field_values[10], phase=field_values[11], repetition=field_values[12], set=field_values[13], acquisition_time_stamp_ns=field_values[14], physiology_time_stamp_ns=field_values[15], image_type=field_values[16], image_index=field_values[17], image_series_index=field_values[18], user_int=field_values[19], user_float=field_values[20])
+        return ImageHeader(flags=field_values[0], measurement_uid=field_values[1], measurement_freq=field_values[2], field_of_view=field_values[3], position=field_values[4], col_dir=field_values[5], line_dir=field_values[6], slice_dir=field_values[7], patient_table_position=field_values[8], average=field_values[9], slice=field_values[10], contrast=field_values[11], phase=field_values[12], repetition=field_values[13], set=field_values[14], acquisition_time_stamp_ns=field_values[15], physiology_time_stamp_ns=field_values[16], image_type=field_values[17], image_quantitative_type=field_values[18], image_index=field_values[19], image_series_index=field_values[20], user_int=field_values[21], user_float=field_values[22])
 
 
 class ImageSerializer(typing.Generic[T, T_NP], _binary.RecordSerializer[Image[T_NP]]):
@@ -715,20 +751,20 @@ class ImageSerializer(typing.Generic[T, T_NP], _binary.RecordSerializer[Image[T_
 
 class NoiseCovarianceSerializer(_binary.RecordSerializer[NoiseCovariance]):
     def __init__(self) -> None:
-        super().__init__([("coil_labels", _binary.VectorSerializer(CoilLabelTypeSerializer())), ("receiver_noise_bandwidth", _binary.float32_serializer), ("noise_dwell_time_ns", _binary.uint64_serializer), ("sample_count", _binary.size_serializer), ("matrix", _binary.NDArraySerializer(_binary.complexfloat32_serializer, 2))])
+        super().__init__([("coil_labels", _binary.VectorSerializer(CoilLabelTypeSerializer())), ("receiver_noise_bandwidth", _binary.float32_serializer), ("noise_dwell_time_us", _binary.float32_serializer), ("sample_count", _binary.size_serializer), ("matrix", _binary.NDArraySerializer(_binary.complexfloat32_serializer, 2))])
 
     def write(self, stream: _binary.CodedOutputStream, value: NoiseCovariance) -> None:
         if isinstance(value, np.void):
             self.write_numpy(stream, value)
             return
-        self._write(stream, value.coil_labels, value.receiver_noise_bandwidth, value.noise_dwell_time_ns, value.sample_count, value.matrix)
+        self._write(stream, value.coil_labels, value.receiver_noise_bandwidth, value.noise_dwell_time_us, value.sample_count, value.matrix)
 
     def write_numpy(self, stream: _binary.CodedOutputStream, value: np.void) -> None:
-        self._write(stream, value['coil_labels'], value['receiver_noise_bandwidth'], value['noise_dwell_time_ns'], value['sample_count'], value['matrix'])
+        self._write(stream, value['coil_labels'], value['receiver_noise_bandwidth'], value['noise_dwell_time_us'], value['sample_count'], value['matrix'])
 
     def read(self, stream: _binary.CodedInputStream) -> NoiseCovariance:
         field_values = self._read(stream)
-        return NoiseCovariance(coil_labels=field_values[0], receiver_noise_bandwidth=field_values[1], noise_dwell_time_ns=field_values[2], sample_count=field_values[3], matrix=field_values[4])
+        return NoiseCovariance(coil_labels=field_values[0], receiver_noise_bandwidth=field_values[1], noise_dwell_time_us=field_values[2], sample_count=field_values[3], matrix=field_values[4])
 
 
 class WaveformSerializer(typing.Generic[T, T_NP], _binary.RecordSerializer[Waveform[T_NP]]):
@@ -873,5 +909,41 @@ class ImageArraySerializer(_binary.RecordSerializer[ImageArray]):
     def read(self, stream: _binary.CodedInputStream) -> ImageArray:
         field_values = self._read(stream)
         return ImageArray(data=field_values[0], headers=field_values[1], meta=field_values[2], waveforms=field_values[3])
+
+
+class PulseHeaderSerializer(_binary.RecordSerializer[PulseHeader]):
+    def __init__(self) -> None:
+        super().__init__([("pulse_time_stamp_ns", _binary.uint64_serializer), ("channel_order", _binary.VectorSerializer(_binary.uint32_serializer)), ("sample_time_ns", _binary.uint32_serializer), ("pulse_calibration", _binary.OptionalSerializer(_binary.VectorSerializer(_binary.float32_serializer)))])
+
+    def write(self, stream: _binary.CodedOutputStream, value: PulseHeader) -> None:
+        if isinstance(value, np.void):
+            self.write_numpy(stream, value)
+            return
+        self._write(stream, value.pulse_time_stamp_ns, value.channel_order, value.sample_time_ns, value.pulse_calibration)
+
+    def write_numpy(self, stream: _binary.CodedOutputStream, value: np.void) -> None:
+        self._write(stream, value['pulse_time_stamp_ns'], value['channel_order'], value['sample_time_ns'], value['pulse_calibration'])
+
+    def read(self, stream: _binary.CodedInputStream) -> PulseHeader:
+        field_values = self._read(stream)
+        return PulseHeader(pulse_time_stamp_ns=field_values[0], channel_order=field_values[1], sample_time_ns=field_values[2], pulse_calibration=field_values[3])
+
+
+class PulseSerializer(_binary.RecordSerializer[Pulse]):
+    def __init__(self) -> None:
+        super().__init__([("head", PulseHeaderSerializer()), ("amplitude", _binary.NDArraySerializer(_binary.float32_serializer, 2)), ("phase", _binary.NDArraySerializer(_binary.float32_serializer, 2))])
+
+    def write(self, stream: _binary.CodedOutputStream, value: Pulse) -> None:
+        if isinstance(value, np.void):
+            self.write_numpy(stream, value)
+            return
+        self._write(stream, value.head, value.amplitude, value.phase)
+
+    def write_numpy(self, stream: _binary.CodedOutputStream, value: np.void) -> None:
+        self._write(stream, value['head'], value['amplitude'], value['phase'])
+
+    def read(self, stream: _binary.CodedInputStream) -> Pulse:
+        field_values = self._read(stream)
+        return Pulse(head=field_values[0], amplitude=field_values[1], phase=field_values[2])
 
 

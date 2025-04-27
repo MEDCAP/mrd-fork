@@ -15,8 +15,8 @@ classdef StudyInformationType < handle
   methods
     function self = StudyInformationType(kwargs)
       arguments
-        kwargs.study_date = yardl.None;
-        kwargs.study_time = yardl.None;
+        kwargs.study_date = yardl.Date();
+        kwargs.study_time = yardl.Time();
         kwargs.study_id = yardl.None;
         kwargs.accession_number = yardl.None;
         kwargs.referring_physician_name = yardl.None;
