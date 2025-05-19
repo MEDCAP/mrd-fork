@@ -170,23 +170,14 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
         self._idx_converter = EncodingCountersConverter()
         self._measurement_uid_converter = _ndjson.uint32_converter
         self._scan_counter_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
-<<<<<<< HEAD
-        self._acquisition_time_stamp_ns_converter = _ndjson.uint64_converter
-        self._physiology_time_stamp_ns_converter = _ndjson.uint64_converter
-=======
         self._acquisition_time_stamp_ns_converter = _ndjson.OptionalConverter(_ndjson.uint64_converter)
         self._physiology_time_stamp_ns_converter = _ndjson.VectorConverter(_ndjson.uint64_converter)
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
         self._channel_order_converter = _ndjson.VectorConverter(_ndjson.uint32_converter)
         self._discard_pre_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
         self._discard_post_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
         self._center_sample_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
         self._encoding_space_ref_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
-<<<<<<< HEAD
-        self._sample_time_ns_converter = _ndjson.uint64_converter
-=======
         self._sample_time_ns_converter = _ndjson.OptionalConverter(_ndjson.uint64_converter)
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
         self._position_converter = _ndjson.FixedNDArrayConverter(_ndjson.float32_converter, (3,))
         self._read_dir_converter = _ndjson.FixedNDArrayConverter(_ndjson.float32_converter, (3,))
         self._phase_dir_converter = _ndjson.FixedNDArrayConverter(_ndjson.float32_converter, (3,))
@@ -226,12 +217,8 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
         json_object["measurementUid"] = self._measurement_uid_converter.to_json(value.measurement_uid)
         if value.scan_counter is not None:
             json_object["scanCounter"] = self._scan_counter_converter.to_json(value.scan_counter)
-<<<<<<< HEAD
-        json_object["acquisitionTimeStampNs"] = self._acquisition_time_stamp_ns_converter.to_json(value.acquisition_time_stamp_ns)
-=======
         if value.acquisition_time_stamp_ns is not None:
             json_object["acquisitionTimeStampNs"] = self._acquisition_time_stamp_ns_converter.to_json(value.acquisition_time_stamp_ns)
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
         json_object["physiologyTimeStampNs"] = self._physiology_time_stamp_ns_converter.to_json(value.physiology_time_stamp_ns)
         json_object["channelOrder"] = self._channel_order_converter.to_json(value.channel_order)
         if value.discard_pre is not None:
@@ -242,12 +229,8 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
             json_object["centerSample"] = self._center_sample_converter.to_json(value.center_sample)
         if value.encoding_space_ref is not None:
             json_object["encodingSpaceRef"] = self._encoding_space_ref_converter.to_json(value.encoding_space_ref)
-<<<<<<< HEAD
-        json_object["sampleTimeNs"] = self._sample_time_ns_converter.to_json(value.sample_time_ns)
-=======
         if value.sample_time_ns is not None:
             json_object["sampleTimeNs"] = self._sample_time_ns_converter.to_json(value.sample_time_ns)
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
         json_object["position"] = self._position_converter.to_json(value.position)
         json_object["readDir"] = self._read_dir_converter.to_json(value.read_dir)
         json_object["phaseDir"] = self._phase_dir_converter.to_json(value.phase_dir)
@@ -267,12 +250,8 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
         json_object["measurementUid"] = self._measurement_uid_converter.numpy_to_json(value["measurement_uid"])
         if (field_val := value["scan_counter"]) is not None:
             json_object["scanCounter"] = self._scan_counter_converter.numpy_to_json(field_val)
-<<<<<<< HEAD
-        json_object["acquisitionTimeStampNs"] = self._acquisition_time_stamp_ns_converter.numpy_to_json(value["acquisition_time_stamp_ns"])
-=======
         if (field_val := value["acquisition_time_stamp_ns"]) is not None:
             json_object["acquisitionTimeStampNs"] = self._acquisition_time_stamp_ns_converter.numpy_to_json(field_val)
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
         json_object["physiologyTimeStampNs"] = self._physiology_time_stamp_ns_converter.numpy_to_json(value["physiology_time_stamp_ns"])
         json_object["channelOrder"] = self._channel_order_converter.numpy_to_json(value["channel_order"])
         if (field_val := value["discard_pre"]) is not None:
@@ -283,12 +262,8 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
             json_object["centerSample"] = self._center_sample_converter.numpy_to_json(field_val)
         if (field_val := value["encoding_space_ref"]) is not None:
             json_object["encodingSpaceRef"] = self._encoding_space_ref_converter.numpy_to_json(field_val)
-<<<<<<< HEAD
-        json_object["sampleTimeNs"] = self._sample_time_ns_converter.numpy_to_json(value["sample_time_ns"])
-=======
         if (field_val := value["sample_time_ns"]) is not None:
             json_object["sampleTimeNs"] = self._sample_time_ns_converter.numpy_to_json(field_val)
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
         json_object["position"] = self._position_converter.numpy_to_json(value["position"])
         json_object["readDir"] = self._read_dir_converter.numpy_to_json(value["read_dir"])
         json_object["phaseDir"] = self._phase_dir_converter.numpy_to_json(value["phase_dir"])
@@ -306,22 +281,14 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
             idx=self._idx_converter.from_json(json_object["idx"],),
             measurement_uid=self._measurement_uid_converter.from_json(json_object["measurementUid"],),
             scan_counter=self._scan_counter_converter.from_json(json_object.get("scanCounter")),
-<<<<<<< HEAD
-            acquisition_time_stamp_ns=self._acquisition_time_stamp_ns_converter.from_json(json_object["acquisitionTimeStampNs"],),
-=======
             acquisition_time_stamp_ns=self._acquisition_time_stamp_ns_converter.from_json(json_object.get("acquisitionTimeStampNs")),
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
             physiology_time_stamp_ns=self._physiology_time_stamp_ns_converter.from_json(json_object["physiologyTimeStampNs"],),
             channel_order=self._channel_order_converter.from_json(json_object["channelOrder"],),
             discard_pre=self._discard_pre_converter.from_json(json_object.get("discardPre")),
             discard_post=self._discard_post_converter.from_json(json_object.get("discardPost")),
             center_sample=self._center_sample_converter.from_json(json_object.get("centerSample")),
             encoding_space_ref=self._encoding_space_ref_converter.from_json(json_object.get("encodingSpaceRef")),
-<<<<<<< HEAD
-            sample_time_ns=self._sample_time_ns_converter.from_json(json_object["sampleTimeNs"],),
-=======
             sample_time_ns=self._sample_time_ns_converter.from_json(json_object.get("sampleTimeNs")),
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
             position=self._position_converter.from_json(json_object["position"],),
             read_dir=self._read_dir_converter.from_json(json_object["readDir"],),
             phase_dir=self._phase_dir_converter.from_json(json_object["phaseDir"],),
@@ -339,22 +306,14 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
             self._idx_converter.from_json_to_numpy(json_object["idx"]),
             self._measurement_uid_converter.from_json_to_numpy(json_object["measurementUid"]),
             self._scan_counter_converter.from_json_to_numpy(json_object.get("scanCounter")),
-<<<<<<< HEAD
-            self._acquisition_time_stamp_ns_converter.from_json_to_numpy(json_object["acquisitionTimeStampNs"]),
-=======
             self._acquisition_time_stamp_ns_converter.from_json_to_numpy(json_object.get("acquisitionTimeStampNs")),
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
             self._physiology_time_stamp_ns_converter.from_json_to_numpy(json_object["physiologyTimeStampNs"]),
             self._channel_order_converter.from_json_to_numpy(json_object["channelOrder"]),
             self._discard_pre_converter.from_json_to_numpy(json_object.get("discardPre")),
             self._discard_post_converter.from_json_to_numpy(json_object.get("discardPost")),
             self._center_sample_converter.from_json_to_numpy(json_object.get("centerSample")),
             self._encoding_space_ref_converter.from_json_to_numpy(json_object.get("encodingSpaceRef")),
-<<<<<<< HEAD
-            self._sample_time_ns_converter.from_json_to_numpy(json_object["sampleTimeNs"]),
-=======
             self._sample_time_ns_converter.from_json_to_numpy(json_object.get("sampleTimeNs")),
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
             self._position_converter.from_json_to_numpy(json_object["position"]),
             self._read_dir_converter.from_json_to_numpy(json_object["readDir"]),
             self._phase_dir_converter.from_json_to_numpy(json_object["phaseDir"]),
@@ -369,17 +328,11 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
     def __init__(self) -> None:
         self._head_converter = AcquisitionHeaderConverter()
         self._data_converter = _ndjson.NDArrayConverter(_ndjson.complexfloat32_converter, 2)
-<<<<<<< HEAD
-        super().__init__(np.dtype([
-            ("head", self._head_converter.overall_dtype()),
-            ("data", self._data_converter.overall_dtype()),
-=======
         self._trajectory_converter = _ndjson.NDArrayConverter(_ndjson.float32_converter, 2)
         super().__init__(np.dtype([
             ("head", self._head_converter.overall_dtype()),
             ("data", self._data_converter.overall_dtype()),
             ("trajectory", self._trajectory_converter.overall_dtype()),
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
         ]))
 
     def to_json(self, value: Acquisition) -> object:
@@ -389,10 +342,7 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
 
         json_object["head"] = self._head_converter.to_json(value.head)
         json_object["data"] = self._data_converter.to_json(value.data)
-<<<<<<< HEAD
-=======
         json_object["trajectory"] = self._trajectory_converter.to_json(value.trajectory)
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
         return json_object
 
     def numpy_to_json(self, value: np.void) -> object:
@@ -402,10 +352,7 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
 
         json_object["head"] = self._head_converter.numpy_to_json(value["head"])
         json_object["data"] = self._data_converter.numpy_to_json(value["data"])
-<<<<<<< HEAD
-=======
         json_object["trajectory"] = self._trajectory_converter.numpy_to_json(value["trajectory"])
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
         return json_object
 
     def from_json(self, json_object: object) -> Acquisition:
@@ -414,10 +361,7 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
         return Acquisition(
             head=self._head_converter.from_json(json_object["head"],),
             data=self._data_converter.from_json(json_object["data"],),
-<<<<<<< HEAD
-=======
             trajectory=self._trajectory_converter.from_json(json_object["trajectory"],),
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
         )
 
     def from_json_to_numpy(self, json_object: object) -> np.void:
@@ -3591,14 +3535,10 @@ class NDJsonMrdReader(_ndjson.NDJsonProtocolReader, MrdReaderBase):
             yield converter.from_json(json_object)
 
 class NDJsonMrdNoiseCovarianceWriter(_ndjson.NDJsonProtocolWriter, MrdNoiseCovarianceWriterBase):
-<<<<<<< HEAD
-    """NDJson writer for the MrdNoiseCovariance protocol."""
-=======
     """NDJson writer for the MrdNoiseCovariance protocol.
 
     Protocol for serializing a noise covariance matrix
     """
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
 
 
     def __init__(self, stream: typing.Union[typing.TextIO, str]) -> None:
@@ -3612,14 +3552,10 @@ class NDJsonMrdNoiseCovarianceWriter(_ndjson.NDJsonProtocolWriter, MrdNoiseCovar
 
 
 class NDJsonMrdNoiseCovarianceReader(_ndjson.NDJsonProtocolReader, MrdNoiseCovarianceReaderBase):
-<<<<<<< HEAD
-    """NDJson writer for the MrdNoiseCovariance protocol."""
-=======
     """NDJson writer for the MrdNoiseCovariance protocol.
 
     Protocol for serializing a noise covariance matrix
     """
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
 
 
     def __init__(self, stream: typing.Union[io.BufferedReader, typing.TextIO, str]) -> None:
