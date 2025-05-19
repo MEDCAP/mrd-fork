@@ -2,6 +2,10 @@
 
 classdef MrdNoiseCovarianceReader < yardl.binary.BinaryProtocolReader & mrd.MrdNoiseCovarianceReaderBase
   % Binary reader for the MrdNoiseCovariance protocol
+<<<<<<< HEAD
+=======
+  % Protocol for serializing a noise covariance matrix
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
   properties (Access=protected)
     noise_covariance_serializer
   end

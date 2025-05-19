@@ -889,14 +889,23 @@ struct _Inner_AcquisitionHeader {
   mrd::hdf5::_Inner_EncodingCounters idx;
   uint32_t measurement_uid;
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> scan_counter;
+<<<<<<< HEAD
   uint64_t acquisition_time_stamp_ns;
   uint64_t physiology_time_stamp_ns;
+=======
+  yardl::hdf5::InnerOptional<uint64_t, uint64_t> acquisition_time_stamp_ns;
+  yardl::hdf5::InnerVlen<uint64_t, uint64_t> physiology_time_stamp_ns;
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
   yardl::hdf5::InnerVlen<uint32_t, uint32_t> channel_order;
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> discard_pre;
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> discard_post;
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> center_sample;
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> encoding_space_ref;
+<<<<<<< HEAD
   uint64_t sample_time_ns;
+=======
+  yardl::hdf5::InnerOptional<uint64_t, uint64_t> sample_time_ns;
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
   yardl::FixedNDArray<float, 3> position;
   yardl::FixedNDArray<float, 3> read_dir;
   yardl::FixedNDArray<float, 3> phase_dir;
@@ -910,16 +919,66 @@ struct _Inner_Acquisition {
   _Inner_Acquisition() {} 
   _Inner_Acquisition(mrd::Acquisition const& o) 
       : head(o.head),
+<<<<<<< HEAD
       data(o.data) {
+=======
+      data(o.data),
+      trajectory(o.trajectory) {
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
   }
 
   void ToOuter (mrd::Acquisition& o) const {
     yardl::hdf5::ToOuter(head, o.head);
     yardl::hdf5::ToOuter(data, o.data);
+<<<<<<< HEAD
+=======
+    yardl::hdf5::ToOuter(trajectory, o.trajectory);
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
   }
 
   mrd::hdf5::_Inner_AcquisitionHeader head;
   yardl::hdf5::InnerNdArray<std::complex<float>, std::complex<float>, 2> data;
+};
+
+struct _Inner_GradHeader {
+  _Inner_GradHeader() {} 
+  _Inner_GradHeader(mrd::GradHeader const& o) 
+      : gradient_time_stamp_ns(o.gradient_time_stamp_ns),
+      gradient_sample_time_ns(o.gradient_sample_time_ns),
+      pulse_calibration(o.pulse_calibration) {
+  }
+
+  void ToOuter (mrd::GradHeader& o) const {
+    yardl::hdf5::ToOuter(gradient_time_stamp_ns, o.gradient_time_stamp_ns);
+    yardl::hdf5::ToOuter(gradient_sample_time_ns, o.gradient_sample_time_ns);
+    yardl::hdf5::ToOuter(pulse_calibration, o.pulse_calibration);
+  }
+
+  uint64_t gradient_time_stamp_ns;
+  uint32_t gradient_sample_time_ns;
+  yardl::hdf5::InnerOptional<yardl::hdf5::InnerVlen<float, float>, std::vector<float>> pulse_calibration;
+};
+
+struct _Inner_Gradient {
+  _Inner_Gradient() {} 
+  _Inner_Gradient(mrd::Gradient const& o) 
+      : head(o.head),
+      rl(o.rl),
+      ap(o.ap),
+      fh(o.fh) {
+  }
+
+  void ToOuter (mrd::Gradient& o) const {
+    yardl::hdf5::ToOuter(head, o.head);
+    yardl::hdf5::ToOuter(rl, o.rl);
+    yardl::hdf5::ToOuter(ap, o.ap);
+    yardl::hdf5::ToOuter(fh, o.fh);
+  }
+
+  mrd::hdf5::_Inner_GradHeader head;
+  yardl::hdf5::InnerVlen<float, float> rl;
+  yardl::hdf5::InnerVlen<float, float> ap;
+  yardl::hdf5::InnerVlen<float, float> fh;
 };
 
 struct _Inner_GradHeader {
@@ -1842,14 +1901,23 @@ struct _Inner_Pulse {
   t.insertMember("idx", HOFFSET(RecordType, idx), mrd::hdf5::GetEncodingCountersHdf5Ddl());
   t.insertMember("measurementUid", HOFFSET(RecordType, measurement_uid), H5::PredType::NATIVE_UINT32);
   t.insertMember("scanCounter", HOFFSET(RecordType, scan_counter), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
+<<<<<<< HEAD
   t.insertMember("acquisitionTimeStampNs", HOFFSET(RecordType, acquisition_time_stamp_ns), H5::PredType::NATIVE_UINT64);
   t.insertMember("physiologyTimeStampNs", HOFFSET(RecordType, physiology_time_stamp_ns), H5::PredType::NATIVE_UINT64);
+=======
+  t.insertMember("acquisitionTimeStampNs", HOFFSET(RecordType, acquisition_time_stamp_ns), yardl::hdf5::OptionalTypeDdl<uint64_t, uint64_t>(H5::PredType::NATIVE_UINT64));
+  t.insertMember("physiologyTimeStampNs", HOFFSET(RecordType, physiology_time_stamp_ns), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_UINT64));
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
   t.insertMember("channelOrder", HOFFSET(RecordType, channel_order), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_UINT32));
   t.insertMember("discardPre", HOFFSET(RecordType, discard_pre), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
   t.insertMember("discardPost", HOFFSET(RecordType, discard_post), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
   t.insertMember("centerSample", HOFFSET(RecordType, center_sample), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
   t.insertMember("encodingSpaceRef", HOFFSET(RecordType, encoding_space_ref), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
+<<<<<<< HEAD
   t.insertMember("sampleTimeNs", HOFFSET(RecordType, sample_time_ns), H5::PredType::NATIVE_UINT64);
+=======
+  t.insertMember("sampleTimeNs", HOFFSET(RecordType, sample_time_ns), yardl::hdf5::OptionalTypeDdl<uint64_t, uint64_t>(H5::PredType::NATIVE_UINT64));
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
   t.insertMember("position", HOFFSET(RecordType, position), yardl::hdf5::FixedNDArrayDdl(H5::PredType::NATIVE_FLOAT, {3}));
   t.insertMember("readDir", HOFFSET(RecordType, read_dir), yardl::hdf5::FixedNDArrayDdl(H5::PredType::NATIVE_FLOAT, {3}));
   t.insertMember("phaseDir", HOFFSET(RecordType, phase_dir), yardl::hdf5::FixedNDArrayDdl(H5::PredType::NATIVE_FLOAT, {3}));
@@ -1865,6 +1933,25 @@ struct _Inner_Pulse {
   H5::CompType t(sizeof(RecordType));
   t.insertMember("head", HOFFSET(RecordType, head), mrd::hdf5::GetAcquisitionHeaderHdf5Ddl());
   t.insertMember("data", HOFFSET(RecordType, data), yardl::hdf5::NDArrayDdl<std::complex<float>, std::complex<float>, 2>(yardl::hdf5::ComplexTypeDdl<float>()));
+  return t;
+}
+
+[[maybe_unused]] H5::CompType GetGradHeaderHdf5Ddl() {
+  using RecordType = mrd::hdf5::_Inner_GradHeader;
+  H5::CompType t(sizeof(RecordType));
+  t.insertMember("gradientTimeStampNs", HOFFSET(RecordType, gradient_time_stamp_ns), H5::PredType::NATIVE_UINT64);
+  t.insertMember("gradientSampleTimeNs", HOFFSET(RecordType, gradient_sample_time_ns), H5::PredType::NATIVE_UINT32);
+  t.insertMember("pulseCalibration", HOFFSET(RecordType, pulse_calibration), yardl::hdf5::OptionalTypeDdl<yardl::hdf5::InnerVlen<float, float>, std::vector<float>>(yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_FLOAT)));
+  return t;
+}
+
+[[maybe_unused]] H5::CompType GetGradientHdf5Ddl() {
+  using RecordType = mrd::hdf5::_Inner_Gradient;
+  H5::CompType t(sizeof(RecordType));
+  t.insertMember("head", HOFFSET(RecordType, head), mrd::hdf5::GetGradHeaderHdf5Ddl());
+  t.insertMember("rl", HOFFSET(RecordType, rl), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_FLOAT));
+  t.insertMember("ap", HOFFSET(RecordType, ap), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_FLOAT));
+  t.insertMember("fh", HOFFSET(RecordType, fh), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_FLOAT));
   return t;
 }
 

@@ -68,8 +68,14 @@ struct IsTriviallySerializable<mrd::Acquisition> {
     std::is_standard_layout_v<__T__> &&
     IsTriviallySerializable<decltype(__T__::head)>::value &&
     IsTriviallySerializable<decltype(__T__::data)>::value &&
+<<<<<<< HEAD
     (sizeof(__T__) == (sizeof(__T__::head) + sizeof(__T__::data))) &&
     offsetof(__T__, head) < offsetof(__T__, data);
+=======
+    IsTriviallySerializable<decltype(__T__::trajectory)>::value &&
+    (sizeof(__T__) == (sizeof(__T__::head) + sizeof(__T__::data) + sizeof(__T__::trajectory))) &&
+    offsetof(__T__, head) < offsetof(__T__, data) && offsetof(__T__, data) < offsetof(__T__, trajectory);
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
 };
 
 template <>
@@ -1127,14 +1133,23 @@ namespace {
   mrd::binary::WriteEncodingCounters(stream, value.idx);
   yardl::binary::WriteInteger(stream, value.measurement_uid);
   yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.scan_counter);
+<<<<<<< HEAD
   yardl::binary::WriteInteger(stream, value.acquisition_time_stamp_ns);
   yardl::binary::WriteInteger(stream, value.physiology_time_stamp_ns);
+=======
+  yardl::binary::WriteOptional<uint64_t, yardl::binary::WriteInteger>(stream, value.acquisition_time_stamp_ns);
+  yardl::binary::WriteVector<uint64_t, yardl::binary::WriteInteger>(stream, value.physiology_time_stamp_ns);
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
   yardl::binary::WriteVector<uint32_t, yardl::binary::WriteInteger>(stream, value.channel_order);
   yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.discard_pre);
   yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.discard_post);
   yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.center_sample);
   yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.encoding_space_ref);
+<<<<<<< HEAD
   yardl::binary::WriteInteger(stream, value.sample_time_ns);
+=======
+  yardl::binary::WriteOptional<uint64_t, yardl::binary::WriteInteger>(stream, value.sample_time_ns);
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
   yardl::binary::WriteFixedNDArray<float, yardl::binary::WriteFloatingPoint, 3>(stream, value.position);
   yardl::binary::WriteFixedNDArray<float, yardl::binary::WriteFloatingPoint, 3>(stream, value.read_dir);
   yardl::binary::WriteFixedNDArray<float, yardl::binary::WriteFloatingPoint, 3>(stream, value.phase_dir);
@@ -1142,6 +1157,8 @@ namespace {
   yardl::binary::WriteFixedNDArray<float, yardl::binary::WriteFloatingPoint, 3>(stream, value.patient_table_position);
   yardl::binary::WriteVector<int32_t, yardl::binary::WriteInteger>(stream, value.user_int);
   yardl::binary::WriteVector<float, yardl::binary::WriteFloatingPoint>(stream, value.user_float);
+<<<<<<< HEAD
+=======
 }
 
 [[maybe_unused]] void ReadAcquisitionHeader(yardl::binary::CodedInputStream& stream, mrd::AcquisitionHeader& value) {
@@ -1150,6 +1167,46 @@ namespace {
     return;
   }
 
+  yardl::binary::ReadFlags<mrd::AcquisitionFlags>(stream, value.flags);
+  mrd::binary::ReadEncodingCounters(stream, value.idx);
+  yardl::binary::ReadInteger(stream, value.measurement_uid);
+  yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.scan_counter);
+  yardl::binary::ReadOptional<uint64_t, yardl::binary::ReadInteger>(stream, value.acquisition_time_stamp_ns);
+  yardl::binary::ReadVector<uint64_t, yardl::binary::ReadInteger>(stream, value.physiology_time_stamp_ns);
+  yardl::binary::ReadVector<uint32_t, yardl::binary::ReadInteger>(stream, value.channel_order);
+  yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.discard_pre);
+  yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.discard_post);
+  yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.center_sample);
+  yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.encoding_space_ref);
+  yardl::binary::ReadOptional<uint64_t, yardl::binary::ReadInteger>(stream, value.sample_time_ns);
+  yardl::binary::ReadFixedNDArray<float, yardl::binary::ReadFloatingPoint, 3>(stream, value.position);
+  yardl::binary::ReadFixedNDArray<float, yardl::binary::ReadFloatingPoint, 3>(stream, value.read_dir);
+  yardl::binary::ReadFixedNDArray<float, yardl::binary::ReadFloatingPoint, 3>(stream, value.phase_dir);
+  yardl::binary::ReadFixedNDArray<float, yardl::binary::ReadFloatingPoint, 3>(stream, value.slice_dir);
+  yardl::binary::ReadFixedNDArray<float, yardl::binary::ReadFloatingPoint, 3>(stream, value.patient_table_position);
+  yardl::binary::ReadVector<int32_t, yardl::binary::ReadInteger>(stream, value.user_int);
+  yardl::binary::ReadVector<float, yardl::binary::ReadFloatingPoint>(stream, value.user_float);
+}
+
+[[maybe_unused]] void WriteAcquisition(yardl::binary::CodedOutputStream& stream, mrd::Acquisition const& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::Acquisition>::value) {
+    yardl::binary::WriteTriviallySerializable(stream, value);
+    return;
+  }
+
+  mrd::binary::WriteAcquisitionHeader(stream, value.head);
+  mrd::binary::WriteAcquisitionData(stream, value.data);
+  mrd::binary::WriteTrajectoryData(stream, value.trajectory);
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
+}
+
+[[maybe_unused]] void ReadAcquisitionHeader(yardl::binary::CodedInputStream& stream, mrd::AcquisitionHeader& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::AcquisitionHeader>::value) {
+    yardl::binary::ReadTriviallySerializable(stream, value);
+    return;
+  }
+
+<<<<<<< HEAD
   yardl::binary::ReadFlags<mrd::AcquisitionFlags>(stream, value.flags);
   mrd::binary::ReadEncodingCounters(stream, value.idx);
   yardl::binary::ReadInteger(stream, value.measurement_uid);
@@ -1187,8 +1244,74 @@ namespace {
     return;
   }
 
+=======
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
   mrd::binary::ReadAcquisitionHeader(stream, value.head);
   mrd::binary::ReadAcquisitionData(stream, value.data);
+}
+
+[[maybe_unused]] void WriteGradientData(yardl::binary::CodedOutputStream& stream, mrd::GradientData const& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::GradientData>::value) {
+    yardl::binary::WriteTriviallySerializable(stream, value);
+    return;
+  }
+
+  yardl::binary::WriteNDArray<float, yardl::binary::WriteFloatingPoint, 1>(stream, value);
+}
+
+[[maybe_unused]] void ReadGradientData(yardl::binary::CodedInputStream& stream, mrd::GradientData& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::GradientData>::value) {
+    yardl::binary::ReadTriviallySerializable(stream, value);
+    return;
+  }
+
+  yardl::binary::ReadNDArray<float, yardl::binary::ReadFloatingPoint, 1>(stream, value);
+}
+
+[[maybe_unused]] void WriteGradHeader(yardl::binary::CodedOutputStream& stream, mrd::GradHeader const& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::GradHeader>::value) {
+    yardl::binary::WriteTriviallySerializable(stream, value);
+    return;
+  }
+
+  yardl::binary::WriteInteger(stream, value.gradient_time_stamp_ns);
+  yardl::binary::WriteInteger(stream, value.gradient_sample_time_ns);
+  yardl::binary::WriteOptional<std::vector<float>, yardl::binary::WriteVector<float, yardl::binary::WriteFloatingPoint>>(stream, value.pulse_calibration);
+}
+
+[[maybe_unused]] void ReadGradHeader(yardl::binary::CodedInputStream& stream, mrd::GradHeader& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::GradHeader>::value) {
+    yardl::binary::ReadTriviallySerializable(stream, value);
+    return;
+  }
+
+  yardl::binary::ReadInteger(stream, value.gradient_time_stamp_ns);
+  yardl::binary::ReadInteger(stream, value.gradient_sample_time_ns);
+  yardl::binary::ReadOptional<std::vector<float>, yardl::binary::ReadVector<float, yardl::binary::ReadFloatingPoint>>(stream, value.pulse_calibration);
+}
+
+[[maybe_unused]] void WriteGradient(yardl::binary::CodedOutputStream& stream, mrd::Gradient const& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::Gradient>::value) {
+    yardl::binary::WriteTriviallySerializable(stream, value);
+    return;
+  }
+
+  mrd::binary::WriteGradHeader(stream, value.head);
+  mrd::binary::WriteGradientData(stream, value.rl);
+  mrd::binary::WriteGradientData(stream, value.ap);
+  mrd::binary::WriteGradientData(stream, value.fh);
+}
+
+[[maybe_unused]] void ReadGradient(yardl::binary::CodedInputStream& stream, mrd::Gradient& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::Gradient>::value) {
+    yardl::binary::ReadTriviallySerializable(stream, value);
+    return;
+  }
+
+  mrd::binary::ReadGradHeader(stream, value.head);
+  mrd::binary::ReadGradientData(stream, value.rl);
+  mrd::binary::ReadGradientData(stream, value.ap);
+  mrd::binary::ReadGradientData(stream, value.fh);
 }
 
 [[maybe_unused]] void WriteGradientData(yardl::binary::CodedOutputStream& stream, mrd::GradientData const& value) {

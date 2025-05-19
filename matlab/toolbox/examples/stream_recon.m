@@ -145,8 +145,13 @@ while r.has_data()
                 img_head.line_dir = ref_acq.head.phase_dir;
                 img_head.slice_dir = ref_acq.head.slice_dir;
                 img_head.patient_table_position = ref_acq.head.patient_table_position;
+<<<<<<< HEAD
                 img_head.acquisition_time_stamp = ref_acq.head.acquisition_time_stamp;
                 img_head.physiology_time_stamp = ref_acq.head.physiology_time_stamp;
+=======
+                img_head.acquisition_time_stamp_ns = ref_acq.head.acquisition_time_stamp_ns;
+                img_head.physiology_time_stamp_ns = ref_acq.head.physiology_time_stamp_ns;
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
                 img_head.slice = ref_acq.head.idx.slice;
                 img_head.contrast = contrast;
                 img_head.repetition = ref_acq.head.idx.repetition;

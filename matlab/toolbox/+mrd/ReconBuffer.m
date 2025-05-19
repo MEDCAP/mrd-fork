@@ -2,20 +2,39 @@
 
 classdef ReconBuffer < handle
   properties
+<<<<<<< HEAD
     data
     trajectory
     density
     headers
+=======
+    % Buffered Acquisition data
+    data
+    % Buffered Trajectory data
+    trajectory
+    % Buffered Density weights
+    density
+    % Buffered AcquisitionHeaders
+    headers
+    % Sampling details for these Acquisitions
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
     sampling
   end
 
   methods
     function self = ReconBuffer(kwargs)
       arguments
+<<<<<<< HEAD
         kwargs.data = single.empty();
         kwargs.trajectory = single.empty();
         kwargs.density = yardl.None;
         kwargs.headers = mrd.AcquisitionHeader.empty();
+=======
+        kwargs.data = single.empty(0, 0, 0, 0, 0, 0, 0);
+        kwargs.trajectory = single.empty(0, 0, 0, 0, 0, 0, 0);
+        kwargs.density = yardl.None;
+        kwargs.headers = mrd.AcquisitionHeader.empty(0, 0, 0, 0, 0);
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
         kwargs.sampling = mrd.SamplingDescription();
       end
       self.data = kwargs.data;
@@ -28,20 +47,31 @@ classdef ReconBuffer < handle
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.ReconBuffer") && ...
+<<<<<<< HEAD
         isequal({self.data}, {other.data}) && ...
         isequal({self.trajectory}, {other.trajectory}) && ...
         isequal({self.density}, {other.density}) && ...
         isequal({self.headers}, {other.headers}) && ...
         isequal({self.sampling}, {other.sampling});
+=======
+        isequal(self.data, other.data) && ...
+        isequal(self.trajectory, other.trajectory) && ...
+        isequal(self.density, other.density) && ...
+        isequal(self.headers, other.headers) && ...
+        isequal(self.sampling, other.sampling);
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
     end
 
     function res = ne(self, other)
       res = ~self.eq(other);
     end
+<<<<<<< HEAD
 
     function res = isequal(self, other)
       res = all(eq(self, other));
     end
+=======
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
   end
 
   methods (Static)

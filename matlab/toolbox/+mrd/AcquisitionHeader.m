@@ -2,6 +2,7 @@
 
 classdef AcquisitionHeader < handle
   properties
+<<<<<<< HEAD
     flags
     idx
     measurement_uid
@@ -20,6 +21,47 @@ classdef AcquisitionHeader < handle
     slice_dir
     patient_table_position
     user_int
+=======
+    % A bit mask of common attributes applicable to individual acquisition
+    flags
+    % Encoding loop counters
+    idx
+    % Unique ID corresponding to the readout
+    measurement_uid
+    % Zero-indexed incrementing counter for readouts
+    scan_counter
+    % Clock time stamp (e.g. nanoseconds since midnight)
+    acquisition_time_stamp_ns
+    % Time stamps relative to physiological triggering in nanoseconds
+    physiology_time_stamp_ns
+    % Channel numbers
+    channel_order
+    % Number of readout samples to be discarded at the beginning
+    %   (e.g. if the ADC is active during gradient events)
+    discard_pre
+    % Number of readout samples to be discarded at the end
+    %   (e.g. if the ADC is active during gradient events)
+    discard_post
+    % Index of the readout sample corresponing to k-space center (zero indexed)
+    center_sample
+    % Indexed reference to the encoding spaces enumerated in the MRD Header
+    encoding_space_ref
+    % Readout bandwidth, as time between samples in nanoseconds
+    sample_time_ns
+    % Center of the excited volume, in LPS coordinates relative to isocenter in millimeters
+    position
+    % Directional cosine of readout/frequency encoding
+    read_dir
+    % Directional cosine of phase encoding (2D)
+    phase_dir
+    % Directional cosine of slice normal, i.e. cross-product of read_dir and phase_dir
+    slice_dir
+    % Offset position of the patient table, in LPS coordinates
+    patient_table_position
+    % User-defined integer parameters
+    user_int
+    % User-defined float parameters
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
     user_float
   end
 
@@ -30,14 +72,23 @@ classdef AcquisitionHeader < handle
         kwargs.idx = mrd.EncodingCounters();
         kwargs.measurement_uid = uint32(0);
         kwargs.scan_counter = yardl.None;
+<<<<<<< HEAD
         kwargs.acquisition_time_stamp_ns = uint64(0);
         kwargs.physiology_time_stamp_ns = uint64(0);
+=======
+        kwargs.acquisition_time_stamp_ns = yardl.None;
+        kwargs.physiology_time_stamp_ns = uint64.empty();
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
         kwargs.channel_order = uint32.empty();
         kwargs.discard_pre = yardl.None;
         kwargs.discard_post = yardl.None;
         kwargs.center_sample = yardl.None;
         kwargs.encoding_space_ref = yardl.None;
+<<<<<<< HEAD
         kwargs.sample_time_ns = uint64(0);
+=======
+        kwargs.sample_time_ns = yardl.None;
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
         kwargs.position = repelem(single(0), 3, 1);
         kwargs.read_dir = repelem(single(0), 3, 1);
         kwargs.phase_dir = repelem(single(0), 3, 1);
@@ -67,6 +118,7 @@ classdef AcquisitionHeader < handle
       self.user_float = kwargs.user_float;
     end
 
+<<<<<<< HEAD
     function res = acquisition_time_stamp(self)
       res = uint32(double(self.acquisition_time_stamp_ns) ./ 1e6);
       return
@@ -105,15 +157,42 @@ classdef AcquisitionHeader < handle
         isequal({self.patient_table_position}, {other.patient_table_position}) && ...
         isequal({self.user_int}, {other.user_int}) && ...
         isequal({self.user_float}, {other.user_float});
+=======
+    function res = eq(self, other)
+      res = ...
+        isa(other, "mrd.AcquisitionHeader") && ...
+        isequal(self.flags, other.flags) && ...
+        isequal(self.idx, other.idx) && ...
+        isequal(self.measurement_uid, other.measurement_uid) && ...
+        isequal(self.scan_counter, other.scan_counter) && ...
+        isequal(self.acquisition_time_stamp_ns, other.acquisition_time_stamp_ns) && ...
+        isequal(self.physiology_time_stamp_ns, other.physiology_time_stamp_ns) && ...
+        isequal(self.channel_order, other.channel_order) && ...
+        isequal(self.discard_pre, other.discard_pre) && ...
+        isequal(self.discard_post, other.discard_post) && ...
+        isequal(self.center_sample, other.center_sample) && ...
+        isequal(self.encoding_space_ref, other.encoding_space_ref) && ...
+        isequal(self.sample_time_ns, other.sample_time_ns) && ...
+        isequal(self.position, other.position) && ...
+        isequal(self.read_dir, other.read_dir) && ...
+        isequal(self.phase_dir, other.phase_dir) && ...
+        isequal(self.slice_dir, other.slice_dir) && ...
+        isequal(self.patient_table_position, other.patient_table_position) && ...
+        isequal(self.user_int, other.user_int) && ...
+        isequal(self.user_float, other.user_float);
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
     end
 
     function res = ne(self, other)
       res = ~self.eq(other);
     end
+<<<<<<< HEAD
 
     function res = isequal(self, other)
       res = all(eq(self, other));
     end
+=======
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
   end
 
   methods (Static)

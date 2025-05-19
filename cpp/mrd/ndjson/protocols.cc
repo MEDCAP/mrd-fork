@@ -940,6 +940,12 @@ void to_json(ordered_json& j, mrd::Acquisition const& value) {
   if (yardl::ndjson::ShouldSerializeFieldValue(value.data)) {
     j.push_back({"data", value.data});
   }
+<<<<<<< HEAD
+=======
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.trajectory)) {
+    j.push_back({"trajectory", value.trajectory});
+  }
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
 }
 
 void from_json(ordered_json const& j, mrd::Acquisition& value) {
@@ -948,6 +954,62 @@ void from_json(ordered_json const& j, mrd::Acquisition& value) {
   }
   if (auto it = j.find("data"); it != j.end()) {
     it->get_to(value.data);
+  }
+}
+
+void to_json(ordered_json& j, mrd::GradHeader const& value) {
+  j = ordered_json::object();
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.gradient_time_stamp_ns)) {
+    j.push_back({"gradientTimeStampNs", value.gradient_time_stamp_ns});
+  }
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.gradient_sample_time_ns)) {
+    j.push_back({"gradientSampleTimeNs", value.gradient_sample_time_ns});
+  }
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.pulse_calibration)) {
+    j.push_back({"pulseCalibration", value.pulse_calibration});
+  }
+}
+
+void from_json(ordered_json const& j, mrd::GradHeader& value) {
+  if (auto it = j.find("gradientTimeStampNs"); it != j.end()) {
+    it->get_to(value.gradient_time_stamp_ns);
+  }
+  if (auto it = j.find("gradientSampleTimeNs"); it != j.end()) {
+    it->get_to(value.gradient_sample_time_ns);
+  }
+  if (auto it = j.find("pulseCalibration"); it != j.end()) {
+    it->get_to(value.pulse_calibration);
+  }
+}
+
+void to_json(ordered_json& j, mrd::Gradient const& value) {
+  j = ordered_json::object();
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.head)) {
+    j.push_back({"head", value.head});
+  }
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.rl)) {
+    j.push_back({"rl", value.rl});
+  }
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.ap)) {
+    j.push_back({"ap", value.ap});
+  }
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.fh)) {
+    j.push_back({"fh", value.fh});
+  }
+}
+
+void from_json(ordered_json const& j, mrd::Gradient& value) {
+  if (auto it = j.find("head"); it != j.end()) {
+    it->get_to(value.head);
+  }
+  if (auto it = j.find("rl"); it != j.end()) {
+    it->get_to(value.rl);
+  }
+  if (auto it = j.find("ap"); it != j.end()) {
+    it->get_to(value.ap);
+  }
+  if (auto it = j.find("fh"); it != j.end()) {
+    it->get_to(value.fh);
   }
 }
 

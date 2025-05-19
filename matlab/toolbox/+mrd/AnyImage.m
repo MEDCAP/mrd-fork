@@ -82,7 +82,11 @@ classdef AnyImage < yardl.Union
     end
 
     function eq = eq(self, other)
+<<<<<<< HEAD
       eq = isa(other, "mrd.AnyImage") && all([self.index_] == [other.index_], 'all') && all([self.value] == [other.value], 'all');
+=======
+      eq = isa(other, "mrd.AnyImage") && isequal(self.index, other.index) && isequal(self.value, other.value);
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
     end
 
     function ne = ne(self, other)

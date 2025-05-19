@@ -89,11 +89,15 @@ ImageHeader: !record
     userInt: int*
     # User-defined float parameters
     userFloat: float*
+<<<<<<< HEAD
   computedFields:
     # ADD: original acquisitionTimeStamp in ms
     acquisitionTimeStamp: (acquisitionTimeStampNs/1e6) as uint
     physiologyTimeStamp: (physiologyTimeStampNs/1e6) as uint
     
+=======
+
+>>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
 
 ImageMetaValue: [string, long, double]
 
