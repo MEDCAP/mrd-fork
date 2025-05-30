@@ -73,7 +73,7 @@ ImageHeader: !record
     repetition: uint?
     # Sets of different preparation, e.g. flow encoding, diffusion weighting
     set: uint?
-    # EDIT: Clock time stamp, ns since midnight
+    # Clock time stamp, ns since midnight
     acquisitionTimeStampNs: uint64
     # Time stamp ns relative to physiological triggering, e.g. ECG, pulse oximetry, respiratory
     physiologyTimeStampNs: uint64
@@ -89,15 +89,6 @@ ImageHeader: !record
     userInt: int*
     # User-defined float parameters
     userFloat: float*
-<<<<<<< HEAD
-  computedFields:
-    # ADD: original acquisitionTimeStamp in ms
-    acquisitionTimeStamp: (acquisitionTimeStampNs/1e6) as uint
-    physiologyTimeStamp: (physiologyTimeStampNs/1e6) as uint
-    
-=======
-
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
 
 ImageMetaValue: [string, long, double]
 

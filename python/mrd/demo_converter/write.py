@@ -24,7 +24,7 @@ def generate_header(dat_hdr):
 
 if __name__ == '__main__':
     # read file from dat file
-    dat_filename = "mrd/demo_converter/meas_MID00070_FID50886_c13_sp3_timeOptimal_inj1.dat"
+    dat_filename = "meas_MID00070_FID50886_c13_sp3_timeOptimal_inj1.dat"
     twixObj = mapVBVD(dat_filename)
     hdr = twixObj.hdr['Meas']
     # generate mrd.header from dat header
