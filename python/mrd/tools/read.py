@@ -5,12 +5,7 @@ from quantization import dequantize
 from matplotlib import pyplot as plt
 
 # change filename below to read different files
-dir = 'data'
-# filename = 'empty_mrd.bin'      # mrd file with empty fields
-# filename = 'siemens_mrd.bin'    # mrd file converted from siemens raw data
-# filename = 'phantom.bin'        # shepp-logan phantom made from MRD2 tutorial
 filename = 'simulated_mrd.bin'    # mrd file filled with simulated data
-filename = os.path.join(dir, filename)
 
 with mrd.BinaryMrdReader(filename) as r:
     head = r.read_header()
