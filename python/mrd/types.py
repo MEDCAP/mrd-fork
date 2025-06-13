@@ -123,31 +123,19 @@ class EncodingCounters:
 
 AcquisitionData = npt.NDArray[np.complex64]
 
-TrajectoryData = npt.NDArray[np.float32]
-
 class AcquisitionHeader:
     flags: AcquisitionFlags
     idx: EncodingCounters
     measurement_uid: yardl.UInt32
     scan_counter: typing.Optional[yardl.UInt32]
-    """Zero-indexed incrementing counter for readouts"""
-
     acquisition_time_stamp_ns: typing.Optional[yardl.UInt64]
-    """Clock time stamp (e.g. nanoseconds since midnight)"""
-
     physiology_time_stamp_ns: list[yardl.UInt64]
-    """Time stamps relative to physiological triggering in nanoseconds"""
-
     channel_order: list[yardl.UInt32]
     discard_pre: typing.Optional[yardl.UInt32]
     discard_post: typing.Optional[yardl.UInt32]
     center_sample: typing.Optional[yardl.UInt32]
     encoding_space_ref: typing.Optional[yardl.UInt32]
-    """Indexed reference to the encoding spaces enumerated in the MRD Header"""
-
     sample_time_ns: typing.Optional[yardl.UInt64]
-    """Readout bandwidth, as time between samples in nanoseconds"""
-
     position: npt.NDArray[np.float32]
     read_dir: npt.NDArray[np.float32]
     phase_dir: npt.NDArray[np.float32]
@@ -155,8 +143,6 @@ class AcquisitionHeader:
     patient_table_position: npt.NDArray[np.float32]
     user_int: list[yardl.Int32]
     user_float: list[yardl.Float32]
-    """User-defined float parameters"""
-
 
     def __init__(self, *,
         flags: AcquisitionFlags = AcquisitionFlags(0),
@@ -232,19 +218,11 @@ class AcquisitionHeader:
 
 class Acquisition:
     head: AcquisitionHeader
-    """Acquisition header"""
-
     data: AcquisitionData
-    """Raw k-space samples array"""
-
-    trajectory: TrajectoryData
-    """Trajectory array"""
-
 
     def __init__(self, *,
         head: typing.Optional[AcquisitionHeader] = None,
         data: typing.Optional[AcquisitionData] = None,
-        trajectory: typing.Optional[TrajectoryData] = None,
     ):
         self.head = head if head is not None else AcquisitionHeader()
         self.data = data if data is not None else np.zeros((0, 0), dtype=np.dtype(np.complex64))
@@ -258,12 +236,6 @@ class Acquisition:
     def active_channels(self) -> yardl.Size:
         return len(self.head.channel_order)
 
-    def trajectory_dimensions(self) -> yardl.Size:
-        return self.trajectory.shape[0]
-
-    def trajectory_samples(self) -> yardl.Size:
-        return self.trajectory.shape[1]
-
     def __eq__(self, other: object) -> bool:
         return (
             isinstance(other, Acquisition)
@@ -272,26 +244,18 @@ class Acquisition:
         )
 
     def __str__(self) -> str:
-        return f"Acquisition(head={self.head}, data={self.data}, trajectory={self.trajectory})"
+        return f"Acquisition(head={self.head}, data={self.data})"
 
     def __repr__(self) -> str:
-        return f"Acquisition(head={repr(self.head)}, data={repr(self.data)}, trajectory={repr(self.trajectory)})"
+        return f"Acquisition(head={repr(self.head)}, data={repr(self.data)})"
 
 
 GradientData = npt.NDArray[np.float32]
-"""gradient xyz stored as 1D array shape (samples)"""
 
-
-class GradHeader:
+class GradientHeader:
     gradient_time_stamp_ns: yardl.UInt64
-    """Clock time stamp, nanoseconds since midnight"""
-
     gradient_sample_time_ns: yardl.UInt32
-    """Gradient sample duration in nanoseconds"""
-
     pulse_calibration: typing.Optional[list[yardl.Float32]]
-    """Grad calibration (T/m/A). Can be here or as a calGradMap calibration image or neither"""
-
 
     def __init__(self, *,
         gradient_time_stamp_ns: yardl.UInt64 = 0,
@@ -304,43 +268,37 @@ class GradHeader:
 
     def __eq__(self, other: object) -> bool:
         return (
-            isinstance(other, GradHeader)
+            isinstance(other, GradientHeader)
             and self.gradient_time_stamp_ns == other.gradient_time_stamp_ns
             and self.gradient_sample_time_ns == other.gradient_sample_time_ns
             and self.pulse_calibration == other.pulse_calibration
         )
 
     def __str__(self) -> str:
-        return f"GradHeader(gradientTimeStampNs={self.gradient_time_stamp_ns}, gradientSampleTimeNs={self.gradient_sample_time_ns}, pulseCalibration={self.pulse_calibration})"
+        return f"GradientHeader(gradientTimeStampNs={self.gradient_time_stamp_ns}, gradientSampleTimeNs={self.gradient_sample_time_ns}, pulseCalibration={self.pulse_calibration})"
 
     def __repr__(self) -> str:
-        return f"GradHeader(gradientTimeStampNs={repr(self.gradient_time_stamp_ns)}, gradientSampleTimeNs={repr(self.gradient_sample_time_ns)}, pulseCalibration={repr(self.pulse_calibration)})"
+        return f"GradientHeader(gradientTimeStampNs={repr(self.gradient_time_stamp_ns)}, gradientSampleTimeNs={repr(self.gradient_sample_time_ns)}, pulseCalibration={repr(self.pulse_calibration)})"
 
 
 class Gradient:
-    head: GradHeader
-    """Grad header"""
-
+    head: GradientHeader
     rl: GradientData
-    """gradient directions"""
-
     ap: GradientData
     fh: GradientData
 
     def __init__(self, *,
-        head: typing.Optional[GradHeader] = None,
+        head: typing.Optional[GradientHeader] = None,
         rl: typing.Optional[GradientData] = None,
         ap: typing.Optional[GradientData] = None,
         fh: typing.Optional[GradientData] = None,
     ):
-        self.head = head if head is not None else GradHeader()
+        self.head = head if head is not None else GradientHeader()
         self.rl = rl if rl is not None else np.zeros((0), dtype=np.dtype(np.float32))
         self.ap = ap if ap is not None else np.zeros((0), dtype=np.dtype(np.float32))
         self.fh = fh if fh is not None else np.zeros((0), dtype=np.dtype(np.float32))
 
     def samples(self) -> yardl.Size:
-        """EDIT: Assuming writer sets rl,ap,fh gradients, all have the same size. Computed fields are in ns"""
-
         return self.rl.shape[0]
 
     def starttime(self) -> yardl.UInt64:
@@ -1525,8 +1483,6 @@ class ImageType(yardl.OutOfRangeEnum):
     COMPLEX = 5
 
 class ImageQuantitativeType(yardl.OutOfRangeEnum):
-    """EDIT: Added new type"""
-
     QUANT_T1 = 1
     QUANT_T2STAR = 2
     QUANT_ADC = 3
@@ -1538,14 +1494,8 @@ ImageData = npt.NDArray[Y_NP]
 
 class ImageHeader:
     flags: ImageFlags
-    """A bit mask 9of common attributes applicable to individual images"""
-
     measurement_uid: yardl.UInt32
-    """Unique ID corresponding to the image"""
-
     measurement_freq: yardl.UInt32
-    """NMR frequency of this measurement (Hz) SKADD 2/7/25"""
-
     field_of_view: npt.NDArray[np.float32]
     position: npt.NDArray[np.float32]
     col_dir: npt.NDArray[np.float32]
@@ -1558,26 +1508,14 @@ class ImageHeader:
     phase: typing.Optional[yardl.UInt32]
     repetition: typing.Optional[yardl.UInt32]
     set: typing.Optional[yardl.UInt32]
-    """Sets of different preparation, e.g. flow encoding, diffusion weighting"""
-
     acquisition_time_stamp_ns: yardl.UInt64
-    """EDIT: Clock time stamp, ns since midnight"""
-
     physiology_time_stamp_ns: yardl.UInt64
-    """Time stamp ns relative to physiological triggering, e.g. ECG, pulse oximetry, respiratory"""
-
     image_type: ImageType
-    """Interpretation type of the image"""
-
     image_quantitative_type: typing.Optional[ImageQuantitativeType]
-    """Quantitative interpretation type of the image"""
-
     image_index: typing.Optional[yardl.UInt32]
     image_series_index: typing.Optional[yardl.UInt32]
     user_int: list[yardl.Int32]
     user_float: list[yardl.Float32]
-    """User-defined float parameters"""
-
 
     def __init__(self, *,
         flags: ImageFlags = ImageFlags(0),
@@ -1682,14 +1620,8 @@ ImageMeta = dict[str, list[ImageMetaValue]]
 
 class Image(typing.Generic[T_NP]):
     head: ImageHeader
-    """Image header"""
-
     data: ImageData[T_NP]
-    """Image data array"""
-
     meta: ImageMeta
-    """Meta attributes"""
-
 
     def __init__(self, *,
         head: ImageHeader,
@@ -1768,20 +1700,10 @@ del AnyImageUnionCase
 
 class NoiseCovariance:
     coil_labels: list[CoilLabelType]
-    """Comes from Header.acquisitionSystemInformation.coilLabel"""
-
     receiver_noise_bandwidth: yardl.Float32
-    """Comes from Header.acquisitionSystemInformation.relativeReceiverNoiseBandwidth"""
-
     noise_dwell_time_us: yardl.Float32
-    """Comes from Acquisition.sampleTimeUs"""
-
     sample_count: yardl.Size
-    """Number of samples used to compute matrix"""
-
     matrix: npt.NDArray[np.complex64]
-    """Noise covariance matrix with dimensions [coil, coil]"""
-
 
     def __init__(self, *,
         coil_labels: typing.Optional[list[CoilLabelType]] = None,
@@ -1817,26 +1739,12 @@ WaveformSamples = npt.NDArray[T_NP]
 
 class Waveform(typing.Generic[T_NP]):
     flags: yardl.UInt64
-    """Bit field of flags. Currently unused"""
-
     measurement_uid: yardl.UInt32
-    """Unique ID for this measurement"""
-
     scan_counter: yardl.UInt32
-    """Number of the acquisition after this waveform"""
-
     time_stamp_ns: yardl.UInt64
-    """EDIT: Starting timestamp of this waveform, nanoseconds since midnight"""
-
     sample_time_ns: yardl.UInt64
-    """EDIT: Time between samples in nanoseconds"""
-
     waveform_id: yardl.UInt32
-    """ID matching the waveform in the MRD header"""
-
     data: WaveformSamples[T_NP]
-    """Waveform sample array"""
-
 
     def __init__(self, *,
         flags: yardl.UInt64 = 0,
@@ -1920,8 +1828,6 @@ class AcquisitionBucket:
 
 
 class SamplingLimits:
-    """Sampled range along E0, E1, E2 (for asymmetric echo and partial fourier)"""
-
     kspace_encoding_step_0: LimitType
     kspace_encoding_step_1: LimitType
     kspace_encoding_step_2: LimitType
@@ -1989,20 +1895,10 @@ class SamplingDescription:
 
 class ReconBuffer:
     data: npt.NDArray[np.complex64]
-    """Buffered Acquisition data"""
-
     trajectory: npt.NDArray[np.float32]
-    """Buffered Trajectory data"""
-
     density: typing.Optional[npt.NDArray[np.float32]]
-    """Buffered Density weights"""
-
     headers: npt.NDArray[np.void]
-    """Buffered AcquisitionHeaders"""
-
     sampling: SamplingDescription
-    """Sampling details for these Acquisitions"""
-
 
     def __init__(self, *,
         data: typing.Optional[npt.NDArray[np.complex64]] = None,
@@ -2119,17 +2015,9 @@ ArrayComplexFloat = Array[np.complex64]
 
 class PulseHeader:
     pulse_time_stamp_ns: yardl.UInt64
-    """Clock time stamp nanoseconds since midnight"""
-
     channel_order: list[yardl.UInt32]
-    """Channel numbers"""
-
     sample_time_ns: yardl.UInt32
-    """Sample time in ns"""
-
     pulse_calibration: typing.Optional[list[yardl.Float32]]
-    """Pulse calibration (rad/s/V). Can be here or as a calB1Map calibration image or neither"""
-
 
     def __init__(self, *,
         pulse_time_stamp_ns: yardl.UInt64 = 0,
@@ -2162,11 +2050,7 @@ PulseData = npt.NDArray[np.float32]
 
 class Pulse:
     head: PulseHeader
-    """Pulse header"""
-
     amplitude: PulseData
-    """Raw pulse amplitude/phase array"""
-
     phase: PulseData
 
     def __init__(self, *,
@@ -2179,8 +2063,6 @@ class Pulse:
         self.phase = phase if phase is not None else np.zeros((0, 0), dtype=np.dtype(np.float32))
 
     def coils(self) -> yardl.Size:
-        """Assuming writer sets amp and phase array the same size"""
-
         return self.amplitude.shape[0]
 
     def samples(self) -> yardl.Size:
@@ -2250,9 +2132,9 @@ def _mk_get_dtype():
     dtype_map.setdefault(AcquisitionFlags, np.dtype(np.uint64))
     dtype_map.setdefault(EncodingCounters, np.dtype([('kspace_encode_step_1', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('kspace_encode_step_2', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('average', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('slice', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('contrast', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('phase', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('repetition', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('set', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('segment', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('user', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(AcquisitionHeader, np.dtype([('flags', get_dtype(AcquisitionFlags)), ('idx', get_dtype(EncodingCounters)), ('measurement_uid', np.dtype(np.uint32)), ('scan_counter', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('acquisition_time_stamp_ns', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint64))], align=True)), ('physiology_time_stamp_ns', np.dtype(np.object_)), ('channel_order', np.dtype(np.object_)), ('discard_pre', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('discard_post', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('center_sample', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('encoding_space_ref', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('sample_time_ns', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint64))], align=True)), ('position', np.dtype(np.float32), (3,)), ('read_dir', np.dtype(np.float32), (3,)), ('phase_dir', np.dtype(np.float32), (3,)), ('slice_dir', np.dtype(np.float32), (3,)), ('patient_table_position', np.dtype(np.float32), (3,)), ('user_int', np.dtype(np.object_)), ('user_float', np.dtype(np.object_))], align=True))
-    dtype_map.setdefault(Acquisition, np.dtype([('head', get_dtype(AcquisitionHeader)), ('data', np.dtype(np.object_)), ('trajectory', np.dtype(np.object_))], align=True))
-    dtype_map.setdefault(GradHeader, np.dtype([('gradient_time_stamp_ns', np.dtype(np.uint64)), ('gradient_sample_time_ns', np.dtype(np.uint32)), ('pulse_calibration', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True))], align=True))
-    dtype_map.setdefault(Gradient, np.dtype([('head', get_dtype(GradHeader)), ('rl', np.dtype(np.object_)), ('ap', np.dtype(np.object_)), ('fh', np.dtype(np.object_))], align=True))
+    dtype_map.setdefault(Acquisition, np.dtype([('head', get_dtype(AcquisitionHeader)), ('data', np.dtype(np.object_))], align=True))
+    dtype_map.setdefault(GradientHeader, np.dtype([('gradient_time_stamp_ns', np.dtype(np.uint64)), ('gradient_sample_time_ns', np.dtype(np.uint32)), ('pulse_calibration', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True))], align=True))
+    dtype_map.setdefault(Gradient, np.dtype([('head', get_dtype(GradientHeader)), ('rl', np.dtype(np.object_)), ('ap', np.dtype(np.object_)), ('fh', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(PatientGender, np.dtype(np.int32))
     dtype_map.setdefault(SubjectInformationType, np.dtype([('patient_name', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('patient_weight_kg', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.float32))], align=True)), ('patient_height_m', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.float32))], align=True)), ('patient_id', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('patient_birthdate', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.datetime64))], align=True)), ('patient_gender', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(PatientGender))], align=True))], align=True))
     dtype_map.setdefault(StudyInformationType, np.dtype([('study_date', np.dtype(np.datetime64)), ('study_time', np.dtype(np.timedelta64)), ('study_id', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('accession_number', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.int64))], align=True)), ('referring_physician_name', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('study_description', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('study_instance_uid', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('body_part_examined', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True))], align=True))

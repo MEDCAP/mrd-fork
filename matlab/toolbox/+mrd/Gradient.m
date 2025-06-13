@@ -2,9 +2,7 @@
 
 classdef Gradient < handle
   properties
-    % Grad header
     head
-    % gradient directions
     rl
     ap
     fh
@@ -13,10 +11,10 @@ classdef Gradient < handle
   methods
     function self = Gradient(kwargs)
       arguments
-        kwargs.head = mrd.GradHeader();
-        kwargs.rl = single.empty(0);
-        kwargs.ap = single.empty(0);
-        kwargs.fh = single.empty(0);
+        kwargs.head = mrd.GradientHeader();
+        kwargs.rl = single.empty();
+        kwargs.ap = single.empty();
+        kwargs.fh = single.empty();
       end
       self.head = kwargs.head;
       self.rl = kwargs.rl;
@@ -25,7 +23,6 @@ classdef Gradient < handle
     end
 
     function res = samples(self)
-      % EDIT: Assuming writer sets rl,ap,fh gradients, all have the same size. Computed fields are in ns
       res = size(self.rl, ndims(self.rl)-(0));
       return
     end
@@ -44,14 +41,18 @@ classdef Gradient < handle
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.Gradient") && ...
-        isequal(self.head, other.head) && ...
-        isequal(self.rl, other.rl) && ...
-        isequal(self.ap, other.ap) && ...
-        isequal(self.fh, other.fh);
+        isequal({self.head}, {other.head}) && ...
+        isequal({self.rl}, {other.rl}) && ...
+        isequal({self.ap}, {other.ap}) && ...
+        isequal({self.fh}, {other.fh});
     end
 
     function res = ne(self, other)
       res = ~self.eq(other);
+    end
+
+    function res = isequal(self, other)
+      res = all(eq(self, other));
     end
   end
 

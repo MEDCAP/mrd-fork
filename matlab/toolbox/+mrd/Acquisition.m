@@ -2,13 +2,7 @@
 
 classdef Acquisition < handle
   properties
-<<<<<<< HEAD
     head
-=======
-    % Acquisition header
-    head
-    % Raw k-space samples array
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
     data
   end
 
@@ -16,12 +10,7 @@ classdef Acquisition < handle
     function self = Acquisition(kwargs)
       arguments
         kwargs.head = mrd.AcquisitionHeader();
-<<<<<<< HEAD
         kwargs.data = single.empty();
-=======
-        kwargs.data = single.empty(0, 0);
-        kwargs.trajectory = single.empty(0, 0);
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
       end
       self.head = kwargs.head;
       self.data = kwargs.data;
@@ -39,19 +28,6 @@ classdef Acquisition < handle
 
     function res = active_channels(self)
       res = length(self.head.channel_order);
-<<<<<<< HEAD
-=======
-      return
-    end
-
-    function res = trajectory_dimensions(self)
-      res = size(self.trajectory, ndims(self.trajectory)-(0));
-      return
-    end
-
-    function res = trajectory_samples(self)
-      res = size(self.trajectory, ndims(self.trajectory)-(1));
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
       return
     end
 
@@ -59,14 +35,8 @@ classdef Acquisition < handle
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.Acquisition") && ...
-<<<<<<< HEAD
         isequal({self.head}, {other.head}) && ...
         isequal({self.data}, {other.data});
-=======
-        isequal(self.head, other.head) && ...
-        isequal(self.data, other.data) && ...
-        isequal(self.trajectory, other.trajectory);
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
     end
 
     function res = ne(self, other)

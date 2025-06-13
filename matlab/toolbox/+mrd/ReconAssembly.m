@@ -19,25 +19,17 @@ classdef ReconAssembly < handle
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.ReconAssembly") && ...
-<<<<<<< HEAD
         isequal({self.data}, {other.data}) && ...
         isequal({self.ref}, {other.ref});
-=======
-        isequal(self.data, other.data) && ...
-        isequal(self.ref, other.ref);
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
     end
 
     function res = ne(self, other)
       res = ~self.eq(other);
     end
-<<<<<<< HEAD
 
     function res = isequal(self, other)
       res = all(eq(self, other));
     end
-=======
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
   end
 
   methods (Static)

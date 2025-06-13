@@ -328,11 +328,9 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
     def __init__(self) -> None:
         self._head_converter = AcquisitionHeaderConverter()
         self._data_converter = _ndjson.NDArrayConverter(_ndjson.complexfloat32_converter, 2)
-        self._trajectory_converter = _ndjson.NDArrayConverter(_ndjson.float32_converter, 2)
         super().__init__(np.dtype([
             ("head", self._head_converter.overall_dtype()),
             ("data", self._data_converter.overall_dtype()),
-            ("trajectory", self._trajectory_converter.overall_dtype()),
         ]))
 
     def to_json(self, value: Acquisition) -> object:
@@ -342,7 +340,6 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
 
         json_object["head"] = self._head_converter.to_json(value.head)
         json_object["data"] = self._data_converter.to_json(value.data)
-        json_object["trajectory"] = self._trajectory_converter.to_json(value.trajectory)
         return json_object
 
     def numpy_to_json(self, value: np.void) -> object:
@@ -352,7 +349,6 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
 
         json_object["head"] = self._head_converter.numpy_to_json(value["head"])
         json_object["data"] = self._data_converter.numpy_to_json(value["data"])
-        json_object["trajectory"] = self._trajectory_converter.numpy_to_json(value["trajectory"])
         return json_object
 
     def from_json(self, json_object: object) -> Acquisition:
@@ -361,7 +357,6 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
         return Acquisition(
             head=self._head_converter.from_json(json_object["head"],),
             data=self._data_converter.from_json(json_object["data"],),
-            trajectory=self._trajectory_converter.from_json(json_object["trajectory"],),
         )
 
     def from_json_to_numpy(self, json_object: object) -> np.void:
@@ -373,7 +368,7 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
         ) # type:ignore 
 
 
-class GradHeaderConverter(_ndjson.JsonConverter[GradHeader, np.void]):
+class GradientHeaderConverter(_ndjson.JsonConverter[GradientHeader, np.void]):
     def __init__(self) -> None:
         self._gradient_time_stamp_ns_converter = _ndjson.uint64_converter
         self._gradient_sample_time_ns_converter = _ndjson.uint32_converter
@@ -384,9 +379,9 @@ class GradHeaderConverter(_ndjson.JsonConverter[GradHeader, np.void]):
             ("pulse_calibration", self._pulse_calibration_converter.overall_dtype()),
         ]))
 
-    def to_json(self, value: GradHeader) -> object:
-        if not isinstance(value, GradHeader): # pyright: ignore [reportUnnecessaryIsInstance]
-            raise TypeError("Expected 'GradHeader' instance")
+    def to_json(self, value: GradientHeader) -> object:
+        if not isinstance(value, GradientHeader): # pyright: ignore [reportUnnecessaryIsInstance]
+            raise TypeError("Expected 'GradientHeader' instance")
         json_object = {}
 
         json_object["gradientTimeStampNs"] = self._gradient_time_stamp_ns_converter.to_json(value.gradient_time_stamp_ns)
@@ -406,10 +401,10 @@ class GradHeaderConverter(_ndjson.JsonConverter[GradHeader, np.void]):
             json_object["pulseCalibration"] = self._pulse_calibration_converter.numpy_to_json(field_val)
         return json_object
 
-    def from_json(self, json_object: object) -> GradHeader:
+    def from_json(self, json_object: object) -> GradientHeader:
         if not isinstance(json_object, dict):
             raise TypeError("Expected 'dict' instance")
-        return GradHeader(
+        return GradientHeader(
             gradient_time_stamp_ns=self._gradient_time_stamp_ns_converter.from_json(json_object["gradientTimeStampNs"],),
             gradient_sample_time_ns=self._gradient_sample_time_ns_converter.from_json(json_object["gradientSampleTimeNs"],),
             pulse_calibration=self._pulse_calibration_converter.from_json(json_object.get("pulseCalibration")),
@@ -427,115 +422,7 @@ class GradHeaderConverter(_ndjson.JsonConverter[GradHeader, np.void]):
 
 class GradientConverter(_ndjson.JsonConverter[Gradient, np.void]):
     def __init__(self) -> None:
-        self._head_converter = GradHeaderConverter()
-        self._rl_converter = _ndjson.NDArrayConverter(_ndjson.float32_converter, 1)
-        self._ap_converter = _ndjson.NDArrayConverter(_ndjson.float32_converter, 1)
-        self._fh_converter = _ndjson.NDArrayConverter(_ndjson.float32_converter, 1)
-        super().__init__(np.dtype([
-            ("head", self._head_converter.overall_dtype()),
-            ("rl", self._rl_converter.overall_dtype()),
-            ("ap", self._ap_converter.overall_dtype()),
-            ("fh", self._fh_converter.overall_dtype()),
-        ]))
-
-    def to_json(self, value: Gradient) -> object:
-        if not isinstance(value, Gradient): # pyright: ignore [reportUnnecessaryIsInstance]
-            raise TypeError("Expected 'Gradient' instance")
-        json_object = {}
-
-        json_object["head"] = self._head_converter.to_json(value.head)
-        json_object["rl"] = self._rl_converter.to_json(value.rl)
-        json_object["ap"] = self._ap_converter.to_json(value.ap)
-        json_object["fh"] = self._fh_converter.to_json(value.fh)
-        return json_object
-
-    def numpy_to_json(self, value: np.void) -> object:
-        if not isinstance(value, np.void): # pyright: ignore [reportUnnecessaryIsInstance]
-            raise TypeError("Expected 'np.void' instance")
-        json_object = {}
-
-        json_object["head"] = self._head_converter.numpy_to_json(value["head"])
-        json_object["rl"] = self._rl_converter.numpy_to_json(value["rl"])
-        json_object["ap"] = self._ap_converter.numpy_to_json(value["ap"])
-        json_object["fh"] = self._fh_converter.numpy_to_json(value["fh"])
-        return json_object
-
-    def from_json(self, json_object: object) -> Gradient:
-        if not isinstance(json_object, dict):
-            raise TypeError("Expected 'dict' instance")
-        return Gradient(
-            head=self._head_converter.from_json(json_object["head"],),
-            rl=self._rl_converter.from_json(json_object["rl"],),
-            ap=self._ap_converter.from_json(json_object["ap"],),
-            fh=self._fh_converter.from_json(json_object["fh"],),
-        )
-
-    def from_json_to_numpy(self, json_object: object) -> np.void:
-        if not isinstance(json_object, dict):
-            raise TypeError("Expected 'dict' instance")
-        return (
-            self._head_converter.from_json_to_numpy(json_object["head"]),
-            self._rl_converter.from_json_to_numpy(json_object["rl"]),
-            self._ap_converter.from_json_to_numpy(json_object["ap"]),
-            self._fh_converter.from_json_to_numpy(json_object["fh"]),
-        ) # type:ignore 
-
-
-class GradHeaderConverter(_ndjson.JsonConverter[GradHeader, np.void]):
-    def __init__(self) -> None:
-        self._gradient_time_stamp_ns_converter = _ndjson.uint64_converter
-        self._gradient_sample_time_ns_converter = _ndjson.uint32_converter
-        self._pulse_calibration_converter = _ndjson.OptionalConverter(_ndjson.VectorConverter(_ndjson.float32_converter))
-        super().__init__(np.dtype([
-            ("gradient_time_stamp_ns", self._gradient_time_stamp_ns_converter.overall_dtype()),
-            ("gradient_sample_time_ns", self._gradient_sample_time_ns_converter.overall_dtype()),
-            ("pulse_calibration", self._pulse_calibration_converter.overall_dtype()),
-        ]))
-
-    def to_json(self, value: GradHeader) -> object:
-        if not isinstance(value, GradHeader): # pyright: ignore [reportUnnecessaryIsInstance]
-            raise TypeError("Expected 'GradHeader' instance")
-        json_object = {}
-
-        json_object["gradientTimeStampNs"] = self._gradient_time_stamp_ns_converter.to_json(value.gradient_time_stamp_ns)
-        json_object["gradientSampleTimeNs"] = self._gradient_sample_time_ns_converter.to_json(value.gradient_sample_time_ns)
-        if value.pulse_calibration is not None:
-            json_object["pulseCalibration"] = self._pulse_calibration_converter.to_json(value.pulse_calibration)
-        return json_object
-
-    def numpy_to_json(self, value: np.void) -> object:
-        if not isinstance(value, np.void): # pyright: ignore [reportUnnecessaryIsInstance]
-            raise TypeError("Expected 'np.void' instance")
-        json_object = {}
-
-        json_object["gradientTimeStampNs"] = self._gradient_time_stamp_ns_converter.numpy_to_json(value["gradient_time_stamp_ns"])
-        json_object["gradientSampleTimeNs"] = self._gradient_sample_time_ns_converter.numpy_to_json(value["gradient_sample_time_ns"])
-        if (field_val := value["pulse_calibration"]) is not None:
-            json_object["pulseCalibration"] = self._pulse_calibration_converter.numpy_to_json(field_val)
-        return json_object
-
-    def from_json(self, json_object: object) -> GradHeader:
-        if not isinstance(json_object, dict):
-            raise TypeError("Expected 'dict' instance")
-        return GradHeader(
-            gradient_time_stamp_ns=self._gradient_time_stamp_ns_converter.from_json(json_object["gradientTimeStampNs"],),
-            gradient_sample_time_ns=self._gradient_sample_time_ns_converter.from_json(json_object["gradientSampleTimeNs"],),
-            pulse_calibration=self._pulse_calibration_converter.from_json(json_object.get("pulseCalibration")),
-        )
-
-    def from_json_to_numpy(self, json_object: object) -> np.void:
-        if not isinstance(json_object, dict):
-            raise TypeError("Expected 'dict' instance")
-        return (
-            self._gradient_time_stamp_ns_converter.from_json_to_numpy(json_object["gradientTimeStampNs"]),
-            self._gradient_sample_time_ns_converter.from_json_to_numpy(json_object["gradientSampleTimeNs"]),
-            self._pulse_calibration_converter.from_json_to_numpy(json_object.get("pulseCalibration")),
-        ) # type:ignore 
-
-
-class GradientConverter(_ndjson.JsonConverter[Gradient, np.void]):
-    def __init__(self) -> None:
-        self._head_converter = GradHeaderConverter()
+        self._head_converter = GradientHeaderConverter()
         self._rl_converter = _ndjson.NDArrayConverter(_ndjson.float32_converter, 1)
         self._ap_converter = _ndjson.NDArrayConverter(_ndjson.float32_converter, 1)
         self._fh_converter = _ndjson.NDArrayConverter(_ndjson.float32_converter, 1)
@@ -3491,10 +3378,7 @@ class PulseConverter(_ndjson.JsonConverter[Pulse, np.void]):
 
 
 class NDJsonMrdWriter(_ndjson.NDJsonProtocolWriter, MrdWriterBase):
-    """NDJson writer for the Mrd protocol.
-
-    The MRD Protocol
-    """
+    """NDJson writer for the Mrd protocol."""
 
 
     def __init__(self, stream: typing.Union[typing.TextIO, str]) -> None:
@@ -3514,10 +3398,7 @@ class NDJsonMrdWriter(_ndjson.NDJsonProtocolWriter, MrdWriterBase):
 
 
 class NDJsonMrdReader(_ndjson.NDJsonProtocolReader, MrdReaderBase):
-    """NDJson writer for the Mrd protocol.
-
-    The MRD Protocol
-    """
+    """NDJson writer for the Mrd protocol."""
 
 
     def __init__(self, stream: typing.Union[io.BufferedReader, typing.TextIO, str]) -> None:
@@ -3535,10 +3416,7 @@ class NDJsonMrdReader(_ndjson.NDJsonProtocolReader, MrdReaderBase):
             yield converter.from_json(json_object)
 
 class NDJsonMrdNoiseCovarianceWriter(_ndjson.NDJsonProtocolWriter, MrdNoiseCovarianceWriterBase):
-    """NDJson writer for the MrdNoiseCovariance protocol.
-
-    Protocol for serializing a noise covariance matrix
-    """
+    """NDJson writer for the MrdNoiseCovariance protocol."""
 
 
     def __init__(self, stream: typing.Union[typing.TextIO, str]) -> None:
@@ -3552,10 +3430,7 @@ class NDJsonMrdNoiseCovarianceWriter(_ndjson.NDJsonProtocolWriter, MrdNoiseCovar
 
 
 class NDJsonMrdNoiseCovarianceReader(_ndjson.NDJsonProtocolReader, MrdNoiseCovarianceReaderBase):
-    """NDJson writer for the MrdNoiseCovariance protocol.
-
-    Protocol for serializing a noise covariance matrix
-    """
+    """NDJson writer for the MrdNoiseCovariance protocol."""
 
 
     def __init__(self, stream: typing.Union[io.BufferedReader, typing.TextIO, str]) -> None:

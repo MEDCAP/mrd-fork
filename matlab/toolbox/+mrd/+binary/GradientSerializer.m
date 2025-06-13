@@ -3,7 +3,7 @@
 classdef GradientSerializer < yardl.binary.RecordSerializer
   methods
     function self = GradientSerializer()
-      field_serializers{1} = mrd.binary.GradHeaderSerializer();
+      field_serializers{1} = mrd.binary.GradientHeaderSerializer();
       field_serializers{2} = yardl.binary.NDArraySerializer(yardl.binary.Float32Serializer, 1);
       field_serializers{3} = yardl.binary.NDArraySerializer(yardl.binary.Float32Serializer, 1);
       field_serializers{4} = yardl.binary.NDArraySerializer(yardl.binary.Float32Serializer, 1);

@@ -1,5 +1,3 @@
-# ADD: pulse field
-
 PulseData: !array
   items: float
   dimensions:

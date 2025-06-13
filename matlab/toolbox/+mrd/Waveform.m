@@ -5,16 +5,8 @@ classdef Waveform < handle
     flags
     measurement_uid
     scan_counter
-<<<<<<< HEAD
     time_stamp_ns
     sample_time_ns
-=======
-    % EDIT: Starting timestamp of this waveform, nanoseconds since midnight
-    time_stamp_ns
-    % EDIT: Time between samples in nanoseconds
-    sample_time_ns
-    % ID matching the waveform in the MRD header
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
     waveform_id
     data
   end
@@ -52,21 +44,10 @@ classdef Waveform < handle
       return
     end
 
-    function res = time_stamp(self)
-      res = uint32(self.time_stamp_ns ./ 1000);
-      return
-    end
-
-    function res = sample_time_us(self)
-      res = single(self.sample_time_ns ./ 1000);
-      return
-    end
-
 
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.Waveform") && ...
-<<<<<<< HEAD
         isequal({self.flags}, {other.flags}) && ...
         isequal({self.measurement_uid}, {other.measurement_uid}) && ...
         isequal({self.scan_counter}, {other.scan_counter}) && ...
@@ -74,15 +55,6 @@ classdef Waveform < handle
         isequal({self.sample_time_ns}, {other.sample_time_ns}) && ...
         isequal({self.waveform_id}, {other.waveform_id}) && ...
         isequal({self.data}, {other.data});
-=======
-        isequal(self.flags, other.flags) && ...
-        isequal(self.measurement_uid, other.measurement_uid) && ...
-        isequal(self.scan_counter, other.scan_counter) && ...
-        isequal(self.time_stamp_ns, other.time_stamp_ns) && ...
-        isequal(self.sample_time_ns, other.sample_time_ns) && ...
-        isequal(self.waveform_id, other.waveform_id) && ...
-        isequal(self.data, other.data);
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
     end
 
     function res = ne(self, other)

@@ -2,7 +2,6 @@
 
 classdef ImageHeader < handle
   properties
-<<<<<<< HEAD
     flags
     measurement_uid
     measurement_freq
@@ -25,53 +24,6 @@ classdef ImageHeader < handle
     image_index
     image_series_index
     user_int
-=======
-    % A bit mask 9of common attributes applicable to individual images
-    flags
-    % Unique ID corresponding to the image
-    measurement_uid
-    % NMR frequency of this measurement (Hz) SKADD 2/7/25
-    measurement_freq
-    % Physical size (in mm) in each of the 3 dimensions in the image
-    field_of_view
-    % Center of the excited volume, in LPS coordinates relative to isocenter in millimeters
-    position
-    % Directional cosine of readout/frequency encoding
-    col_dir
-    % Directional cosine of phase encoding (2D)
-    line_dir
-    % Directional cosine of 3D phase encoding direction
-    slice_dir
-    % Offset position of the patient table, in LPS coordinates
-    patient_table_position
-    % Signal average
-    average
-    % Slice number (multi-slice 2D)
-    slice
-    % Echo number in multi-echo
-    contrast
-    % Cardiac phase
-    phase
-    % Counter in repeated/dynamic acquisitions
-    repetition
-    % Sets of different preparation, e.g. flow encoding, diffusion weighting
-    set
-    % EDIT: Clock time stamp, ns since midnight
-    acquisition_time_stamp_ns
-    % Time stamp ns relative to physiological triggering, e.g. ECG, pulse oximetry, respiratory
-    physiology_time_stamp_ns
-    % Interpretation type of the image
-    image_type
-    % Quantitative interpretation type of the image
-    image_quantitative_type
-    % Image index number within a series of images, corresponding to DICOM InstanceNumber (0020,0013)
-    image_index
-    % Series index, used to separate images into different series, corresponding to DICOM SeriesNumber (0020,0011)
-    image_series_index
-    % User-defined int parameters
-    user_int
-    % User-defined float parameters
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
     user_float
   end
 
@@ -130,18 +82,6 @@ classdef ImageHeader < handle
       self.user_float = kwargs.user_float;
     end
 
-<<<<<<< HEAD
-    function res = acquisition_time_stamp(self)
-      res = uint32(double(self.acquisition_time_stamp_ns) ./ 1e6);
-      return
-    end
-
-    function res = physiology_time_stamp(self)
-      res = double(self.physiology_time_stamp_ns) ./ 1e6;
-      return
-    end
-
-
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.ImageHeader") && ...
@@ -168,40 +108,11 @@ classdef ImageHeader < handle
         isequal({self.image_series_index}, {other.image_series_index}) && ...
         isequal({self.user_int}, {other.user_int}) && ...
         isequal({self.user_float}, {other.user_float});
-=======
-    function res = eq(self, other)
-      res = ...
-        isa(other, "mrd.ImageHeader") && ...
-        isequal(self.flags, other.flags) && ...
-        isequal(self.measurement_uid, other.measurement_uid) && ...
-        isequal(self.measurement_freq, other.measurement_freq) && ...
-        isequal(self.field_of_view, other.field_of_view) && ...
-        isequal(self.position, other.position) && ...
-        isequal(self.col_dir, other.col_dir) && ...
-        isequal(self.line_dir, other.line_dir) && ...
-        isequal(self.slice_dir, other.slice_dir) && ...
-        isequal(self.patient_table_position, other.patient_table_position) && ...
-        isequal(self.average, other.average) && ...
-        isequal(self.slice, other.slice) && ...
-        isequal(self.contrast, other.contrast) && ...
-        isequal(self.phase, other.phase) && ...
-        isequal(self.repetition, other.repetition) && ...
-        isequal(self.set, other.set) && ...
-        isequal(self.acquisition_time_stamp_ns, other.acquisition_time_stamp_ns) && ...
-        isequal(self.physiology_time_stamp_ns, other.physiology_time_stamp_ns) && ...
-        isequal(self.image_type, other.image_type) && ...
-        isequal(self.image_quantitative_type, other.image_quantitative_type) && ...
-        isequal(self.image_index, other.image_index) && ...
-        isequal(self.image_series_index, other.image_series_index) && ...
-        isequal(self.user_int, other.user_int) && ...
-        isequal(self.user_float, other.user_float);
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
     end
 
     function res = ne(self, other)
       res = ~self.eq(other);
     end
-<<<<<<< HEAD
 
     function res = isequal(self, other)
       res = all(eq(self, other));
@@ -222,8 +133,4 @@ classdef ImageHeader < handle
       z = reshape(repelem(elem, prod(sz)), sz);
     end
   end
-=======
-  end
-
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
 end

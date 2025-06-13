@@ -2,22 +2,10 @@
 
 classdef NoiseCovariance < handle
   properties
-<<<<<<< HEAD
     coil_labels
     receiver_noise_bandwidth
     noise_dwell_time_us
     sample_count
-=======
-    % Comes from Header.acquisitionSystemInformation.coilLabel
-    coil_labels
-    % Comes from Header.acquisitionSystemInformation.relativeReceiverNoiseBandwidth
-    receiver_noise_bandwidth
-    % Comes from Acquisition.sampleTimeUs
-    noise_dwell_time_us
-    % Number of samples used to compute matrix
-    sample_count
-    % Noise covariance matrix with dimensions [coil, coil]
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
     matrix
   end
 
@@ -28,11 +16,7 @@ classdef NoiseCovariance < handle
         kwargs.receiver_noise_bandwidth = single(0);
         kwargs.noise_dwell_time_us = single(0);
         kwargs.sample_count = uint64(0);
-<<<<<<< HEAD
         kwargs.matrix = single.empty();
-=======
-        kwargs.matrix = single.empty(0, 0);
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
       end
       self.coil_labels = kwargs.coil_labels;
       self.receiver_noise_bandwidth = kwargs.receiver_noise_bandwidth;
@@ -44,31 +28,20 @@ classdef NoiseCovariance < handle
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.NoiseCovariance") && ...
-<<<<<<< HEAD
         isequal({self.coil_labels}, {other.coil_labels}) && ...
         isequal({self.receiver_noise_bandwidth}, {other.receiver_noise_bandwidth}) && ...
         isequal({self.noise_dwell_time_us}, {other.noise_dwell_time_us}) && ...
         isequal({self.sample_count}, {other.sample_count}) && ...
         isequal({self.matrix}, {other.matrix});
-=======
-        isequal(self.coil_labels, other.coil_labels) && ...
-        isequal(self.receiver_noise_bandwidth, other.receiver_noise_bandwidth) && ...
-        isequal(self.noise_dwell_time_us, other.noise_dwell_time_us) && ...
-        isequal(self.sample_count, other.sample_count) && ...
-        isequal(self.matrix, other.matrix);
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
     end
 
     function res = ne(self, other)
       res = ~self.eq(other);
     end
-<<<<<<< HEAD
 
     function res = isequal(self, other)
       res = all(eq(self, other));
     end
-=======
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
   end
 
   methods (Static)

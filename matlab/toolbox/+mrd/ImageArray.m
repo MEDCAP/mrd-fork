@@ -11,15 +11,9 @@ classdef ImageArray < handle
   methods
     function self = ImageArray(kwargs)
       arguments
-<<<<<<< HEAD
         kwargs.data = single.empty();
         kwargs.headers = mrd.ImageHeader.empty();
         kwargs.meta = mrd.ImageMeta.empty();
-=======
-        kwargs.data = single.empty(0, 0, 0, 0, 0, 0, 0);
-        kwargs.headers = mrd.ImageHeader.empty(0, 0, 0);
-        kwargs.meta = mrd.ImageMeta.empty(0, 0, 0);
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
         kwargs.waveforms = mrd.WaveformUint32.empty();
       end
       self.data = kwargs.data;
@@ -31,29 +25,19 @@ classdef ImageArray < handle
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.ImageArray") && ...
-<<<<<<< HEAD
         isequal({self.data}, {other.data}) && ...
         isequal({self.headers}, {other.headers}) && ...
         isequal({self.meta}, {other.meta}) && ...
         isequal({self.waveforms}, {other.waveforms});
-=======
-        isequal(self.data, other.data) && ...
-        isequal(self.headers, other.headers) && ...
-        isequal(self.meta, other.meta) && ...
-        isequal(self.waveforms, other.waveforms);
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
     end
 
     function res = ne(self, other)
       res = ~self.eq(other);
     end
-<<<<<<< HEAD
 
     function res = isequal(self, other)
       res = all(eq(self, other));
     end
-=======
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
   end
 
   methods (Static)

@@ -2,13 +2,9 @@
 
 classdef PulseHeader < handle
   properties
-    % Clock time stamp nanoseconds since midnight
     pulse_time_stamp_ns
-    % Channel numbers
     channel_order
-    % Sample time in ns
     sample_time_ns
-    % Pulse calibration (rad/s/V). Can be here or as a calB1Map calibration image or neither
     pulse_calibration
   end
 
@@ -29,14 +25,18 @@ classdef PulseHeader < handle
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.PulseHeader") && ...
-        isequal(self.pulse_time_stamp_ns, other.pulse_time_stamp_ns) && ...
-        isequal(self.channel_order, other.channel_order) && ...
-        isequal(self.sample_time_ns, other.sample_time_ns) && ...
-        isequal(self.pulse_calibration, other.pulse_calibration);
+        isequal({self.pulse_time_stamp_ns}, {other.pulse_time_stamp_ns}) && ...
+        isequal({self.channel_order}, {other.channel_order}) && ...
+        isequal({self.sample_time_ns}, {other.sample_time_ns}) && ...
+        isequal({self.pulse_calibration}, {other.pulse_calibration});
     end
 
     function res = ne(self, other)
       res = ~self.eq(other);
+    end
+
+    function res = isequal(self, other)
+      res = all(eq(self, other));
     end
   end
 

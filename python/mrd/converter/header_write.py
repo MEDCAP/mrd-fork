@@ -6,7 +6,7 @@ import datetime
 
 import mrd
 
-def parse_header_from_dat(hdr):
+def parse_header_from_twix(hdr):
     '''
     Generate an mrd header from Siemens dat file decoded with mapvbvd
     parameter:

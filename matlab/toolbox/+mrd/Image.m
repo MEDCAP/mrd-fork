@@ -2,13 +2,7 @@
 
 classdef Image < handle
   properties
-<<<<<<< HEAD
     head
-=======
-    % Image header
-    head
-    % Image data array
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
     data
     meta
   end
@@ -55,15 +49,9 @@ classdef Image < handle
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.Image") && ...
-<<<<<<< HEAD
         isequal({self.head}, {other.head}) && ...
         isequal({self.data}, {other.data}) && ...
         isequal({self.meta}, {other.meta});
-=======
-        isequal(self.head, other.head) && ...
-        isequal(self.data, other.data) && ...
-        isequal(self.meta, other.meta);
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
     end
 
     function res = ne(self, other)

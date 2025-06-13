@@ -7,23 +7,14 @@ classdef AcquisitionHeaderSerializer < yardl.binary.RecordSerializer
       field_serializers{2} = mrd.binary.EncodingCountersSerializer();
       field_serializers{3} = yardl.binary.Uint32Serializer;
       field_serializers{4} = yardl.binary.OptionalSerializer(yardl.binary.Uint32Serializer);
-<<<<<<< HEAD
-      field_serializers{5} = yardl.binary.Uint64Serializer;
-      field_serializers{6} = yardl.binary.Uint64Serializer;
-=======
       field_serializers{5} = yardl.binary.OptionalSerializer(yardl.binary.Uint64Serializer);
       field_serializers{6} = yardl.binary.VectorSerializer(yardl.binary.Uint64Serializer);
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
       field_serializers{7} = yardl.binary.VectorSerializer(yardl.binary.Uint32Serializer);
       field_serializers{8} = yardl.binary.OptionalSerializer(yardl.binary.Uint32Serializer);
       field_serializers{9} = yardl.binary.OptionalSerializer(yardl.binary.Uint32Serializer);
       field_serializers{10} = yardl.binary.OptionalSerializer(yardl.binary.Uint32Serializer);
       field_serializers{11} = yardl.binary.OptionalSerializer(yardl.binary.Uint32Serializer);
-<<<<<<< HEAD
-      field_serializers{12} = yardl.binary.Uint64Serializer;
-=======
       field_serializers{12} = yardl.binary.OptionalSerializer(yardl.binary.Uint64Serializer);
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
       field_serializers{13} = yardl.binary.FixedNDArraySerializer(yardl.binary.Float32Serializer, [3]);
       field_serializers{14} = yardl.binary.FixedNDArraySerializer(yardl.binary.Float32Serializer, [3]);
       field_serializers{15} = yardl.binary.FixedNDArraySerializer(yardl.binary.Float32Serializer, [3]);

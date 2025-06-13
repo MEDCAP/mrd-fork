@@ -5,10 +5,6 @@ classdef AcquisitionSerializer < yardl.binary.RecordSerializer
     function self = AcquisitionSerializer()
       field_serializers{1} = mrd.binary.AcquisitionHeaderSerializer();
       field_serializers{2} = yardl.binary.NDArraySerializer(yardl.binary.Complexfloat32Serializer, 2);
-<<<<<<< HEAD
-=======
-      field_serializers{3} = yardl.binary.NDArraySerializer(yardl.binary.Float32Serializer, 2);
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
       self@yardl.binary.RecordSerializer('mrd.Acquisition', field_serializers);
     end
 
@@ -18,20 +14,12 @@ classdef AcquisitionSerializer < yardl.binary.RecordSerializer
         outstream (1,1) yardl.binary.CodedOutputStream
         value (1,1) mrd.Acquisition
       end
-<<<<<<< HEAD
       self.write_(outstream, value.head, value.data);
-=======
-      self.write_(outstream, value.head, value.data, value.trajectory);
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
     end
 
     function value = read(self, instream)
       fields = self.read_(instream);
-<<<<<<< HEAD
       value = mrd.Acquisition(head=fields{1}, data=fields{2});
-=======
-      value = mrd.Acquisition(head=fields{1}, data=fields{2}, trajectory=fields{3});
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
     end
   end
 end

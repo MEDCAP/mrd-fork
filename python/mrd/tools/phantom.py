@@ -85,6 +85,7 @@ def generate(output_file, matrix, coils, oversampling, repetitions, noise_level)
             noise = generate_noise((coils, nkx), noise_level)
             # Here's where we would make the noise correlated
             acq.head.scan_counter = scan_counter
+            print("noise loop", acq.head.scan_counter)
             scan_counter += 1
             acq.head.flags = mrd.AcquisitionFlags.IS_NOISE_MEASUREMENT
             acq.data[:] = noise
@@ -99,6 +100,8 @@ def generate(output_file, matrix, coils, oversampling, repetitions, noise_level)
 
             for line in range(nky):
                 acq.head.scan_counter = scan_counter
+                print("repetition loop", acq.head.scan_counter)
+
                 scan_counter += 1
 
                 acq.head.flags = mrd.AcquisitionFlags(0)

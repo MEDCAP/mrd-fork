@@ -16,11 +16,7 @@ classdef ReconData < handle
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.ReconData") && ...
-<<<<<<< HEAD
         isequal({self.buffers}, {other.buffers});
-=======
-        isequal(self.buffers, other.buffers);
->>>>>>> 34594f0a430fc035361e38f998636583f38fc1fe
     end
 
     function res = ne(self, other)

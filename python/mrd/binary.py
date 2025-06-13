@@ -20,10 +20,7 @@ from . import _binary
 from . import yardl_types as yardl
 
 class BinaryMrdWriter(_binary.BinaryProtocolWriter, MrdWriterBase):
-    """Binary writer for the Mrd protocol.
-
-    The MRD Protocol
-    """
+    """Binary writer for the Mrd protocol."""
 
 
     def __init__(self, stream: typing.Union[typing.BinaryIO, str]) -> None:
@@ -38,10 +35,7 @@ class BinaryMrdWriter(_binary.BinaryProtocolWriter, MrdWriterBase):
 
 
 class BinaryMrdReader(_binary.BinaryProtocolReader, MrdReaderBase):
-    """Binary writer for the Mrd protocol.
-
-    The MRD Protocol
-    """
+    """Binary writer for the Mrd protocol."""
 
 
     def __init__(self, stream: typing.Union[io.BufferedReader, io.BytesIO, typing.BinaryIO, str]) -> None:
@@ -55,10 +49,7 @@ class BinaryMrdReader(_binary.BinaryProtocolReader, MrdReaderBase):
         return _binary.StreamSerializer(_binary.UnionSerializer(StreamItem, [(StreamItem.Acquisition, AcquisitionSerializer()), (StreamItem.Pulse, PulseSerializer()), (StreamItem.Gradient, GradientSerializer()), (StreamItem.WaveformUint32, WaveformSerializer(_binary.uint32_serializer)), (StreamItem.ImageUint16, ImageSerializer(_binary.uint16_serializer)), (StreamItem.ImageInt16, ImageSerializer(_binary.int16_serializer)), (StreamItem.ImageUint32, ImageSerializer(_binary.uint32_serializer)), (StreamItem.ImageInt32, ImageSerializer(_binary.int32_serializer)), (StreamItem.ImageFloat, ImageSerializer(_binary.float32_serializer)), (StreamItem.ImageDouble, ImageSerializer(_binary.float64_serializer)), (StreamItem.ImageComplexFloat, ImageSerializer(_binary.complexfloat32_serializer)), (StreamItem.ImageComplexDouble, ImageSerializer(_binary.complexfloat64_serializer)), (StreamItem.AcquisitionBucket, AcquisitionBucketSerializer()), (StreamItem.ReconData, ReconDataSerializer()), (StreamItem.ArrayComplexFloat, _binary.DynamicNDArraySerializer(_binary.complexfloat32_serializer)), (StreamItem.ImageArray, ImageArraySerializer())])).read(self._stream)
 
 class BinaryMrdNoiseCovarianceWriter(_binary.BinaryProtocolWriter, MrdNoiseCovarianceWriterBase):
-    """Binary writer for the MrdNoiseCovariance protocol.
-
-    Protocol for serializing a noise covariance matrix
-    """
+    """Binary writer for the MrdNoiseCovariance protocol."""
 
 
     def __init__(self, stream: typing.Union[typing.BinaryIO, str]) -> None:
@@ -70,10 +61,7 @@ class BinaryMrdNoiseCovarianceWriter(_binary.BinaryProtocolWriter, MrdNoiseCovar
 
 
 class BinaryMrdNoiseCovarianceReader(_binary.BinaryProtocolReader, MrdNoiseCovarianceReaderBase):
-    """Binary writer for the MrdNoiseCovariance protocol.
-
-    Protocol for serializing a noise covariance matrix
-    """
+    """Binary writer for the MrdNoiseCovariance protocol."""
 
 
     def __init__(self, stream: typing.Union[io.BufferedReader, io.BytesIO, typing.BinaryIO, str]) -> None:
@@ -121,27 +109,27 @@ class AcquisitionHeaderSerializer(_binary.RecordSerializer[AcquisitionHeader]):
 
 class AcquisitionSerializer(_binary.RecordSerializer[Acquisition]):
     def __init__(self) -> None:
-        super().__init__([("head", AcquisitionHeaderSerializer()), ("data", _binary.NDArraySerializer(_binary.complexfloat32_serializer, 2)), ("trajectory", _binary.NDArraySerializer(_binary.float32_serializer, 2))])
+        super().__init__([("head", AcquisitionHeaderSerializer()), ("data", _binary.NDArraySerializer(_binary.complexfloat32_serializer, 2))])
 
     def write(self, stream: _binary.CodedOutputStream, value: Acquisition) -> None:
         if isinstance(value, np.void):
             self.write_numpy(stream, value)
             return
-        self._write(stream, value.head, value.data, value.trajectory)
+        self._write(stream, value.head, value.data)
 
     def write_numpy(self, stream: _binary.CodedOutputStream, value: np.void) -> None:
-        self._write(stream, value['head'], value['data'], value['trajectory'])
+        self._write(stream, value['head'], value['data'])
 
     def read(self, stream: _binary.CodedInputStream) -> Acquisition:
         field_values = self._read(stream)
-        return Acquisition(head=field_values[0], data=field_values[1], trajectory=field_values[2])
+        return Acquisition(head=field_values[0], data=field_values[1])
 
 
-class GradHeaderSerializer(_binary.RecordSerializer[GradHeader]):
+class GradientHeaderSerializer(_binary.RecordSerializer[GradientHeader]):
     def __init__(self) -> None:
         super().__init__([("gradient_time_stamp_ns", _binary.uint64_serializer), ("gradient_sample_time_ns", _binary.uint32_serializer), ("pulse_calibration", _binary.OptionalSerializer(_binary.VectorSerializer(_binary.float32_serializer)))])
 
-    def write(self, stream: _binary.CodedOutputStream, value: GradHeader) -> None:
+    def write(self, stream: _binary.CodedOutputStream, value: GradientHeader) -> None:
         if isinstance(value, np.void):
             self.write_numpy(stream, value)
             return
@@ -150,14 +138,14 @@ class GradHeaderSerializer(_binary.RecordSerializer[GradHeader]):
     def write_numpy(self, stream: _binary.CodedOutputStream, value: np.void) -> None:
         self._write(stream, value['gradient_time_stamp_ns'], value['gradient_sample_time_ns'], value['pulse_calibration'])
 
-    def read(self, stream: _binary.CodedInputStream) -> GradHeader:
+    def read(self, stream: _binary.CodedInputStream) -> GradientHeader:
         field_values = self._read(stream)
-        return GradHeader(gradient_time_stamp_ns=field_values[0], gradient_sample_time_ns=field_values[1], pulse_calibration=field_values[2])
+        return GradientHeader(gradient_time_stamp_ns=field_values[0], gradient_sample_time_ns=field_values[1], pulse_calibration=field_values[2])
 
 
 class GradientSerializer(_binary.RecordSerializer[Gradient]):
     def __init__(self) -> None:
-        super().__init__([("head", GradHeaderSerializer()), ("rl", _binary.NDArraySerializer(_binary.float32_serializer, 1)), ("ap", _binary.NDArraySerializer(_binary.float32_serializer, 1)), ("fh", _binary.NDArraySerializer(_binary.float32_serializer, 1))])
+        super().__init__([("head", GradientHeaderSerializer()), ("rl", _binary.NDArraySerializer(_binary.float32_serializer, 1)), ("ap", _binary.NDArraySerializer(_binary.float32_serializer, 1)), ("fh", _binary.NDArraySerializer(_binary.float32_serializer, 1))])
 
     def write(self, stream: _binary.CodedOutputStream, value: Gradient) -> None:
         if isinstance(value, np.void):

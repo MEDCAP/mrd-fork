@@ -7,7 +7,7 @@ GradientData: !array
   dimensions:
     samples:
 
-GradHeader: !record
+GradientHeader: !record
   fields:
     # Clock time stamp, nanoseconds since midnight
     gradientTimeStampNs: uint64
@@ -19,7 +19,7 @@ GradHeader: !record
 Gradient: !record
   fields:
     # Grad header
-    head: GradHeader
+    head: GradientHeader
     # gradient directions
     rl: GradientData
     ap: GradientData
