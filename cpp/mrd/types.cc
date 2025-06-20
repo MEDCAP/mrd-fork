@@ -46,5 +46,12 @@ const ImageFlags ImageFlags::kFirstInRepetition = ImageFlags(4096ULL);
 const ImageFlags ImageFlags::kLastInRepetition = ImageFlags(8192ULL);
 const ImageFlags ImageFlags::kFirstInSet = ImageFlags(16384ULL);
 const ImageFlags ImageFlags::kLastInSet = ImageFlags(32768ULL);
+const ImageQuantitativeType ImageQuantitativeType::kQuantSpinDensity = ImageQuantitativeType(1ULL);
+const ImageQuantitativeType ImageQuantitativeType::kQuantT1 = ImageQuantitativeType(2ULL);
+const ImageQuantitativeType ImageQuantitativeType::kQuantT2 = ImageQuantitativeType(4ULL);
+const ImageQuantitativeType ImageQuantitativeType::kQuantT2star = ImageQuantitativeType(8ULL);
+const ImageQuantitativeType ImageQuantitativeType::kQuantADC = ImageQuantitativeType(16ULL);
+const ImageQuantitativeType ImageQuantitativeType::kQuantB1Map = ImageQuantitativeType(32ULL);
+const ImageQuantitativeType ImageQuantitativeType::kQuantSensitivityMap = ImageQuantitativeType(64ULL);
 } // namespace mrd
 

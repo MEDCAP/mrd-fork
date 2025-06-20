@@ -23,15 +23,18 @@ ImageType: !enum
     imag: 4
     complex: 5
 
-# EDIT: Added new type
-ImageQuantitativeType: !enum
+# EDIT: Added new type-
+# Quantitative Image Type. Used flags to allow requests for multiple types with one command
+ImageQuantitativeType: !flags
+  base: uint64
   values:
-    quantT1: 1               # in s
-    quantT2star: 2           # in s
-    quantADC: 3              # in s/m^2
-    quantSpinDensity: 4      # in mol/m^3
-    quantB1Map: 5            # in rad/s/V
-    quantSensitivityMap: 6   # in Vm^3/mol
+    quantSpinDensity: 0x0001      # in mol/m^3
+    quantT1: 0x0002               # in s
+    quantT2: 0x0004               # in s
+    quantT2star: 0x0008           # in s
+    quantADC: 0x0010              # in s/m^2
+    quantB1Map: 0x0020            # in rad/s/V
+    quantSensitivityMap: 0x0040   # in Vm^3/mol
 
 ImageData<Y>: !array
   items: Y
@@ -43,7 +46,7 @@ ImageData<Y>: !array
 
 ImageHeader: !record
   fields:
-    # A bit mask 9of common attributes applicable to individual images
+    # A bit mask of common attributes applicable to individual images
     flags: ImageFlags
     # Unique ID corresponding to the image
     measurementUid: uint

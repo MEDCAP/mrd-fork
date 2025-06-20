@@ -2,23 +2,26 @@
 
 classdef ImageQuantitativeType < uint64
   methods (Static)
-    function v = QUANT_T1
+    function v = QUANT_SPIN_DENSITY
       v = mrd.ImageQuantitativeType(1);
     end
-    function v = QUANT_T2STAR
+    function v = QUANT_T1
       v = mrd.ImageQuantitativeType(2);
     end
-    function v = QUANT_ADC
-      v = mrd.ImageQuantitativeType(3);
-    end
-    function v = QUANT_SPIN_DENSITY
+    function v = QUANT_T2
       v = mrd.ImageQuantitativeType(4);
     end
+    function v = QUANT_T2STAR
+      v = mrd.ImageQuantitativeType(8);
+    end
+    function v = QUANT_ADC
+      v = mrd.ImageQuantitativeType(16);
+    end
     function v = QUANT_B1_MAP
-      v = mrd.ImageQuantitativeType(5);
+      v = mrd.ImageQuantitativeType(32);
     end
     function v = QUANT_SENSITIVITY_MAP
-      v = mrd.ImageQuantitativeType(6);
+      v = mrd.ImageQuantitativeType(64);
     end
 
     function z = zeros(varargin)
@@ -32,6 +35,34 @@ classdef ImageQuantitativeType < uint64
         sz = [sz, sz];
       end
       z = reshape(repelem(elem, prod(sz)), sz);
+    end
+  end
+
+  methods
+    function self = ImageQuantitativeType(varargin)
+      if nargin == 0
+        value = 0;
+      elseif nargin == 1
+        value = varargin{1};
+      else
+        value = 0;
+        for i = 1:nargin
+          value = bitor(value, varargin{i});
+        end
+      end
+      self@uint64(value);
+    end
+
+    function res = has_flags(self, flag)
+      res = bitand(self, flag) == flag;
+    end
+
+    function res = with_flags(self, flag)
+      res = mrd.ImageQuantitativeType(bitor(self, flag));
+    end
+
+    function res = without_flags(self, flag)
+      res = mrd.ImageQuantitativeType(bitand(self, bitcmp(flag)));
     end
   end
 end

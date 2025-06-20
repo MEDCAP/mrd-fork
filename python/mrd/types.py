@@ -123,6 +123,10 @@ class EncodingCounters:
 
 AcquisitionData = npt.NDArray[np.complex64]
 
+AcquisitionPhase = npt.NDArray[np.float32]
+
+TrajectoryData = npt.NDArray[np.float32]
+
 class AcquisitionHeader:
     flags: AcquisitionFlags
     idx: EncodingCounters
@@ -219,13 +223,16 @@ class AcquisitionHeader:
 class Acquisition:
     head: AcquisitionHeader
     data: AcquisitionData
+    phase: AcquisitionPhase
 
     def __init__(self, *,
         head: typing.Optional[AcquisitionHeader] = None,
         data: typing.Optional[AcquisitionData] = None,
+        phase: typing.Optional[AcquisitionPhase] = None,
     ):
         self.head = head if head is not None else AcquisitionHeader()
         self.data = data if data is not None else np.zeros((0, 0), dtype=np.dtype(np.complex64))
+        self.phase = phase if phase is not None else np.zeros((0), dtype=np.dtype(np.float32))
 
     def coils(self) -> yardl.Size:
         return self.data.shape[0]
@@ -241,13 +248,14 @@ class Acquisition:
             isinstance(other, Acquisition)
             and self.head == other.head
             and yardl.structural_equal(self.data, other.data)
+            and yardl.structural_equal(self.phase, other.phase)
         )
 
     def __str__(self) -> str:
-        return f"Acquisition(head={self.head}, data={self.data})"
+        return f"Acquisition(head={self.head}, data={self.data}, phase={self.phase})"
 
     def __repr__(self) -> str:
-        return f"Acquisition(head={repr(self.head)}, data={repr(self.data)})"
+        return f"Acquisition(head={repr(self.head)}, data={repr(self.data)}, phase={repr(self.phase)})"
 
 
 GradientData = npt.NDArray[np.float32]
@@ -1482,13 +1490,22 @@ class ImageType(yardl.OutOfRangeEnum):
     IMAG = 4
     COMPLEX = 5
 
-class ImageQuantitativeType(yardl.OutOfRangeEnum):
-    QUANT_T1 = 1
-    QUANT_T2STAR = 2
-    QUANT_ADC = 3
-    QUANT_SPIN_DENSITY = 4
-    QUANT_B1_MAP = 5
-    QUANT_SENSITIVITY_MAP = 6
+class ImageQuantitativeType(enum.IntFlag):
+    QUANT_SPIN_DENSITY = 1
+    QUANT_T1 = 2
+    QUANT_T2 = 4
+    QUANT_T2STAR = 8
+    QUANT_ADC = 16
+    QUANT_B1_MAP = 32
+    QUANT_SENSITIVITY_MAP = 64
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, ImageQuantitativeType) and self.value == other.value
+
+    def __hash__(self) -> int:
+        return hash(self.value)
+
+    __str__ = enum.Flag.__str__ # type: ignore
 
 ImageData = npt.NDArray[Y_NP]
 
@@ -2048,19 +2065,21 @@ class PulseHeader:
 
 PulseData = npt.NDArray[np.float32]
 
+PulsePhase = npt.NDArray[np.float32]
+
 class Pulse:
     head: PulseHeader
     amplitude: PulseData
-    phase: PulseData
+    phase: PulsePhase
 
     def __init__(self, *,
         head: typing.Optional[PulseHeader] = None,
         amplitude: typing.Optional[PulseData] = None,
-        phase: typing.Optional[PulseData] = None,
+        phase: typing.Optional[PulsePhase] = None,
     ):
         self.head = head if head is not None else PulseHeader()
         self.amplitude = amplitude if amplitude is not None else np.zeros((0, 0), dtype=np.dtype(np.float32))
-        self.phase = phase if phase is not None else np.zeros((0, 0), dtype=np.dtype(np.float32))
+        self.phase = phase if phase is not None else np.zeros((0), dtype=np.dtype(np.float32))
 
     def coils(self) -> yardl.Size:
         return self.amplitude.shape[0]
@@ -2132,7 +2151,7 @@ def _mk_get_dtype():
     dtype_map.setdefault(AcquisitionFlags, np.dtype(np.uint64))
     dtype_map.setdefault(EncodingCounters, np.dtype([('kspace_encode_step_1', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('kspace_encode_step_2', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('average', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('slice', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('contrast', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('phase', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('repetition', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('set', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('segment', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('user', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(AcquisitionHeader, np.dtype([('flags', get_dtype(AcquisitionFlags)), ('idx', get_dtype(EncodingCounters)), ('measurement_uid', np.dtype(np.uint32)), ('scan_counter', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('acquisition_time_stamp_ns', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint64))], align=True)), ('physiology_time_stamp_ns', np.dtype(np.object_)), ('channel_order', np.dtype(np.object_)), ('discard_pre', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('discard_post', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('center_sample', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('encoding_space_ref', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('sample_time_ns', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint64))], align=True)), ('position', np.dtype(np.float32), (3,)), ('read_dir', np.dtype(np.float32), (3,)), ('phase_dir', np.dtype(np.float32), (3,)), ('slice_dir', np.dtype(np.float32), (3,)), ('patient_table_position', np.dtype(np.float32), (3,)), ('user_int', np.dtype(np.object_)), ('user_float', np.dtype(np.object_))], align=True))
-    dtype_map.setdefault(Acquisition, np.dtype([('head', get_dtype(AcquisitionHeader)), ('data', np.dtype(np.object_))], align=True))
+    dtype_map.setdefault(Acquisition, np.dtype([('head', get_dtype(AcquisitionHeader)), ('data', np.dtype(np.object_)), ('phase', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(GradientHeader, np.dtype([('gradient_time_stamp_ns', np.dtype(np.uint64)), ('gradient_sample_time_ns', np.dtype(np.uint32)), ('pulse_calibration', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True))], align=True))
     dtype_map.setdefault(Gradient, np.dtype([('head', get_dtype(GradientHeader)), ('rl', np.dtype(np.object_)), ('ap', np.dtype(np.object_)), ('fh', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(PatientGender, np.dtype(np.int32))
@@ -2175,7 +2194,7 @@ def _mk_get_dtype():
     dtype_map.setdefault(Header, np.dtype([('version', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.int64))], align=True)), ('subject_information', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(SubjectInformationType))], align=True)), ('study_information', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(StudyInformationType))], align=True)), ('measurement_information', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(MeasurementInformationType))], align=True)), ('acquisition_system_information', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(AcquisitionSystemInformationType))], align=True)), ('experimental_conditions', get_dtype(ExperimentalConditionsType)), ('encoding', np.dtype(np.object_)), ('sequence_parameters', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(SequenceParametersType))], align=True)), ('user_parameters', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(UserParametersType))], align=True)), ('waveform_information', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(ImageFlags, np.dtype(np.uint64))
     dtype_map.setdefault(ImageType, np.dtype(np.int32))
-    dtype_map.setdefault(ImageQuantitativeType, np.dtype(np.int32))
+    dtype_map.setdefault(ImageQuantitativeType, np.dtype(np.uint64))
     dtype_map.setdefault(ImageHeader, np.dtype([('flags', get_dtype(ImageFlags)), ('measurement_uid', np.dtype(np.uint32)), ('measurement_freq', np.dtype(np.uint32)), ('field_of_view', np.dtype(np.float32), (3,)), ('position', np.dtype(np.float32), (3,)), ('col_dir', np.dtype(np.float32), (3,)), ('line_dir', np.dtype(np.float32), (3,)), ('slice_dir', np.dtype(np.float32), (3,)), ('patient_table_position', np.dtype(np.float32), (3,)), ('average', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('slice', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('contrast', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('phase', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('repetition', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('set', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('acquisition_time_stamp_ns', np.dtype(np.uint64)), ('physiology_time_stamp_ns', np.dtype(np.uint64)), ('image_type', get_dtype(ImageType)), ('image_quantitative_type', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(ImageQuantitativeType))], align=True)), ('image_index', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('image_series_index', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('user_int', np.dtype(np.object_)), ('user_float', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(ImageMetaValue, np.dtype(np.object_))
     dtype_map.setdefault(Image, lambda type_args: np.dtype([('head', get_dtype(ImageHeader)), ('data', np.dtype(np.object_)), ('meta', np.dtype(np.object_))], align=True))

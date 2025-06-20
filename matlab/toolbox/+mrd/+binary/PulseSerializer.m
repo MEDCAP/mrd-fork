@@ -5,7 +5,7 @@ classdef PulseSerializer < yardl.binary.RecordSerializer
     function self = PulseSerializer()
       field_serializers{1} = mrd.binary.PulseHeaderSerializer();
       field_serializers{2} = yardl.binary.NDArraySerializer(yardl.binary.Float32Serializer, 2);
-      field_serializers{3} = yardl.binary.NDArraySerializer(yardl.binary.Float32Serializer, 2);
+      field_serializers{3} = yardl.binary.NDArraySerializer(yardl.binary.Float32Serializer, 1);
       self@yardl.binary.RecordSerializer('mrd.Pulse', field_serializers);
     end
 

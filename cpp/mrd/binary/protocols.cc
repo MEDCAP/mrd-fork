@@ -68,8 +68,9 @@ struct IsTriviallySerializable<mrd::Acquisition> {
     std::is_standard_layout_v<__T__> &&
     IsTriviallySerializable<decltype(__T__::head)>::value &&
     IsTriviallySerializable<decltype(__T__::data)>::value &&
-    (sizeof(__T__) == (sizeof(__T__::head) + sizeof(__T__::data))) &&
-    offsetof(__T__, head) < offsetof(__T__, data);
+    IsTriviallySerializable<decltype(__T__::phase)>::value &&
+    (sizeof(__T__) == (sizeof(__T__::head) + sizeof(__T__::data) + sizeof(__T__::phase))) &&
+    offsetof(__T__, head) < offsetof(__T__, data) && offsetof(__T__, data) < offsetof(__T__, phase);
 };
 
 template <>
@@ -1099,6 +1100,42 @@ namespace {
   yardl::binary::ReadNDArray<std::complex<float>, yardl::binary::ReadFloatingPoint, 2>(stream, value);
 }
 
+[[maybe_unused]] void WriteAcquisitionPhase(yardl::binary::CodedOutputStream& stream, mrd::AcquisitionPhase const& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::AcquisitionPhase>::value) {
+    yardl::binary::WriteTriviallySerializable(stream, value);
+    return;
+  }
+
+  yardl::binary::WriteNDArray<float, yardl::binary::WriteFloatingPoint, 1>(stream, value);
+}
+
+[[maybe_unused]] void ReadAcquisitionPhase(yardl::binary::CodedInputStream& stream, mrd::AcquisitionPhase& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::AcquisitionPhase>::value) {
+    yardl::binary::ReadTriviallySerializable(stream, value);
+    return;
+  }
+
+  yardl::binary::ReadNDArray<float, yardl::binary::ReadFloatingPoint, 1>(stream, value);
+}
+
+[[maybe_unused]] void WriteTrajectoryData(yardl::binary::CodedOutputStream& stream, mrd::TrajectoryData const& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::TrajectoryData>::value) {
+    yardl::binary::WriteTriviallySerializable(stream, value);
+    return;
+  }
+
+  yardl::binary::WriteNDArray<float, yardl::binary::WriteFloatingPoint, 2>(stream, value);
+}
+
+[[maybe_unused]] void ReadTrajectoryData(yardl::binary::CodedInputStream& stream, mrd::TrajectoryData& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::TrajectoryData>::value) {
+    yardl::binary::ReadTriviallySerializable(stream, value);
+    return;
+  }
+
+  yardl::binary::ReadNDArray<float, yardl::binary::ReadFloatingPoint, 2>(stream, value);
+}
+
 [[maybe_unused]] void WriteAcquisitionHeader(yardl::binary::CodedOutputStream& stream, mrd::AcquisitionHeader const& value) {
   if constexpr (yardl::binary::IsTriviallySerializable<mrd::AcquisitionHeader>::value) {
     yardl::binary::WriteTriviallySerializable(stream, value);
@@ -1161,6 +1198,7 @@ namespace {
 
   mrd::binary::WriteAcquisitionHeader(stream, value.head);
   mrd::binary::WriteAcquisitionData(stream, value.data);
+  mrd::binary::WriteAcquisitionPhase(stream, value.phase);
 }
 
 [[maybe_unused]] void ReadAcquisition(yardl::binary::CodedInputStream& stream, mrd::Acquisition& value) {
@@ -1171,6 +1209,7 @@ namespace {
 
   mrd::binary::ReadAcquisitionHeader(stream, value.head);
   mrd::binary::ReadAcquisitionData(stream, value.data);
+  mrd::binary::ReadAcquisitionPhase(stream, value.phase);
 }
 
 [[maybe_unused]] void WriteGradientData(yardl::binary::CodedOutputStream& stream, mrd::GradientData const& value) {
@@ -2037,7 +2076,7 @@ template<typename Y, yardl::binary::Reader<Y> ReadY>
   yardl::binary::WriteInteger(stream, value.acquisition_time_stamp_ns);
   yardl::binary::WriteInteger(stream, value.physiology_time_stamp_ns);
   yardl::binary::WriteEnum<mrd::ImageType>(stream, value.image_type);
-  yardl::binary::WriteOptional<mrd::ImageQuantitativeType, yardl::binary::WriteEnum<mrd::ImageQuantitativeType>>(stream, value.image_quantitative_type);
+  yardl::binary::WriteOptional<mrd::ImageQuantitativeType, yardl::binary::WriteFlags<mrd::ImageQuantitativeType>>(stream, value.image_quantitative_type);
   yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.image_index);
   yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.image_series_index);
   yardl::binary::WriteVector<int32_t, yardl::binary::WriteInteger>(stream, value.user_int);
@@ -2068,7 +2107,7 @@ template<typename Y, yardl::binary::Reader<Y> ReadY>
   yardl::binary::ReadInteger(stream, value.acquisition_time_stamp_ns);
   yardl::binary::ReadInteger(stream, value.physiology_time_stamp_ns);
   yardl::binary::ReadEnum<mrd::ImageType>(stream, value.image_type);
-  yardl::binary::ReadOptional<mrd::ImageQuantitativeType, yardl::binary::ReadEnum<mrd::ImageQuantitativeType>>(stream, value.image_quantitative_type);
+  yardl::binary::ReadOptional<mrd::ImageQuantitativeType, yardl::binary::ReadFlags<mrd::ImageQuantitativeType>>(stream, value.image_quantitative_type);
   yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.image_index);
   yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.image_series_index);
   yardl::binary::ReadVector<int32_t, yardl::binary::ReadInteger>(stream, value.user_int);
@@ -2635,6 +2674,24 @@ template<typename T, yardl::binary::Reader<T> ReadT>
   yardl::binary::ReadNDArray<float, yardl::binary::ReadFloatingPoint, 2>(stream, value);
 }
 
+[[maybe_unused]] void WritePulsePhase(yardl::binary::CodedOutputStream& stream, mrd::PulsePhase const& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::PulsePhase>::value) {
+    yardl::binary::WriteTriviallySerializable(stream, value);
+    return;
+  }
+
+  yardl::binary::WriteNDArray<float, yardl::binary::WriteFloatingPoint, 1>(stream, value);
+}
+
+[[maybe_unused]] void ReadPulsePhase(yardl::binary::CodedInputStream& stream, mrd::PulsePhase& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::PulsePhase>::value) {
+    yardl::binary::ReadTriviallySerializable(stream, value);
+    return;
+  }
+
+  yardl::binary::ReadNDArray<float, yardl::binary::ReadFloatingPoint, 1>(stream, value);
+}
+
 [[maybe_unused]] void WritePulse(yardl::binary::CodedOutputStream& stream, mrd::Pulse const& value) {
   if constexpr (yardl::binary::IsTriviallySerializable<mrd::Pulse>::value) {
     yardl::binary::WriteTriviallySerializable(stream, value);
@@ -2643,7 +2700,7 @@ template<typename T, yardl::binary::Reader<T> ReadT>
 
   mrd::binary::WritePulseHeader(stream, value.head);
   mrd::binary::WritePulseData(stream, value.amplitude);
-  mrd::binary::WritePulseData(stream, value.phase);
+  mrd::binary::WritePulsePhase(stream, value.phase);
 }
 
 [[maybe_unused]] void ReadPulse(yardl::binary::CodedInputStream& stream, mrd::Pulse& value) {
@@ -2654,7 +2711,7 @@ template<typename T, yardl::binary::Reader<T> ReadT>
 
   mrd::binary::ReadPulseHeader(stream, value.head);
   mrd::binary::ReadPulseData(stream, value.amplitude);
-  mrd::binary::ReadPulseData(stream, value.phase);
+  mrd::binary::ReadPulsePhase(stream, value.phase);
 }
 
 [[maybe_unused]] void WriteStreamItem(yardl::binary::CodedOutputStream& stream, mrd::StreamItem const& value) {

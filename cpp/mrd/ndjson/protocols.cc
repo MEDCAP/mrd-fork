@@ -940,6 +940,9 @@ void to_json(ordered_json& j, mrd::Acquisition const& value) {
   if (yardl::ndjson::ShouldSerializeFieldValue(value.data)) {
     j.push_back({"data", value.data});
   }
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.phase)) {
+    j.push_back({"phase", value.phase});
+  }
 }
 
 void from_json(ordered_json const& j, mrd::Acquisition& value) {
@@ -948,6 +951,9 @@ void from_json(ordered_json const& j, mrd::Acquisition& value) {
   }
   if (auto it = j.find("data"); it != j.end()) {
     it->get_to(value.data);
+  }
+  if (auto it = j.find("phase"); it != j.end()) {
+    it->get_to(value.phase);
   }
 }
 
@@ -2663,53 +2669,97 @@ void from_json(ordered_json const& j, mrd::ImageType& value) {
 
 namespace {
 std::unordered_map<std::string, mrd::ImageQuantitativeType> const __ImageQuantitativeType_values = {
+  {"quantSpinDensity", mrd::ImageQuantitativeType::kQuantSpinDensity},
   {"quantT1", mrd::ImageQuantitativeType::kQuantT1},
+  {"quantT2", mrd::ImageQuantitativeType::kQuantT2},
   {"quantT2star", mrd::ImageQuantitativeType::kQuantT2star},
   {"quantADC", mrd::ImageQuantitativeType::kQuantADC},
-  {"quantSpinDensity", mrd::ImageQuantitativeType::kQuantSpinDensity},
   {"quantB1Map", mrd::ImageQuantitativeType::kQuantB1Map},
   {"quantSensitivityMap", mrd::ImageQuantitativeType::kQuantSensitivityMap},
 };
 } //namespace
 
 void to_json(ordered_json& j, mrd::ImageQuantitativeType const& value) {
-  switch (value) {
-    case mrd::ImageQuantitativeType::kQuantT1:
-      j = "quantT1";
-      break;
-    case mrd::ImageQuantitativeType::kQuantT2star:
-      j = "quantT2star";
-      break;
-    case mrd::ImageQuantitativeType::kQuantADC:
-      j = "quantADC";
-      break;
-    case mrd::ImageQuantitativeType::kQuantSpinDensity:
-      j = "quantSpinDensity";
-      break;
-    case mrd::ImageQuantitativeType::kQuantB1Map:
-      j = "quantB1Map";
-      break;
-    case mrd::ImageQuantitativeType::kQuantSensitivityMap:
-      j = "quantSensitivityMap";
-      break;
-    default:
-      using underlying_type = typename std::underlying_type<mrd::ImageQuantitativeType>::type;
-      j = static_cast<underlying_type>(value);
-      break;
+  auto arr = ordered_json::array();
+  if (value == 0) {
+    j = arr;
+    return;
   }
+  auto remaining = value;
+  if (remaining.HasFlags(mrd::ImageQuantitativeType::kQuantSpinDensity)) {
+    remaining.UnsetFlags(mrd::ImageQuantitativeType::kQuantSpinDensity);
+    arr.push_back("quantSpinDensity");
+    if (remaining == 0) {
+      j = arr;
+      return;
+    }
+  }
+  if (remaining.HasFlags(mrd::ImageQuantitativeType::kQuantT1)) {
+    remaining.UnsetFlags(mrd::ImageQuantitativeType::kQuantT1);
+    arr.push_back("quantT1");
+    if (remaining == 0) {
+      j = arr;
+      return;
+    }
+  }
+  if (remaining.HasFlags(mrd::ImageQuantitativeType::kQuantT2)) {
+    remaining.UnsetFlags(mrd::ImageQuantitativeType::kQuantT2);
+    arr.push_back("quantT2");
+    if (remaining == 0) {
+      j = arr;
+      return;
+    }
+  }
+  if (remaining.HasFlags(mrd::ImageQuantitativeType::kQuantT2star)) {
+    remaining.UnsetFlags(mrd::ImageQuantitativeType::kQuantT2star);
+    arr.push_back("quantT2star");
+    if (remaining == 0) {
+      j = arr;
+      return;
+    }
+  }
+  if (remaining.HasFlags(mrd::ImageQuantitativeType::kQuantADC)) {
+    remaining.UnsetFlags(mrd::ImageQuantitativeType::kQuantADC);
+    arr.push_back("quantADC");
+    if (remaining == 0) {
+      j = arr;
+      return;
+    }
+  }
+  if (remaining.HasFlags(mrd::ImageQuantitativeType::kQuantB1Map)) {
+    remaining.UnsetFlags(mrd::ImageQuantitativeType::kQuantB1Map);
+    arr.push_back("quantB1Map");
+    if (remaining == 0) {
+      j = arr;
+      return;
+    }
+  }
+  if (remaining.HasFlags(mrd::ImageQuantitativeType::kQuantSensitivityMap)) {
+    remaining.UnsetFlags(mrd::ImageQuantitativeType::kQuantSensitivityMap);
+    arr.push_back("quantSensitivityMap");
+    if (remaining == 0) {
+      j = arr;
+      return;
+    }
+  }
+  j = value.Value();
 }
 
 void from_json(ordered_json const& j, mrd::ImageQuantitativeType& value) {
-  if (j.is_string()) {
-    auto symbol = j.get<std::string>();
-    if (auto res = __ImageQuantitativeType_values.find(symbol); res != __ImageQuantitativeType_values.end()) {
-      value = res->second;
-      return;
-    }
-    throw std::runtime_error("Invalid enum value '" + symbol + "' for enum mrd::ImageQuantitativeType");
+  if (j.is_number()) {
+    using underlying_type = typename mrd::ImageQuantitativeType::value_type;
+    value = j.get<underlying_type>();
+    return;
   }
-  using underlying_type = typename std::underlying_type<mrd::ImageQuantitativeType>::type;
-  value = static_cast<mrd::ImageQuantitativeType>(j.get<underlying_type>());
+  std::vector<std::string> arr = j;
+  value = {};
+  for (auto const& item : arr) {
+    if (auto res = __ImageQuantitativeType_values.find(item); res != __ImageQuantitativeType_values.end()) {
+      value |= res->second;
+      continue;
+    }
+    throw std::runtime_error("Invalid enum value '" + item + "' for enum mrd::ImageQuantitativeType");
+  }
 }
 
 void to_json(ordered_json& j, mrd::ImageHeader const& value) {

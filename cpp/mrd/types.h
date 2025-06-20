@@ -78,6 +78,10 @@ struct EncodingCounters {
 
 using AcquisitionData = yardl::NDArray<std::complex<float>, 2>;
 
+using AcquisitionPhase = yardl::NDArray<float, 1>;
+
+using TrajectoryData = yardl::NDArray<float, 2>;
+
 struct AcquisitionHeader {
   mrd::AcquisitionFlags flags{};
   mrd::EncodingCounters idx{};
@@ -129,6 +133,7 @@ struct AcquisitionHeader {
 struct Acquisition {
   mrd::AcquisitionHeader head{};
   mrd::AcquisitionData data{};
+  mrd::AcquisitionPhase phase{};
 
   yardl::Size Coils() const {
     return yardl::shape(data, 0);
@@ -144,7 +149,8 @@ struct Acquisition {
 
   bool operator==(const Acquisition& other) const {
     return head == other.head &&
-      data == other.data;
+      data == other.data &&
+      phase == other.phase;
   }
 
   bool operator!=(const Acquisition& other) const {
@@ -880,13 +886,15 @@ enum class ImageType {
   kComplex = 5,
 };
 
-enum class ImageQuantitativeType {
-  kQuantT1 = 1,
-  kQuantT2star = 2,
-  kQuantADC = 3,
-  kQuantSpinDensity = 4,
-  kQuantB1Map = 5,
-  kQuantSensitivityMap = 6,
+struct ImageQuantitativeType : yardl::BaseFlags<uint64_t, ImageQuantitativeType> {
+  using BaseFlags::BaseFlags;
+  static const ImageQuantitativeType kQuantSpinDensity;
+  static const ImageQuantitativeType kQuantT1;
+  static const ImageQuantitativeType kQuantT2;
+  static const ImageQuantitativeType kQuantT2star;
+  static const ImageQuantitativeType kQuantADC;
+  static const ImageQuantitativeType kQuantB1Map;
+  static const ImageQuantitativeType kQuantSensitivityMap;
 };
 
 template <typename Y>
@@ -1206,10 +1214,12 @@ struct PulseHeader {
 
 using PulseData = yardl::NDArray<float, 2>;
 
+using PulsePhase = yardl::NDArray<float, 1>;
+
 struct Pulse {
   mrd::PulseHeader head{};
   mrd::PulseData amplitude{};
-  mrd::PulseData phase{};
+  mrd::PulsePhase phase{};
 
   yardl::Size Coils() const {
     return yardl::shape(amplitude, 0);

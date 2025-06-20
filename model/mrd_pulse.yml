@@ -1,7 +1,14 @@
+# ADD: pulse field
+
 PulseData: !array
   items: float
   dimensions:
     coils:
+    samples:
+
+PulsePhase: !array
+  items: float
+  dimensions:
     samples:
 
 PulseHeader: !record
@@ -21,7 +28,7 @@ Pulse: !record
     head: PulseHeader
     # Raw pulse amplitude/phase array
     amplitude: PulseData
-    phase: PulseData
+    phase: PulsePhase
   computedFields:
     # Assuming writer sets amp and phase array the same size
     coils: size(amplitude, "coils")

@@ -4,6 +4,7 @@ classdef Acquisition < handle
   properties
     head
     data
+    phase
   end
 
   methods
@@ -11,9 +12,11 @@ classdef Acquisition < handle
       arguments
         kwargs.head = mrd.AcquisitionHeader();
         kwargs.data = single.empty();
+        kwargs.phase = single.empty();
       end
       self.head = kwargs.head;
       self.data = kwargs.data;
+      self.phase = kwargs.phase;
     end
 
     function res = coils(self)
@@ -36,7 +39,8 @@ classdef Acquisition < handle
       res = ...
         isa(other, "mrd.Acquisition") && ...
         isequal({self.head}, {other.head}) && ...
-        isequal({self.data}, {other.data});
+        isequal({self.data}, {other.data}) && ...
+        isequal({self.phase}, {other.phase});
     end
 
     function res = ne(self, other)

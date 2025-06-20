@@ -782,23 +782,6 @@ namespace {
   return t;
 }
 
-[[maybe_unused]] H5::EnumType GetImageQuantitativeTypeHdf5Ddl() {
-  H5::EnumType t(H5::PredType::NATIVE_INT32);
-  int32_t i = 1;
-  t.insert("quantT1", &i);
-  i = 2;
-  t.insert("quantT2star", &i);
-  i = 3;
-  t.insert("quantADC", &i);
-  i = 4;
-  t.insert("quantSpinDensity", &i);
-  i = 5;
-  t.insert("quantB1Map", &i);
-  i = 6;
-  t.insert("quantSensitivityMap", &i);
-  return t;
-}
-
 struct _Inner_EncodingCounters {
   _Inner_EncodingCounters() {} 
   _Inner_EncodingCounters(mrd::EncodingCounters const& o) 
@@ -910,16 +893,19 @@ struct _Inner_Acquisition {
   _Inner_Acquisition() {} 
   _Inner_Acquisition(mrd::Acquisition const& o) 
       : head(o.head),
-      data(o.data) {
+      data(o.data),
+      phase(o.phase) {
   }
 
   void ToOuter (mrd::Acquisition& o) const {
     yardl::hdf5::ToOuter(head, o.head);
     yardl::hdf5::ToOuter(data, o.data);
+    yardl::hdf5::ToOuter(phase, o.phase);
   }
 
   mrd::hdf5::_Inner_AcquisitionHeader head;
   yardl::hdf5::InnerNdArray<std::complex<float>, std::complex<float>, 2> data;
+  yardl::hdf5::InnerVlen<float, float> phase;
 };
 
 struct _Inner_GradientHeader {
@@ -1816,7 +1802,7 @@ struct _Inner_Pulse {
 
   mrd::hdf5::_Inner_PulseHeader head;
   yardl::hdf5::InnerNdArray<float, float, 2> amplitude;
-  yardl::hdf5::InnerNdArray<float, float, 2> phase;
+  yardl::hdf5::InnerVlen<float, float> phase;
 };
 
 [[maybe_unused]] H5::CompType GetEncodingCountersHdf5Ddl() {
@@ -1865,6 +1851,7 @@ struct _Inner_Pulse {
   H5::CompType t(sizeof(RecordType));
   t.insertMember("head", HOFFSET(RecordType, head), mrd::hdf5::GetAcquisitionHeaderHdf5Ddl());
   t.insertMember("data", HOFFSET(RecordType, data), yardl::hdf5::NDArrayDdl<std::complex<float>, std::complex<float>, 2>(yardl::hdf5::ComplexTypeDdl<float>()));
+  t.insertMember("phase", HOFFSET(RecordType, phase), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_FLOAT));
   return t;
 }
 
@@ -2226,7 +2213,7 @@ struct _Inner_Pulse {
   t.insertMember("acquisitionTimeStampNs", HOFFSET(RecordType, acquisition_time_stamp_ns), H5::PredType::NATIVE_UINT64);
   t.insertMember("physiologyTimeStampNs", HOFFSET(RecordType, physiology_time_stamp_ns), H5::PredType::NATIVE_UINT64);
   t.insertMember("imageType", HOFFSET(RecordType, image_type), mrd::hdf5::GetImageTypeHdf5Ddl());
-  t.insertMember("imageQuantitativeType", HOFFSET(RecordType, image_quantitative_type), yardl::hdf5::OptionalTypeDdl<mrd::ImageQuantitativeType, mrd::ImageQuantitativeType>(mrd::hdf5::GetImageQuantitativeTypeHdf5Ddl()));
+  t.insertMember("imageQuantitativeType", HOFFSET(RecordType, image_quantitative_type), yardl::hdf5::OptionalTypeDdl<mrd::ImageQuantitativeType, mrd::ImageQuantitativeType>(H5::PredType::NATIVE_UINT64));
   t.insertMember("imageIndex", HOFFSET(RecordType, image_index), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
   t.insertMember("imageSeriesIndex", HOFFSET(RecordType, image_series_index), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
   t.insertMember("userInt", HOFFSET(RecordType, user_int), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_INT32));
@@ -2351,7 +2338,7 @@ template <typename _T_Inner, typename T>
   H5::CompType t(sizeof(RecordType));
   t.insertMember("head", HOFFSET(RecordType, head), mrd::hdf5::GetPulseHeaderHdf5Ddl());
   t.insertMember("amplitude", HOFFSET(RecordType, amplitude), yardl::hdf5::NDArrayDdl<float, float, 2>(H5::PredType::NATIVE_FLOAT));
-  t.insertMember("phase", HOFFSET(RecordType, phase), yardl::hdf5::NDArrayDdl<float, float, 2>(H5::PredType::NATIVE_FLOAT));
+  t.insertMember("phase", HOFFSET(RecordType, phase), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_FLOAT));
   return t;
 }
 

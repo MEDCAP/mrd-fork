@@ -328,9 +328,11 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
     def __init__(self) -> None:
         self._head_converter = AcquisitionHeaderConverter()
         self._data_converter = _ndjson.NDArrayConverter(_ndjson.complexfloat32_converter, 2)
+        self._phase_converter = _ndjson.NDArrayConverter(_ndjson.float32_converter, 1)
         super().__init__(np.dtype([
             ("head", self._head_converter.overall_dtype()),
             ("data", self._data_converter.overall_dtype()),
+            ("phase", self._phase_converter.overall_dtype()),
         ]))
 
     def to_json(self, value: Acquisition) -> object:
@@ -340,6 +342,7 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
 
         json_object["head"] = self._head_converter.to_json(value.head)
         json_object["data"] = self._data_converter.to_json(value.data)
+        json_object["phase"] = self._phase_converter.to_json(value.phase)
         return json_object
 
     def numpy_to_json(self, value: np.void) -> object:
@@ -349,6 +352,7 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
 
         json_object["head"] = self._head_converter.numpy_to_json(value["head"])
         json_object["data"] = self._data_converter.numpy_to_json(value["data"])
+        json_object["phase"] = self._phase_converter.numpy_to_json(value["phase"])
         return json_object
 
     def from_json(self, json_object: object) -> Acquisition:
@@ -357,6 +361,7 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
         return Acquisition(
             head=self._head_converter.from_json(json_object["head"],),
             data=self._data_converter.from_json(json_object["data"],),
+            phase=self._phase_converter.from_json(json_object["phase"],),
         )
 
     def from_json_to_numpy(self, json_object: object) -> np.void:
@@ -365,6 +370,7 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
         return (
             self._head_converter.from_json_to_numpy(json_object["head"]),
             self._data_converter.from_json_to_numpy(json_object["data"]),
+            self._phase_converter.from_json_to_numpy(json_object["phase"]),
         ) # type:ignore 
 
 
@@ -2508,10 +2514,11 @@ image_type_name_to_value_map = {
 image_type_value_to_name_map = {v: n for n, v in image_type_name_to_value_map.items()}
 
 image_quantitative_type_name_to_value_map = {
+    "quantSpinDensity": ImageQuantitativeType.QUANT_SPIN_DENSITY,
     "quantT1": ImageQuantitativeType.QUANT_T1,
+    "quantT2": ImageQuantitativeType.QUANT_T2,
     "quantT2star": ImageQuantitativeType.QUANT_T2STAR,
     "quantADC": ImageQuantitativeType.QUANT_ADC,
-    "quantSpinDensity": ImageQuantitativeType.QUANT_SPIN_DENSITY,
     "quantB1Map": ImageQuantitativeType.QUANT_B1_MAP,
     "quantSensitivityMap": ImageQuantitativeType.QUANT_SENSITIVITY_MAP,
 }
@@ -2537,7 +2544,7 @@ class ImageHeaderConverter(_ndjson.JsonConverter[ImageHeader, np.void]):
         self._acquisition_time_stamp_ns_converter = _ndjson.uint64_converter
         self._physiology_time_stamp_ns_converter = _ndjson.uint64_converter
         self._image_type_converter = _ndjson.EnumConverter(ImageType, np.int32, image_type_name_to_value_map, image_type_value_to_name_map)
-        self._image_quantitative_type_converter = _ndjson.OptionalConverter(_ndjson.EnumConverter(ImageQuantitativeType, np.int32, image_quantitative_type_name_to_value_map, image_quantitative_type_value_to_name_map))
+        self._image_quantitative_type_converter = _ndjson.OptionalConverter(_ndjson.FlagsConverter(ImageQuantitativeType, np.uint64, image_quantitative_type_name_to_value_map, image_quantitative_type_value_to_name_map))
         self._image_index_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
         self._image_series_index_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
         self._user_int_converter = _ndjson.VectorConverter(_ndjson.int32_converter)
@@ -3331,7 +3338,7 @@ class PulseConverter(_ndjson.JsonConverter[Pulse, np.void]):
     def __init__(self) -> None:
         self._head_converter = PulseHeaderConverter()
         self._amplitude_converter = _ndjson.NDArrayConverter(_ndjson.float32_converter, 2)
-        self._phase_converter = _ndjson.NDArrayConverter(_ndjson.float32_converter, 2)
+        self._phase_converter = _ndjson.NDArrayConverter(_ndjson.float32_converter, 1)
         super().__init__(np.dtype([
             ("head", self._head_converter.overall_dtype()),
             ("amplitude", self._amplitude_converter.overall_dtype()),

@@ -62,11 +62,16 @@ AcquisitionData: !array
     coils:
     samples:
 
-# TrajectoryData: !array
-#   items: float
-#   dimensions:
-#     basis:
-#     samples:
+AcquisitionPhase: !array
+  items: float
+  dimensions:
+    samples:
+
+TrajectoryData: !array
+  items: float
+  dimensions:
+    basis:
+    samples:
 
 AcquisitionHeader: !record
   fields:
@@ -117,11 +122,12 @@ Acquisition: !record
     head: AcquisitionHeader
     # Raw k-space samples array
     data: AcquisitionData
+    phase: AcquisitionPhase
     # Trajectory array EDIT: REMOVED
     #trajectory: TrajectoryData
   computedFields:
     coils: size(data, "coils")
     samples: size(data, "samples")
     activeChannels: size(head.channelOrder)
-    # trajectoryDimensions: size(trajectory, "basis")
-    # trajectorySamples: size(trajectory, "samples")
+    #trajectoryDimensions: size(trajectory, "basis")
+    #trajectorySamples: size(trajectory, "samples")
