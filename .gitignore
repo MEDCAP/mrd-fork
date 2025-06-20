@@ -4,3 +4,7 @@ cpp/build/
 
 *.bin
 *.png
+
+# vcpkg
+cpp/vcpkg_installed/
+out/
