@@ -15,7 +15,10 @@ from .yardl_types import ProtocolError
 from . import yardl_types as yardl
 
 class MrdWriterBase(abc.ABC):
-    """Abstract writer for the Mrd protocol."""
+    """Abstract writer for the Mrd protocol.
+
+    The MRD Protocol
+    """
 
 
     def __init__(self) -> None:
@@ -92,7 +95,10 @@ class MrdWriterBase(abc.ABC):
         return "<unknown>"
 
 class MrdReaderBase(abc.ABC):
-    """Abstract reader for the Mrd protocol."""
+    """Abstract reader for the Mrd protocol.
+
+    The MRD Protocol
+    """
 
 
     def __init__(self) -> None:
@@ -179,7 +185,10 @@ class MrdReaderBase(abc.ABC):
         return "<unknown>"
 
 class MrdNoiseCovarianceWriterBase(abc.ABC):
-    """Abstract writer for the MrdNoiseCovariance protocol."""
+    """Abstract writer for the MrdNoiseCovariance protocol.
+
+    Protocol for serializing a noise covariance matrix
+    """
 
 
     def __init__(self) -> None:
@@ -235,7 +244,10 @@ class MrdNoiseCovarianceWriterBase(abc.ABC):
         return "<unknown>"
 
 class MrdNoiseCovarianceReaderBase(abc.ABC):
-    """Abstract reader for the MrdNoiseCovariance protocol."""
+    """Abstract reader for the MrdNoiseCovariance protocol.
+
+    Protocol for serializing a noise covariance matrix
+    """
 
 
     def __init__(self) -> None:

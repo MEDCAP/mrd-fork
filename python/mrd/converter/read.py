@@ -44,10 +44,8 @@ with mrd.BinaryMrdReader(filename) as r:
         data_keys = item.value.__dict__.keys()
         print(data_keys)
         if isinstance(item, mrd.StreamItem.Pulse):
-            print('pulse')
-            print(item.value.amplitude.shape)
-            print(item.value.phase.shape)
-
+            print('pulse:', item.value.amplitude.shape)
+            
         elif isinstance(item, (mrd.StreamItem.ImageFloat)):
             print('image')
             print(item.value.data.shape)
