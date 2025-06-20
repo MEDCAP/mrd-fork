@@ -2,9 +2,13 @@
 
 classdef PulseHeader < handle
   properties
+    % Clock time stamp nanoseconds since midnight
     pulse_time_stamp_ns
+    % Channel numbers
     channel_order
+    % Sample time in ns
     sample_time_ns
+    % Pulse calibration (rad/s/V). Can be here or as a calB1Map calibration image or neither
     pulse_calibration
   end
 

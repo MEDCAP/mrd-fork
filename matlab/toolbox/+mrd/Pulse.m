@@ -2,7 +2,9 @@
 
 classdef Pulse < handle
   properties
+    % Pulse header
     head
+    % Raw pulse amplitude/phase array
     amplitude
     phase
   end
@@ -20,6 +22,7 @@ classdef Pulse < handle
     end
 
     function res = coils(self)
+      % Assuming writer sets amp and phase array the same size
       res = size(self.amplitude, ndims(self.amplitude)-(0));
       return
     end

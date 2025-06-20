@@ -2,10 +2,15 @@
 
 classdef NoiseCovariance < handle
   properties
+    % Comes from Header.acquisitionSystemInformation.coilLabel
     coil_labels
+    % Comes from Header.acquisitionSystemInformation.relativeReceiverNoiseBandwidth
     receiver_noise_bandwidth
+    % Comes from Acquisition.sampleTimeUs
     noise_dwell_time_us
+    % Number of samples used to compute matrix
     sample_count
+    % Noise covariance matrix with dimensions [coil, coil]
     matrix
   end
 

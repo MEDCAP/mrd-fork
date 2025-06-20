@@ -25,8 +25,9 @@ def parse_pulse_from_idea(pulse_amp_filename, pulse_phase_filename):
     # header.pulse_calibration = []
     pulse = mrd.Pulse()
     pulse.head = header
+    # amplitude=(coils, samples), phase=(samples)
     pulse.amplitude = loadmat(pulse_amp_filename)['data'].astype(np.float32)
-    pulse.phase = loadmat(pulse_phase_filename)['data'].astype(np.float32)
+    pulse.phase = loadmat(pulse_phase_filename)['data'].astype(np.float32).flatten()
     yield mrd.StreamItem.Pulse(pulse)
 
 def parse_image_from_mat(mat_filename):
@@ -37,24 +38,29 @@ def parse_image_from_mat(mat_filename):
     return:
         mrd.Image object
     '''
+    # data shape=(channels, MSx, MSy, slices, measurements, metabolites)
     data = loadmat(mat_filename)['data']
-    # iterate over slices, measurements, metabolites to yield channel-combined images
     for islice in range(data.shape[3]):
         for imeas in range(data.shape[4]):
             for imet in range(data.shape[5]):
-                raw_data = data[:, :, :, islice, imeas, imet]
-                image = np.linalg.norm(abs(raw_data), axis=0)   # combine across channels as magnitude image
+                image = abs(data[:, :, :, islice, imeas, imet]) # magnitude image
+                [channels, MSx, MSy] = image.shape
+                # ImageData dimensions=(channels, z, y, x)
+                image = np.reshape(image, (channels, 1, MSy, MSx))  
                 imghdr = mrd.ImageHeader(image_type=mrd.ImageType.MAGNITUDE)
                 imghdr.slice = islice
                 imghdr.image_index = imeas
                 imghdr.contrast = imet
-                mrd_image = mrd.Image[np.float32](head=imghdr, data=image, meta={})
+                mrd_image = mrd.Image[np.float64](head=imghdr, data=image, meta={})
                 yield mrd_image
 
-def stream_item(input: Iterable[mrd.Image[np.float32]]) -> Iterable[mrd.StreamItem]:
+
+def parse_acq_from_mat(mat_filename):
+    for islice in 
+def stream_item(input: Iterable[mrd.Image[np.float64]]) -> Iterable[mrd.StreamItem]:
     for item in input:
         if isinstance(item, mrd.Image):
-            yield mrd.StreamItem.ImageFloat(item)
+            yield mrd.StreamItem.ImageDouble(item)
 
 def generate_data(pulse_amp_filename, pulse_phase_filename, mat_filename):
     yield from parse_pulse_from_idea(pulse_amp_filename, pulse_phase_filename)
