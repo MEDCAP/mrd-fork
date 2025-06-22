@@ -1,0 +1,12 @@
+C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/include/date/date.h
+C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/include/date/solar_hijri.h
+C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/include/date/islamic.h
+C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/include/date/iso_week.h
+C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/include/date/julian.h
+C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/lib/date-tz.lib
+C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/bin/date-tz.dll
+C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/include/date/tz.h
+C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/CMake/dateTargets.cmake
+C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/CMake/dateTargets-debug.cmake
+C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/CMake/dateConfig.cmake
+C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/CMake/dateConfigVersion.cmake

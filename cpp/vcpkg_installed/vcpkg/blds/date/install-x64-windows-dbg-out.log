@@ -1,0 +1,20 @@
+Change Dir: 'C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/blds/date/x64-windows-dbg'
+
+Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v -v -j9 install
+[1/3] C:\PROGRA~1\MIB055~1\2022\PROFES~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe   /TP -DAUTO_DOWNLOAD=0 -DBUILD_TZ_LIB=1 -DDATE_BUILD_DLL=1 -DHAS_REMOTE_API=0 -DHAS_STRING_VIEW=1 -DONLY_C_LOCALE=0 -DUSE_OS_TZDB=0 -Ddate_tz_EXPORTS -IC:\Users\kento\dev\mrd-fork\cpp\vcpkg_installed\vcpkg\blds\date\src\v3.0.4-29cb71cad1.clean\include /nologo /DWIN32 /D_WINDOWS /utf-8 /GR /EHsc /MP  /MDd /Z7 /Ob0 /Od /RTC1  -std:c++17 /showIncludes /FoCMakeFiles\date-tz.dir\src\tz.cpp.obj /FdCMakeFiles\date-tz.dir\ /FS -c C:\Users\kento\dev\mrd-fork\cpp\vcpkg_installed\vcpkg\blds\date\src\v3.0.4-29cb71cad1.clean\src\tz.cpp
+[2/3] C:\WINDOWS\system32\cmd.exe /C "cd . && "C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E vs_link_dll --msvc-ver=1944 --intdir=CMakeFiles\date-tz.dir --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\mt.exe --manifests  -- C:\PROGRA~1\MIB055~1\2022\PROFES~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\link.exe  CMakeFiles\date-tz.dir\src\tz.cpp.obj  /out:date-tz.dll /implib:date-tz.lib /pdb:date-tz.pdb /dll /version:3.0 /machine:x64 /nologo    /debug /INCREMENTAL  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+[2/3] C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\kento\dev\mrd-fork\cpp\vcpkg_installed\vcpkg\blds\date\x64-windows-dbg && "C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -P cmake_install.cmake"
+-- Install configuration: "Debug"
+-- Installing: C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/include/date/date.h
+-- Installing: C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/include/date/solar_hijri.h
+-- Installing: C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/include/date/islamic.h
+-- Installing: C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/include/date/iso_week.h
+-- Installing: C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/include/date/julian.h
+-- Installing: C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/lib/date-tz.lib
+-- Installing: C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/bin/date-tz.dll
+-- Installing: C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/include/date/tz.h
+-- Installing: C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/CMake/dateTargets.cmake
+-- Installing: C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/CMake/dateTargets-debug.cmake
+-- Installing: C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/CMake/dateConfig.cmake
+-- Installing: C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/debug/CMake/dateConfigVersion.cmake
+

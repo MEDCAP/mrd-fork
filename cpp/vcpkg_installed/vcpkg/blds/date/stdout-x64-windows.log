@@ -1,0 +1,21 @@
+CMake Warning at C:/Users/kento/AppData/Local/vcpkg/registries/git-trees/b5a0767b047cd12d9949cb1facb0f72c5d0ddf9f/portfile.cmake:2 (message):
+  You will need to also install
+  https://raw.githubusercontent.com/unicode-org/cldr/master/common/supplemental/windowsZones.xml
+  into your install location.
+
+  See https://howardhinnant.github.io/date/tz.html
+Call Stack (most recent call first):
+  scripts/ports.cmake:203 (include)
+
+
+Downloading https://github.com/HowardHinnant/date/archive/v3.0.4.tar.gz -> HowardHinnant-date-v3.0.4.tar.gz
+Successfully downloaded HowardHinnant-date-v3.0.4.tar.gz
+-- Extracting source C:/Users/kento/AppData/Local/vcpkg/downloads/HowardHinnant-date-v3.0.4.tar.gz
+-- Using source at C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/blds/date/src/v3.0.4-29cb71cad1.clean
+-- Found external ninja('1.12.1').
+-- Configuring x64-windows
+-- Building x64-windows-dbg
+-- Building x64-windows-rel
+-- Installing: C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/share/date/copyright
+-- Installing: C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/date_x64-windows/share/date/usage
+-- Performing post-build validation

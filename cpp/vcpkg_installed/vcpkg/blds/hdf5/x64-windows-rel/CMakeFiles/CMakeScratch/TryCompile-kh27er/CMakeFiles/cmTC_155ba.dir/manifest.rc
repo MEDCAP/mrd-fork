@@ -1,0 +1,2 @@
+#pragma code_page(65001)
+1 /* CREATEPROCESS_MANIFEST_RESOURCE_ID */ 24 /* RT_MANIFEST */ "C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/blds/hdf5/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-kh27er/CMakeFiles/cmTC_155ba.dir/embed.manifest"

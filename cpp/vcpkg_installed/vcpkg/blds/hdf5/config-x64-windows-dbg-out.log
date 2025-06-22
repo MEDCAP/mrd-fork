@@ -1,0 +1,177 @@
+-- The C compiler identification is MSVC 19.44.35209.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Final: share/hdf5/data
+-- Looking for include file sys/file.h
+-- Looking for include file sys/file.h - not found
+-- Looking for include file sys/ioctl.h
+-- Looking for include file sys/ioctl.h - not found
+-- Looking for include file sys/resource.h
+-- Looking for include file sys/resource.h - not found
+-- Looking for include file sys/socket.h
+-- Looking for include file sys/socket.h - not found
+-- Looking for include file sys/stat.h
+-- Looking for include file sys/stat.h - found
+-- Looking for include files sys/stat.h, sys/time.h
+-- Looking for include files sys/stat.h, sys/time.h - not found
+-- Looking for include files sys/stat.h, sys/types.h
+-- Looking for include files sys/stat.h, sys/types.h - found
+-- Looking for 3 include files sys/stat.h, ..., features.h
+-- Looking for 3 include files sys/stat.h, ..., features.h - not found
+-- Looking for 3 include files sys/stat.h, ..., dirent.h
+-- Looking for 3 include files sys/stat.h, ..., dirent.h - not found
+-- Looking for 3 include files sys/stat.h, ..., unistd.h
+-- Looking for 3 include files sys/stat.h, ..., unistd.h - not found
+-- Looking for 3 include files sys/stat.h, ..., pwd.h
+-- Looking for 3 include files sys/stat.h, ..., pwd.h - not found
+-- Looking for 3 include files sys/stat.h, ..., pthread.h
+-- Looking for 3 include files sys/stat.h, ..., pthread.h - not found
+-- Looking for 3 include files sys/stat.h, ..., dlfcn.h
+-- Looking for 3 include files sys/stat.h, ..., dlfcn.h - not found
+-- Looking for 3 include files sys/stat.h, ..., netinet/in.h
+-- Looking for 3 include files sys/stat.h, ..., netinet/in.h - not found
+-- Looking for 3 include files sys/stat.h, ..., netdb.h
+-- Looking for 3 include files sys/stat.h, ..., netdb.h - not found
+-- Looking for 3 include files sys/stat.h, ..., arpa/inet.h
+-- Looking for 3 include files sys/stat.h, ..., arpa/inet.h - not found
+-- Looking for 3 include files sys/stat.h, ..., shlwapi.h
+-- Looking for 3 include files sys/stat.h, ..., shlwapi.h - found
+-- Looking for include file quadmath.h
+-- Looking for include file quadmath.h - not found
+-- Looking for gethostname in ucb;
+-- Looking for gethostname in ucb; - not found
+-- Looking for sys/types.h
+-- Looking for sys/types.h - found
+-- Looking for stdint.h
+-- Looking for stdint.h - found
+-- Looking for stddef.h
+-- Looking for stddef.h - found
+-- Check size of char
+-- Check size of char - done
+-- Check size of short
+-- Check size of short - done
+-- Check size of int
+-- Check size of int - done
+-- Check size of unsigned
+-- Check size of unsigned - done
+-- Check size of long
+-- Check size of long - done
+-- Check size of long long
+-- Check size of long long - done
+-- Check size of float
+-- Check size of float - done
+-- Check size of double
+-- Check size of double - done
+-- Check size of long double
+-- Check size of long double - done
+-- Check size of int8_t
+-- Check size of int8_t - done
+-- Check size of uint8_t
+-- Check size of uint8_t - done
+-- Check size of int_least8_t
+-- Check size of int_least8_t - done
+-- Check size of uint_least8_t
+-- Check size of uint_least8_t - done
+-- Check size of int_fast8_t
+-- Check size of int_fast8_t - done
+-- Check size of uint_fast8_t
+-- Check size of uint_fast8_t - done
+-- Check size of int16_t
+-- Check size of int16_t - done
+-- Check size of uint16_t
+-- Check size of uint16_t - done
+-- Check size of int_least16_t
+-- Check size of int_least16_t - done
+-- Check size of uint_least16_t
+-- Check size of uint_least16_t - done
+-- Check size of int_fast16_t
+-- Check size of int_fast16_t - done
+-- Check size of uint_fast16_t
+-- Check size of uint_fast16_t - done
+-- Check size of int32_t
+-- Check size of int32_t - done
+-- Check size of uint32_t
+-- Check size of uint32_t - done
+-- Check size of int_least32_t
+-- Check size of int_least32_t - done
+-- Check size of uint_least32_t
+-- Check size of uint_least32_t - done
+-- Check size of int_fast32_t
+-- Check size of int_fast32_t - done
+-- Check size of uint_fast32_t
+-- Check size of uint_fast32_t - done
+-- Check size of int64_t
+-- Check size of int64_t - done
+-- Check size of uint64_t
+-- Check size of uint64_t - done
+-- Check size of int_least64_t
+-- Check size of int_least64_t - done
+-- Check size of uint_least64_t
+-- Check size of uint_least64_t - done
+-- Check size of int_fast64_t
+-- Check size of int_fast64_t - done
+-- Check size of uint_fast64_t
+-- Check size of uint_fast64_t - done
+-- Check size of size_t
+-- Check size of size_t - done
+-- Check size of ssize_t
+-- Check size of ssize_t - failed
+-- Check size of off_t
+-- Check size of off_t - done
+-- Check size of time_t
+-- Check size of time_t - done
+-- Check size of _Bool
+-- Check size of _Bool - done
+-- Looking for alarm
+-- Looking for alarm - not found
+-- Looking for fcntl
+-- Looking for fcntl - not found
+-- Looking for flock
+-- Looking for flock - not found
+-- Looking for fork
+-- Looking for fork - not found
+-- Looking for getrusage
+-- Looking for getrusage - not found
+-- Looking for pread
+-- Looking for pread - not found
+-- Looking for pwrite
+-- Looking for pwrite - not found
+-- Looking for rand_r
+-- Looking for rand_r - not found
+-- Looking for random
+-- Looking for random - not found
+-- Looking for strcasestr
+-- Looking for strcasestr - not found
+-- Looking for symlink
+-- Looking for symlink - not found
+-- Looking for tmpfile
+-- Looking for tmpfile - found
+-- Looking for asprintf
+-- Looking for asprintf - not found
+-- Looking for vasprintf
+-- Looking for vasprintf - not found
+-- Looking for waitpid
+-- Looking for waitpid - not found
+-- Looking for sigsetjmp
+-- Looking for sigsetjmp - not found
+-- Check size of CLOCK_MONOTONIC_COARSE
+-- Check size of CLOCK_MONOTONIC_COARSE - failed
+-- Checking if _Float16 support is available
+-- Check size of _Float16
+-- Check size of _Float16 - failed
+-- _Float16 support has been disabled since the _Float16 type was not found
+-- Could NOT find Perl (missing: PERL_EXECUTABLE) 
+-- ....All Warnings are enabled
+-- The CXX compiler identification is MSVC 19.44.35209.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- ....All Warnings are enabled
+-- Configuring done (555.8s)
+-- Generating done (2.9s)
+-- Build files have been written to: C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/blds/hdf5/x64-windows-dbg

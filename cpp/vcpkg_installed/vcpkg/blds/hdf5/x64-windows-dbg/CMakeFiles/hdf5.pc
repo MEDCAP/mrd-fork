@@ -1,0 +1,14 @@
+prefix=C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/pkgs/hdf5_x64-windows/debug
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: hdf5
+Description: HDF5 (Hierarchical Data Format 5) Software Library
+Version: 1.14.6
+
+Cflags: -I${includedir}
+Libs: -L${libdir}  -lhdf5_D
+Requires: 
+Libs.private:  
+Requires.private: 

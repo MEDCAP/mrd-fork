@@ -1,0 +1,48 @@
+-- The C compiler identification is MSVC 19.44.35209.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Final: share/hdf5/data
+-- Looking for include file sys/file.h
+-- Looking for include file sys/file.h - not found
+-- Looking for include file sys/ioctl.h
+-- Looking for include file sys/ioctl.h - not found
+-- Looking for include file sys/resource.h
+-- Looking for include file sys/resource.h - not found
+-- Looking for include file sys/socket.h
+-- Looking for include file sys/socket.h - not found
+-- Looking for include file sys/stat.h
+-- Looking for include file sys/stat.h - found
+-- Looking for include files sys/stat.h, sys/time.h
+-- Looking for include files sys/stat.h, sys/time.h - not found
+-- Looking for include files sys/stat.h, sys/types.h
+-- Looking for include files sys/stat.h, sys/types.h - found
+-- Looking for 3 include files sys/stat.h, ..., features.h
+-- Looking for 3 include files sys/stat.h, ..., features.h - not found
+-- Looking for 3 include files sys/stat.h, ..., dirent.h
+-- Looking for 3 include files sys/stat.h, ..., dirent.h - not found
+-- Looking for 3 include files sys/stat.h, ..., unistd.h
+-- Looking for 3 include files sys/stat.h, ..., unistd.h - not found
+-- Looking for 3 include files sys/stat.h, ..., pwd.h
+-- Looking for 3 include files sys/stat.h, ..., pwd.h - not found
+-- Looking for 3 include files sys/stat.h, ..., pthread.h
+-- Looking for 3 include files sys/stat.h, ..., pthread.h - not found
+-- Looking for 3 include files sys/stat.h, ..., dlfcn.h
+-- Looking for 3 include files sys/stat.h, ..., dlfcn.h - not found
+-- Looking for 3 include files sys/stat.h, ..., netinet/in.h
+-- Looking for 3 include files sys/stat.h, ..., netinet/in.h - not found
+-- Looking for 3 include files sys/stat.h, ..., netdb.h
+-- Looking for 3 include files sys/stat.h, ..., netdb.h - not found
+-- Looking for 3 include files sys/stat.h, ..., arpa/inet.h
+-- Looking for 3 include files sys/stat.h, ..., arpa/inet.h - not found
+-- Looking for 3 include files sys/stat.h, ..., shlwapi.h
+-- Looking for 3 include files sys/stat.h, ..., shlwapi.h - found
+-- Looking for include file quadmath.h
+-- Looking for include file quadmath.h - not found
+-- Looking for gethostname in ucb;
+-- Looking for gethostname in ucb; - not found
+-- Looking for sys/types.h
+-- Looking for sys/types.h - found
+-- Looking for stdint.h
