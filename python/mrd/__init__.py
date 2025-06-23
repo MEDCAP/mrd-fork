@@ -79,6 +79,7 @@ from .types import (
     PulseData,
     PulseHeader,
     PulsePhase,
+    PulsePhaseOffset,
     ReconAssembly,
     ReconBuffer,
     ReconData,
