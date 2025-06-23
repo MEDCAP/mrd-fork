@@ -5,6 +5,7 @@ classdef Pulse < handle
     head
     amplitude
     phase
+    phase_offset
   end
 
   methods
@@ -13,10 +14,12 @@ classdef Pulse < handle
         kwargs.head = mrd.PulseHeader();
         kwargs.amplitude = single.empty();
         kwargs.phase = single.empty();
+        kwargs.phase_offset = single.empty();
       end
       self.head = kwargs.head;
       self.amplitude = kwargs.amplitude;
       self.phase = kwargs.phase;
+      self.phase_offset = kwargs.phase_offset;
     end
 
     function res = coils(self)
@@ -40,7 +43,8 @@ classdef Pulse < handle
         isa(other, "mrd.Pulse") && ...
         isequal({self.head}, {other.head}) && ...
         isequal({self.amplitude}, {other.amplitude}) && ...
-        isequal({self.phase}, {other.phase});
+        isequal({self.phase}, {other.phase}) && ...
+        isequal({self.phase_offset}, {other.phase_offset});
     end
 
     function res = ne(self, other)

@@ -3263,6 +3263,9 @@ void to_json(ordered_json& j, mrd::Pulse const& value) {
   if (yardl::ndjson::ShouldSerializeFieldValue(value.phase)) {
     j.push_back({"phase", value.phase});
   }
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.phase_offset)) {
+    j.push_back({"phaseOffset", value.phase_offset});
+  }
 }
 
 void from_json(ordered_json const& j, mrd::Pulse& value) {
@@ -3274,6 +3277,9 @@ void from_json(ordered_json const& j, mrd::Pulse& value) {
   }
   if (auto it = j.find("phase"); it != j.end()) {
     it->get_to(value.phase);
+  }
+  if (auto it = j.find("phaseOffset"); it != j.end()) {
+    it->get_to(value.phase_offset);
   }
 }
 
