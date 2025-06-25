@@ -1,8 +1,0 @@
-Package: date
-Version: 3.0.4
-Depends: vcpkg-cmake, vcpkg-cmake-config
-Architecture: x64-windows
-Multi-Arch: same
-Abi: eaf3fdebd3024033bec9a3c52896d4851db8abda03b25a222cd9413aaab181a8
-Description: A date and time library based on the C++17 <chrono> header
-Status: install ok installed

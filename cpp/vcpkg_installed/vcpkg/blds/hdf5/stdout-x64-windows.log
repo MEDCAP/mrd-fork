@@ -1,9 +1,0 @@
-Downloading https://github.com/HDFGroup/hdf5/archive/hdf5_1.14.6.tar.gz -> HDFGroup-hdf5-hdf5_1.14.6.tar.gz
-Successfully downloaded HDFGroup-hdf5-hdf5_1.14.6.tar.gz
--- Extracting source C:/Users/kento/AppData/Local/vcpkg/downloads/HDFGroup-hdf5-hdf5_1.14.6.tar.gz
--- Applying patch hdf5_config.patch
--- Applying patch pkgconfig.patch
--- Using source at C:/Users/kento/dev/mrd-fork/cpp/vcpkg_installed/vcpkg/blds/hdf5/src/df5_1.14.6-3417ba69ef.clean
--- Found external ninja('1.12.1').
--- Configuring x64-windows-dbg
--- Configuring x64-windows-rel
