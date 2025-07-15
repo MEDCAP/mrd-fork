@@ -39,10 +39,15 @@ def parse_image_from_mat(mat_filename):
         mrd.Image object
     '''
     # data shape=(channels, MSx, MSy, slices, measurements, metabolites)
+    # data shape=(channels, MSx, MSy, slices, measurements, metabolites)
     data = loadmat(mat_filename)['data']
     for islice in range(data.shape[3]):
         for imeas in range(data.shape[4]):
             for imet in range(data.shape[5]):
+                image = abs(data[:, :, :, islice, imeas, imet]) # magnitude image
+                [channels, MSx, MSy] = image.shape
+                # ImageData dimensions=(channels, z, y, x)
+                image = np.reshape(image, (channels, 1, MSy, MSx))  
                 image = abs(data[:, :, :, islice, imeas, imet]) # magnitude image
                 [channels, MSx, MSy] = image.shape
                 # ImageData dimensions=(channels, z, y, x)
@@ -52,14 +57,17 @@ def parse_image_from_mat(mat_filename):
                 imghdr.image_index = imeas
                 imghdr.contrast = imet
                 mrd_image = mrd.Image[np.float64](head=imghdr, data=image, meta={})
+                mrd_image = mrd.Image[np.float64](head=imghdr, data=image, meta={})
                 yield mrd_image
 
 
 def parse_acq_from_mat(mat_filename):
     for islice in 
 def stream_item(input: Iterable[mrd.Image[np.float64]]) -> Iterable[mrd.StreamItem]:
+def stream_item(input: Iterable[mrd.Image[np.float64]]) -> Iterable[mrd.StreamItem]:
     for item in input:
         if isinstance(item, mrd.Image):
+            yield mrd.StreamItem.ImageDouble(item)
             yield mrd.StreamItem.ImageDouble(item)
 
 def generate_data(pulse_amp_filename, pulse_phase_filename, mat_filename):
