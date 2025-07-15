@@ -68,8 +68,9 @@ struct IsTriviallySerializable<mrd::Acquisition> {
     std::is_standard_layout_v<__T__> &&
     IsTriviallySerializable<decltype(__T__::head)>::value &&
     IsTriviallySerializable<decltype(__T__::data)>::value &&
-    (sizeof(__T__) == (sizeof(__T__::head) + sizeof(__T__::data))) &&
-    offsetof(__T__, head) < offsetof(__T__, data);
+    IsTriviallySerializable<decltype(__T__::trajectory)>::value &&
+    (sizeof(__T__) == (sizeof(__T__::head) + sizeof(__T__::data) + sizeof(__T__::trajectory))) &&
+    offsetof(__T__, head) < offsetof(__T__, data) && offsetof(__T__, data) < offsetof(__T__, trajectory);
 };
 
 template <>
@@ -1099,6 +1100,24 @@ namespace {
   yardl::binary::ReadNDArray<std::complex<float>, yardl::binary::ReadFloatingPoint, 2>(stream, value);
 }
 
+[[maybe_unused]] void WriteTrajectoryData(yardl::binary::CodedOutputStream& stream, mrd::TrajectoryData const& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::TrajectoryData>::value) {
+    yardl::binary::WriteTriviallySerializable(stream, value);
+    return;
+  }
+
+  yardl::binary::WriteNDArray<float, yardl::binary::WriteFloatingPoint, 2>(stream, value);
+}
+
+[[maybe_unused]] void ReadTrajectoryData(yardl::binary::CodedInputStream& stream, mrd::TrajectoryData& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::TrajectoryData>::value) {
+    yardl::binary::ReadTriviallySerializable(stream, value);
+    return;
+  }
+
+  yardl::binary::ReadNDArray<float, yardl::binary::ReadFloatingPoint, 2>(stream, value);
+}
+
 [[maybe_unused]] void WriteAcquisitionHeader(yardl::binary::CodedOutputStream& stream, mrd::AcquisitionHeader const& value) {
   if constexpr (yardl::binary::IsTriviallySerializable<mrd::AcquisitionHeader>::value) {
     yardl::binary::WriteTriviallySerializable(stream, value);
@@ -1161,6 +1180,7 @@ namespace {
 
   mrd::binary::WriteAcquisitionHeader(stream, value.head);
   mrd::binary::WriteAcquisitionData(stream, value.data);
+  mrd::binary::WriteTrajectoryData(stream, value.trajectory);
 }
 
 [[maybe_unused]] void ReadAcquisition(yardl::binary::CodedInputStream& stream, mrd::Acquisition& value) {
@@ -1171,6 +1191,7 @@ namespace {
 
   mrd::binary::ReadAcquisitionHeader(stream, value.head);
   mrd::binary::ReadAcquisitionData(stream, value.data);
+  mrd::binary::ReadTrajectoryData(stream, value.trajectory);
 }
 
 [[maybe_unused]] void WriteGradientData(yardl::binary::CodedOutputStream& stream, mrd::GradientData const& value) {
@@ -2034,8 +2055,8 @@ template<typename Y, yardl::binary::Reader<Y> ReadY>
   yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.phase);
   yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.repetition);
   yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.set);
-  yardl::binary::WriteInteger(stream, value.acquisition_time_stamp_ns);
-  yardl::binary::WriteInteger(stream, value.physiology_time_stamp_ns);
+  yardl::binary::WriteOptional<uint64_t, yardl::binary::WriteInteger>(stream, value.acquisition_time_stamp_ns);
+  yardl::binary::WriteVector<uint64_t, yardl::binary::WriteInteger>(stream, value.physiology_time_stamp_ns);
   yardl::binary::WriteEnum<mrd::ImageType>(stream, value.image_type);
   yardl::binary::WriteOptional<mrd::ImageQuantitativeType, yardl::binary::WriteEnum<mrd::ImageQuantitativeType>>(stream, value.image_quantitative_type);
   yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.image_index);
@@ -2065,8 +2086,8 @@ template<typename Y, yardl::binary::Reader<Y> ReadY>
   yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.phase);
   yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.repetition);
   yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.set);
-  yardl::binary::ReadInteger(stream, value.acquisition_time_stamp_ns);
-  yardl::binary::ReadInteger(stream, value.physiology_time_stamp_ns);
+  yardl::binary::ReadOptional<uint64_t, yardl::binary::ReadInteger>(stream, value.acquisition_time_stamp_ns);
+  yardl::binary::ReadVector<uint64_t, yardl::binary::ReadInteger>(stream, value.physiology_time_stamp_ns);
   yardl::binary::ReadEnum<mrd::ImageType>(stream, value.image_type);
   yardl::binary::ReadOptional<mrd::ImageQuantitativeType, yardl::binary::ReadEnum<mrd::ImageQuantitativeType>>(stream, value.image_quantitative_type);
   yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.image_index);

@@ -328,9 +328,11 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
     def __init__(self) -> None:
         self._head_converter = AcquisitionHeaderConverter()
         self._data_converter = _ndjson.NDArrayConverter(_ndjson.complexfloat32_converter, 2)
+        self._trajectory_converter = _ndjson.NDArrayConverter(_ndjson.float32_converter, 2)
         super().__init__(np.dtype([
             ("head", self._head_converter.overall_dtype()),
             ("data", self._data_converter.overall_dtype()),
+            ("trajectory", self._trajectory_converter.overall_dtype()),
         ]))
 
     def to_json(self, value: Acquisition) -> object:
@@ -340,6 +342,7 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
 
         json_object["head"] = self._head_converter.to_json(value.head)
         json_object["data"] = self._data_converter.to_json(value.data)
+        json_object["trajectory"] = self._trajectory_converter.to_json(value.trajectory)
         return json_object
 
     def numpy_to_json(self, value: np.void) -> object:
@@ -349,6 +352,7 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
 
         json_object["head"] = self._head_converter.numpy_to_json(value["head"])
         json_object["data"] = self._data_converter.numpy_to_json(value["data"])
+        json_object["trajectory"] = self._trajectory_converter.numpy_to_json(value["trajectory"])
         return json_object
 
     def from_json(self, json_object: object) -> Acquisition:
@@ -357,6 +361,7 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
         return Acquisition(
             head=self._head_converter.from_json(json_object["head"],),
             data=self._data_converter.from_json(json_object["data"],),
+            trajectory=self._trajectory_converter.from_json(json_object["trajectory"],),
         )
 
     def from_json_to_numpy(self, json_object: object) -> np.void:
@@ -365,6 +370,7 @@ class AcquisitionConverter(_ndjson.JsonConverter[Acquisition, np.void]):
         return (
             self._head_converter.from_json_to_numpy(json_object["head"]),
             self._data_converter.from_json_to_numpy(json_object["data"]),
+            self._trajectory_converter.from_json_to_numpy(json_object["trajectory"]),
         ) # type:ignore 
 
 
@@ -2534,8 +2540,8 @@ class ImageHeaderConverter(_ndjson.JsonConverter[ImageHeader, np.void]):
         self._phase_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
         self._repetition_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
         self._set_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
-        self._acquisition_time_stamp_ns_converter = _ndjson.uint64_converter
-        self._physiology_time_stamp_ns_converter = _ndjson.uint64_converter
+        self._acquisition_time_stamp_ns_converter = _ndjson.OptionalConverter(_ndjson.uint64_converter)
+        self._physiology_time_stamp_ns_converter = _ndjson.VectorConverter(_ndjson.uint64_converter)
         self._image_type_converter = _ndjson.EnumConverter(ImageType, np.int32, image_type_name_to_value_map, image_type_value_to_name_map)
         self._image_quantitative_type_converter = _ndjson.OptionalConverter(_ndjson.EnumConverter(ImageQuantitativeType, np.int32, image_quantitative_type_name_to_value_map, image_quantitative_type_value_to_name_map))
         self._image_index_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
@@ -2594,7 +2600,8 @@ class ImageHeaderConverter(_ndjson.JsonConverter[ImageHeader, np.void]):
             json_object["repetition"] = self._repetition_converter.to_json(value.repetition)
         if value.set is not None:
             json_object["set"] = self._set_converter.to_json(value.set)
-        json_object["acquisitionTimeStampNs"] = self._acquisition_time_stamp_ns_converter.to_json(value.acquisition_time_stamp_ns)
+        if value.acquisition_time_stamp_ns is not None:
+            json_object["acquisitionTimeStampNs"] = self._acquisition_time_stamp_ns_converter.to_json(value.acquisition_time_stamp_ns)
         json_object["physiologyTimeStampNs"] = self._physiology_time_stamp_ns_converter.to_json(value.physiology_time_stamp_ns)
         json_object["imageType"] = self._image_type_converter.to_json(value.image_type)
         if value.image_quantitative_type is not None:
@@ -2633,7 +2640,8 @@ class ImageHeaderConverter(_ndjson.JsonConverter[ImageHeader, np.void]):
             json_object["repetition"] = self._repetition_converter.numpy_to_json(field_val)
         if (field_val := value["set"]) is not None:
             json_object["set"] = self._set_converter.numpy_to_json(field_val)
-        json_object["acquisitionTimeStampNs"] = self._acquisition_time_stamp_ns_converter.numpy_to_json(value["acquisition_time_stamp_ns"])
+        if (field_val := value["acquisition_time_stamp_ns"]) is not None:
+            json_object["acquisitionTimeStampNs"] = self._acquisition_time_stamp_ns_converter.numpy_to_json(field_val)
         json_object["physiologyTimeStampNs"] = self._physiology_time_stamp_ns_converter.numpy_to_json(value["physiology_time_stamp_ns"])
         json_object["imageType"] = self._image_type_converter.numpy_to_json(value["image_type"])
         if (field_val := value["image_quantitative_type"]) is not None:
@@ -2665,7 +2673,7 @@ class ImageHeaderConverter(_ndjson.JsonConverter[ImageHeader, np.void]):
             phase=self._phase_converter.from_json(json_object.get("phase")),
             repetition=self._repetition_converter.from_json(json_object.get("repetition")),
             set=self._set_converter.from_json(json_object.get("set")),
-            acquisition_time_stamp_ns=self._acquisition_time_stamp_ns_converter.from_json(json_object["acquisitionTimeStampNs"],),
+            acquisition_time_stamp_ns=self._acquisition_time_stamp_ns_converter.from_json(json_object.get("acquisitionTimeStampNs")),
             physiology_time_stamp_ns=self._physiology_time_stamp_ns_converter.from_json(json_object["physiologyTimeStampNs"],),
             image_type=self._image_type_converter.from_json(json_object["imageType"],),
             image_quantitative_type=self._image_quantitative_type_converter.from_json(json_object.get("imageQuantitativeType")),
@@ -2694,7 +2702,7 @@ class ImageHeaderConverter(_ndjson.JsonConverter[ImageHeader, np.void]):
             self._phase_converter.from_json_to_numpy(json_object.get("phase")),
             self._repetition_converter.from_json_to_numpy(json_object.get("repetition")),
             self._set_converter.from_json_to_numpy(json_object.get("set")),
-            self._acquisition_time_stamp_ns_converter.from_json_to_numpy(json_object["acquisitionTimeStampNs"]),
+            self._acquisition_time_stamp_ns_converter.from_json_to_numpy(json_object.get("acquisitionTimeStampNs")),
             self._physiology_time_stamp_ns_converter.from_json_to_numpy(json_object["physiologyTimeStampNs"]),
             self._image_type_converter.from_json_to_numpy(json_object["imageType"]),
             self._image_quantitative_type_converter.from_json_to_numpy(json_object.get("imageQuantitativeType")),
@@ -3378,7 +3386,10 @@ class PulseConverter(_ndjson.JsonConverter[Pulse, np.void]):
 
 
 class NDJsonMrdWriter(_ndjson.NDJsonProtocolWriter, MrdWriterBase):
-    """NDJson writer for the Mrd protocol."""
+    """NDJson writer for the Mrd protocol.
+
+    The MRD Protocol
+    """
 
 
     def __init__(self, stream: typing.Union[typing.TextIO, str]) -> None:
@@ -3398,7 +3409,10 @@ class NDJsonMrdWriter(_ndjson.NDJsonProtocolWriter, MrdWriterBase):
 
 
 class NDJsonMrdReader(_ndjson.NDJsonProtocolReader, MrdReaderBase):
-    """NDJson writer for the Mrd protocol."""
+    """NDJson writer for the Mrd protocol.
+
+    The MRD Protocol
+    """
 
 
     def __init__(self, stream: typing.Union[io.BufferedReader, typing.TextIO, str]) -> None:
@@ -3416,7 +3430,10 @@ class NDJsonMrdReader(_ndjson.NDJsonProtocolReader, MrdReaderBase):
             yield converter.from_json(json_object)
 
 class NDJsonMrdNoiseCovarianceWriter(_ndjson.NDJsonProtocolWriter, MrdNoiseCovarianceWriterBase):
-    """NDJson writer for the MrdNoiseCovariance protocol."""
+    """NDJson writer for the MrdNoiseCovariance protocol.
+
+    Protocol for serializing a noise covariance matrix
+    """
 
 
     def __init__(self, stream: typing.Union[typing.TextIO, str]) -> None:
@@ -3430,7 +3447,10 @@ class NDJsonMrdNoiseCovarianceWriter(_ndjson.NDJsonProtocolWriter, MrdNoiseCovar
 
 
 class NDJsonMrdNoiseCovarianceReader(_ndjson.NDJsonProtocolReader, MrdNoiseCovarianceReaderBase):
-    """NDJson writer for the MrdNoiseCovariance protocol."""
+    """NDJson writer for the MrdNoiseCovariance protocol.
+
+    Protocol for serializing a noise covariance matrix
+    """
 
 
     def __init__(self, stream: typing.Union[io.BufferedReader, typing.TextIO, str]) -> None:
