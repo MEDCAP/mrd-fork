@@ -685,8 +685,9 @@ struct IsTriviallySerializable<mrd::Pulse> {
     IsTriviallySerializable<decltype(__T__::head)>::value &&
     IsTriviallySerializable<decltype(__T__::amplitude)>::value &&
     IsTriviallySerializable<decltype(__T__::phase)>::value &&
-    (sizeof(__T__) == (sizeof(__T__::head) + sizeof(__T__::amplitude) + sizeof(__T__::phase))) &&
-    offsetof(__T__, head) < offsetof(__T__, amplitude) && offsetof(__T__, amplitude) < offsetof(__T__, phase);
+    IsTriviallySerializable<decltype(__T__::phase_offset)>::value &&
+    (sizeof(__T__) == (sizeof(__T__::head) + sizeof(__T__::amplitude) + sizeof(__T__::phase) + sizeof(__T__::phase_offset))) &&
+    offsetof(__T__, head) < offsetof(__T__, amplitude) && offsetof(__T__, amplitude) < offsetof(__T__, phase) && offsetof(__T__, phase) < offsetof(__T__, phase_offset);
 };
 
 #ifndef _MSC_VER
@@ -2674,6 +2675,24 @@ template<typename T, yardl::binary::Reader<T> ReadT>
   yardl::binary::ReadNDArray<float, yardl::binary::ReadFloatingPoint, 1>(stream, value);
 }
 
+[[maybe_unused]] void WritePulsePhaseOffset(yardl::binary::CodedOutputStream& stream, mrd::PulsePhaseOffset const& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::PulsePhaseOffset>::value) {
+    yardl::binary::WriteTriviallySerializable(stream, value);
+    return;
+  }
+
+  yardl::binary::WriteNDArray<float, yardl::binary::WriteFloatingPoint, 1>(stream, value);
+}
+
+[[maybe_unused]] void ReadPulsePhaseOffset(yardl::binary::CodedInputStream& stream, mrd::PulsePhaseOffset& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::PulsePhaseOffset>::value) {
+    yardl::binary::ReadTriviallySerializable(stream, value);
+    return;
+  }
+
+  yardl::binary::ReadNDArray<float, yardl::binary::ReadFloatingPoint, 1>(stream, value);
+}
+
 [[maybe_unused]] void WritePulse(yardl::binary::CodedOutputStream& stream, mrd::Pulse const& value) {
   if constexpr (yardl::binary::IsTriviallySerializable<mrd::Pulse>::value) {
     yardl::binary::WriteTriviallySerializable(stream, value);
@@ -2683,6 +2702,7 @@ template<typename T, yardl::binary::Reader<T> ReadT>
   mrd::binary::WritePulseHeader(stream, value.head);
   mrd::binary::WritePulseData(stream, value.amplitude);
   mrd::binary::WritePulsePhase(stream, value.phase);
+  mrd::binary::WritePulsePhaseOffset(stream, value.phase_offset);
 }
 
 [[maybe_unused]] void ReadPulse(yardl::binary::CodedInputStream& stream, mrd::Pulse& value) {
@@ -2694,6 +2714,7 @@ template<typename T, yardl::binary::Reader<T> ReadT>
   mrd::binary::ReadPulseHeader(stream, value.head);
   mrd::binary::ReadPulseData(stream, value.amplitude);
   mrd::binary::ReadPulsePhase(stream, value.phase);
+  mrd::binary::ReadPulsePhaseOffset(stream, value.phase_offset);
 }
 
 [[maybe_unused]] void WriteStreamItem(yardl::binary::CodedOutputStream& stream, mrd::StreamItem const& value) {

@@ -2245,6 +2245,8 @@ PulseData = npt.NDArray[np.float32]
 
 PulsePhase = npt.NDArray[np.float32]
 
+PulsePhaseOffset = npt.NDArray[np.float32]
+
 class Pulse:
     head: PulseHeader
     """Pulse header"""
@@ -2253,15 +2255,18 @@ class Pulse:
     """Raw pulse amplitude/phase array"""
 
     phase: PulsePhase
+    phase_offset: PulsePhaseOffset
 
     def __init__(self, *,
         head: typing.Optional[PulseHeader] = None,
         amplitude: typing.Optional[PulseData] = None,
         phase: typing.Optional[PulsePhase] = None,
+        phase_offset: typing.Optional[PulsePhaseOffset] = None,
     ):
         self.head = head if head is not None else PulseHeader()
         self.amplitude = amplitude if amplitude is not None else np.zeros((0, 0), dtype=np.dtype(np.float32))
         self.phase = phase if phase is not None else np.zeros((0), dtype=np.dtype(np.float32))
+        self.phase_offset = phase_offset if phase_offset is not None else np.zeros((0), dtype=np.dtype(np.float32))
 
     def coils(self) -> yardl.Size:
         """Assuming writer sets amp and phase array the same size"""
@@ -2280,13 +2285,14 @@ class Pulse:
             and self.head == other.head
             and yardl.structural_equal(self.amplitude, other.amplitude)
             and yardl.structural_equal(self.phase, other.phase)
+            and yardl.structural_equal(self.phase_offset, other.phase_offset)
         )
 
     def __str__(self) -> str:
-        return f"Pulse(head={self.head}, amplitude={self.amplitude}, phase={self.phase})"
+        return f"Pulse(head={self.head}, amplitude={self.amplitude}, phase={self.phase}, phaseOffset={self.phase_offset})"
 
     def __repr__(self) -> str:
-        return f"Pulse(head={repr(self.head)}, amplitude={repr(self.amplitude)}, phase={repr(self.phase)})"
+        return f"Pulse(head={repr(self.head)}, amplitude={repr(self.amplitude)}, phase={repr(self.phase)}, phaseOffset={repr(self.phase_offset)})"
 
 
 class StreamItem:
@@ -2402,7 +2408,7 @@ def _mk_get_dtype():
     dtype_map.setdefault(ReconData, np.dtype([('buffers', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(ImageArray, np.dtype([('data', np.dtype(np.object_)), ('headers', np.dtype(np.object_)), ('meta', np.dtype(np.object_)), ('waveforms', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(PulseHeader, np.dtype([('pulse_time_stamp_ns', np.dtype(np.uint64)), ('channel_order', np.dtype(np.object_)), ('sample_time_ns', np.dtype(np.uint32)), ('pulse_calibration', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True))], align=True))
-    dtype_map.setdefault(Pulse, np.dtype([('head', get_dtype(PulseHeader)), ('amplitude', np.dtype(np.object_)), ('phase', np.dtype(np.object_))], align=True))
+    dtype_map.setdefault(Pulse, np.dtype([('head', get_dtype(PulseHeader)), ('amplitude', np.dtype(np.object_)), ('phase', np.dtype(np.object_)), ('phase_offset', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(StreamItem, np.dtype(np.object_))
 
     return get_dtype

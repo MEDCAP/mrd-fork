@@ -3341,10 +3341,12 @@ class PulseConverter(_ndjson.JsonConverter[Pulse, np.void]):
         self._head_converter = PulseHeaderConverter()
         self._amplitude_converter = _ndjson.NDArrayConverter(_ndjson.float32_converter, 2)
         self._phase_converter = _ndjson.NDArrayConverter(_ndjson.float32_converter, 1)
+        self._phase_offset_converter = _ndjson.NDArrayConverter(_ndjson.float32_converter, 1)
         super().__init__(np.dtype([
             ("head", self._head_converter.overall_dtype()),
             ("amplitude", self._amplitude_converter.overall_dtype()),
             ("phase", self._phase_converter.overall_dtype()),
+            ("phase_offset", self._phase_offset_converter.overall_dtype()),
         ]))
 
     def to_json(self, value: Pulse) -> object:
@@ -3355,6 +3357,7 @@ class PulseConverter(_ndjson.JsonConverter[Pulse, np.void]):
         json_object["head"] = self._head_converter.to_json(value.head)
         json_object["amplitude"] = self._amplitude_converter.to_json(value.amplitude)
         json_object["phase"] = self._phase_converter.to_json(value.phase)
+        json_object["phaseOffset"] = self._phase_offset_converter.to_json(value.phase_offset)
         return json_object
 
     def numpy_to_json(self, value: np.void) -> object:
@@ -3365,6 +3368,7 @@ class PulseConverter(_ndjson.JsonConverter[Pulse, np.void]):
         json_object["head"] = self._head_converter.numpy_to_json(value["head"])
         json_object["amplitude"] = self._amplitude_converter.numpy_to_json(value["amplitude"])
         json_object["phase"] = self._phase_converter.numpy_to_json(value["phase"])
+        json_object["phaseOffset"] = self._phase_offset_converter.numpy_to_json(value["phase_offset"])
         return json_object
 
     def from_json(self, json_object: object) -> Pulse:
@@ -3374,6 +3378,7 @@ class PulseConverter(_ndjson.JsonConverter[Pulse, np.void]):
             head=self._head_converter.from_json(json_object["head"],),
             amplitude=self._amplitude_converter.from_json(json_object["amplitude"],),
             phase=self._phase_converter.from_json(json_object["phase"],),
+            phase_offset=self._phase_offset_converter.from_json(json_object["phaseOffset"],),
         )
 
     def from_json_to_numpy(self, json_object: object) -> np.void:
@@ -3383,6 +3388,7 @@ class PulseConverter(_ndjson.JsonConverter[Pulse, np.void]):
             self._head_converter.from_json_to_numpy(json_object["head"]),
             self._amplitude_converter.from_json_to_numpy(json_object["amplitude"]),
             self._phase_converter.from_json_to_numpy(json_object["phase"]),
+            self._phase_offset_converter.from_json_to_numpy(json_object["phaseOffset"]),
         ) # type:ignore 
 
 

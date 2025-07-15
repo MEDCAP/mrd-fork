@@ -1791,18 +1791,21 @@ struct _Inner_Pulse {
   _Inner_Pulse(mrd::Pulse const& o) 
       : head(o.head),
       amplitude(o.amplitude),
-      phase(o.phase) {
+      phase(o.phase),
+      phase_offset(o.phase_offset) {
   }
 
   void ToOuter (mrd::Pulse& o) const {
     yardl::hdf5::ToOuter(head, o.head);
     yardl::hdf5::ToOuter(amplitude, o.amplitude);
     yardl::hdf5::ToOuter(phase, o.phase);
+    yardl::hdf5::ToOuter(phase_offset, o.phase_offset);
   }
 
   mrd::hdf5::_Inner_PulseHeader head;
   yardl::hdf5::InnerNdArray<float, float, 2> amplitude;
   yardl::hdf5::InnerVlen<float, float> phase;
+  yardl::hdf5::InnerVlen<float, float> phase_offset;
 };
 
 [[maybe_unused]] H5::CompType GetEncodingCountersHdf5Ddl() {
@@ -2339,6 +2342,7 @@ template <typename _T_Inner, typename T>
   t.insertMember("head", HOFFSET(RecordType, head), mrd::hdf5::GetPulseHeaderHdf5Ddl());
   t.insertMember("amplitude", HOFFSET(RecordType, amplitude), yardl::hdf5::NDArrayDdl<float, float, 2>(H5::PredType::NATIVE_FLOAT));
   t.insertMember("phase", HOFFSET(RecordType, phase), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_FLOAT));
+  t.insertMember("phaseOffset", HOFFSET(RecordType, phase_offset), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_FLOAT));
   return t;
 }
 

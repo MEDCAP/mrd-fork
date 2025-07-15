@@ -1305,12 +1305,15 @@ using PulseData = yardl::NDArray<float, 2>;
 
 using PulsePhase = yardl::NDArray<float, 1>;
 
+using PulsePhaseOffset = yardl::NDArray<float, 1>;
+
 struct Pulse {
   // Pulse header
   mrd::PulseHeader head{};
   // Raw pulse amplitude/phase array
   mrd::PulseData amplitude{};
   mrd::PulsePhase phase{};
+  mrd::PulsePhaseOffset phase_offset{};
 
   // Assuming writer sets amp and phase array the same size
   yardl::Size Coils() const {
@@ -1328,7 +1331,8 @@ struct Pulse {
   bool operator==(const Pulse& other) const {
     return head == other.head &&
       amplitude == other.amplitude &&
-      phase == other.phase;
+      phase == other.phase &&
+      phase_offset == other.phase_offset;
   }
 
   bool operator!=(const Pulse& other) const {

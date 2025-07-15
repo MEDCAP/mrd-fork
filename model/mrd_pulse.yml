@@ -11,6 +11,11 @@ PulsePhase: !array
   dimensions:
     samples:
 
+PulsePhaseOffset: !array
+  items: float
+  dimensions:
+    coils:
+
 PulseHeader: !record
   fields:
     # Clock time stamp nanoseconds since midnight
@@ -29,6 +34,7 @@ Pulse: !record
     # Raw pulse amplitude/phase array
     amplitude: PulseData
     phase: PulsePhase
+    phaseOffset: PulsePhaseOffset
   computedFields:
     # Assuming writer sets amp and phase array the same size
     coils: size(amplitude, "coils")

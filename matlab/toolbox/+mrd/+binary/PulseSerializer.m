@@ -6,6 +6,7 @@ classdef PulseSerializer < yardl.binary.RecordSerializer
       field_serializers{1} = mrd.binary.PulseHeaderSerializer();
       field_serializers{2} = yardl.binary.NDArraySerializer(yardl.binary.Float32Serializer, 2);
       field_serializers{3} = yardl.binary.NDArraySerializer(yardl.binary.Float32Serializer, 1);
+      field_serializers{4} = yardl.binary.NDArraySerializer(yardl.binary.Float32Serializer, 1);
       self@yardl.binary.RecordSerializer('mrd.Pulse', field_serializers);
     end
 
@@ -15,12 +16,12 @@ classdef PulseSerializer < yardl.binary.RecordSerializer
         outstream (1,1) yardl.binary.CodedOutputStream
         value (1,1) mrd.Pulse
       end
-      self.write_(outstream, value.head, value.amplitude, value.phase);
+      self.write_(outstream, value.head, value.amplitude, value.phase, value.phase_offset);
     end
 
     function value = read(self, instream)
       fields = self.read_(instream);
-      value = mrd.Pulse(head=fields{1}, amplitude=fields{2}, phase=fields{3});
+      value = mrd.Pulse(head=fields{1}, amplitude=fields{2}, phase=fields{3}, phase_offset=fields{4});
     end
   end
 end

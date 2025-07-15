@@ -931,19 +931,19 @@ class PulseHeaderSerializer(_binary.RecordSerializer[PulseHeader]):
 
 class PulseSerializer(_binary.RecordSerializer[Pulse]):
     def __init__(self) -> None:
-        super().__init__([("head", PulseHeaderSerializer()), ("amplitude", _binary.NDArraySerializer(_binary.float32_serializer, 2)), ("phase", _binary.NDArraySerializer(_binary.float32_serializer, 1))])
+        super().__init__([("head", PulseHeaderSerializer()), ("amplitude", _binary.NDArraySerializer(_binary.float32_serializer, 2)), ("phase", _binary.NDArraySerializer(_binary.float32_serializer, 1)), ("phase_offset", _binary.NDArraySerializer(_binary.float32_serializer, 1))])
 
     def write(self, stream: _binary.CodedOutputStream, value: Pulse) -> None:
         if isinstance(value, np.void):
             self.write_numpy(stream, value)
             return
-        self._write(stream, value.head, value.amplitude, value.phase)
+        self._write(stream, value.head, value.amplitude, value.phase, value.phase_offset)
 
     def write_numpy(self, stream: _binary.CodedOutputStream, value: np.void) -> None:
-        self._write(stream, value['head'], value['amplitude'], value['phase'])
+        self._write(stream, value['head'], value['amplitude'], value['phase'], value['phase_offset'])
 
     def read(self, stream: _binary.CodedInputStream) -> Pulse:
         field_values = self._read(stream)
-        return Pulse(head=field_values[0], amplitude=field_values[1], phase=field_values[2])
+        return Pulse(head=field_values[0], amplitude=field_values[1], phase=field_values[2], phase_offset=field_values[3])
 
 
