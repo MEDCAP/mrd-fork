@@ -77,9 +77,9 @@ ImageHeader: !record
     # Sets of different preparation, e.g. flow encoding, diffusion weighting
     set: uint?
     # Clock time stamp, ns since midnight
-    acquisitionTimeStampNs: uint64
+    acquisitionTimeStampNs: uint64?
     # Time stamp ns relative to physiological triggering, e.g. ECG, pulse oximetry, respiratory
-    physiologyTimeStampNs: uint64
+    physiologyTimeStampNs: uint64*
     # Interpretation type of the image
     imageType: ImageType
     # Quantitative interpretation type of the image

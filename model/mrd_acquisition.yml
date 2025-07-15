@@ -67,11 +67,11 @@ AcquisitionPhase: !array
   dimensions:
     samples:
 
-TrajectoryData: !array
-  items: float
-  dimensions:
-    basis:
-    samples:
+# TrajectoryData: !array
+#   items: float
+#   dimensions:
+#     basis:
+#     samples:
 
 AcquisitionHeader: !record
   fields:
