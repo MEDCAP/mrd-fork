@@ -90,8 +90,6 @@ using AcquisitionData = yardl::NDArray<std::complex<float>, 2>;
 
 using AcquisitionPhase = yardl::NDArray<float, 1>;
 
-using TrajectoryData = yardl::NDArray<float, 2>;
-
 struct AcquisitionHeader {
   // A bit mask of common attributes applicable to individual acquisition
   mrd::AcquisitionFlags flags{};
@@ -974,9 +972,9 @@ struct ImageHeader {
   // Sets of different preparation, e.g. flow encoding, diffusion weighting
   std::optional<uint32_t> set{};
   // Clock time stamp, ns since midnight
-  uint64_t acquisition_time_stamp_ns{};
+  std::optional<uint64_t> acquisition_time_stamp_ns{};
   // Time stamp ns relative to physiological triggering, e.g. ECG, pulse oximetry, respiratory
-  uint64_t physiology_time_stamp_ns{};
+  std::vector<uint64_t> physiology_time_stamp_ns{};
   // Interpretation type of the image
   mrd::ImageType image_type{};
   // Quantitative interpretation type of the image

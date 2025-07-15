@@ -1576,8 +1576,8 @@ struct _Inner_ImageHeader {
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> phase;
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> repetition;
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> set;
-  uint64_t acquisition_time_stamp_ns;
-  uint64_t physiology_time_stamp_ns;
+  yardl::hdf5::InnerOptional<uint64_t, uint64_t> acquisition_time_stamp_ns;
+  yardl::hdf5::InnerVlen<uint64_t, uint64_t> physiology_time_stamp_ns;
   mrd::ImageType image_type;
   yardl::hdf5::InnerOptional<mrd::ImageQuantitativeType, mrd::ImageQuantitativeType> image_quantitative_type;
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> image_index;
@@ -2210,8 +2210,8 @@ struct _Inner_Pulse {
   t.insertMember("phase", HOFFSET(RecordType, phase), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
   t.insertMember("repetition", HOFFSET(RecordType, repetition), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
   t.insertMember("set", HOFFSET(RecordType, set), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
-  t.insertMember("acquisitionTimeStampNs", HOFFSET(RecordType, acquisition_time_stamp_ns), H5::PredType::NATIVE_UINT64);
-  t.insertMember("physiologyTimeStampNs", HOFFSET(RecordType, physiology_time_stamp_ns), H5::PredType::NATIVE_UINT64);
+  t.insertMember("acquisitionTimeStampNs", HOFFSET(RecordType, acquisition_time_stamp_ns), yardl::hdf5::OptionalTypeDdl<uint64_t, uint64_t>(H5::PredType::NATIVE_UINT64));
+  t.insertMember("physiologyTimeStampNs", HOFFSET(RecordType, physiology_time_stamp_ns), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_UINT64));
   t.insertMember("imageType", HOFFSET(RecordType, image_type), mrd::hdf5::GetImageTypeHdf5Ddl());
   t.insertMember("imageQuantitativeType", HOFFSET(RecordType, image_quantitative_type), yardl::hdf5::OptionalTypeDdl<mrd::ImageQuantitativeType, mrd::ImageQuantitativeType>(H5::PredType::NATIVE_UINT64));
   t.insertMember("imageIndex", HOFFSET(RecordType, image_index), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));

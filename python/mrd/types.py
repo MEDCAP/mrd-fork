@@ -145,8 +145,6 @@ AcquisitionData = npt.NDArray[np.complex64]
 
 AcquisitionPhase = npt.NDArray[np.float32]
 
-TrajectoryData = npt.NDArray[np.float32]
-
 class AcquisitionHeader:
     flags: AcquisitionFlags
     """A bit mask of common attributes applicable to individual acquisition"""
@@ -1639,10 +1637,10 @@ class ImageHeader:
     set: typing.Optional[yardl.UInt32]
     """Sets of different preparation, e.g. flow encoding, diffusion weighting"""
 
-    acquisition_time_stamp_ns: yardl.UInt64
+    acquisition_time_stamp_ns: typing.Optional[yardl.UInt64]
     """Clock time stamp, ns since midnight"""
 
-    physiology_time_stamp_ns: yardl.UInt64
+    physiology_time_stamp_ns: list[yardl.UInt64]
     """Time stamp ns relative to physiological triggering, e.g. ECG, pulse oximetry, respiratory"""
 
     image_type: ImageType
@@ -1680,8 +1678,8 @@ class ImageHeader:
         phase: typing.Optional[yardl.UInt32] = None,
         repetition: typing.Optional[yardl.UInt32] = None,
         set: typing.Optional[yardl.UInt32] = None,
-        acquisition_time_stamp_ns: yardl.UInt64 = 0,
-        physiology_time_stamp_ns: yardl.UInt64 = 0,
+        acquisition_time_stamp_ns: typing.Optional[yardl.UInt64] = None,
+        physiology_time_stamp_ns: typing.Optional[list[yardl.UInt64]] = None,
         image_type: ImageType,
         image_quantitative_type: typing.Optional[ImageQuantitativeType] = None,
         image_index: typing.Optional[yardl.UInt32] = None,
@@ -1705,7 +1703,7 @@ class ImageHeader:
         self.repetition = repetition
         self.set = set
         self.acquisition_time_stamp_ns = acquisition_time_stamp_ns
-        self.physiology_time_stamp_ns = physiology_time_stamp_ns
+        self.physiology_time_stamp_ns = physiology_time_stamp_ns if physiology_time_stamp_ns is not None else []
         self.image_type = image_type
         self.image_quantitative_type = image_quantitative_type
         self.image_index = image_index
@@ -2381,7 +2379,7 @@ def _mk_get_dtype():
     dtype_map.setdefault(ImageFlags, np.dtype(np.uint64))
     dtype_map.setdefault(ImageType, np.dtype(np.int32))
     dtype_map.setdefault(ImageQuantitativeType, np.dtype(np.uint64))
-    dtype_map.setdefault(ImageHeader, np.dtype([('flags', get_dtype(ImageFlags)), ('measurement_uid', np.dtype(np.uint32)), ('measurement_freq', np.dtype(np.uint32)), ('field_of_view', np.dtype(np.float32), (3,)), ('position', np.dtype(np.float32), (3,)), ('col_dir', np.dtype(np.float32), (3,)), ('line_dir', np.dtype(np.float32), (3,)), ('slice_dir', np.dtype(np.float32), (3,)), ('patient_table_position', np.dtype(np.float32), (3,)), ('average', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('slice', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('contrast', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('phase', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('repetition', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('set', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('acquisition_time_stamp_ns', np.dtype(np.uint64)), ('physiology_time_stamp_ns', np.dtype(np.uint64)), ('image_type', get_dtype(ImageType)), ('image_quantitative_type', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(ImageQuantitativeType))], align=True)), ('image_index', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('image_series_index', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('user_int', np.dtype(np.object_)), ('user_float', np.dtype(np.object_))], align=True))
+    dtype_map.setdefault(ImageHeader, np.dtype([('flags', get_dtype(ImageFlags)), ('measurement_uid', np.dtype(np.uint32)), ('measurement_freq', np.dtype(np.uint32)), ('field_of_view', np.dtype(np.float32), (3,)), ('position', np.dtype(np.float32), (3,)), ('col_dir', np.dtype(np.float32), (3,)), ('line_dir', np.dtype(np.float32), (3,)), ('slice_dir', np.dtype(np.float32), (3,)), ('patient_table_position', np.dtype(np.float32), (3,)), ('average', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('slice', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('contrast', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('phase', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('repetition', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('set', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('acquisition_time_stamp_ns', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint64))], align=True)), ('physiology_time_stamp_ns', np.dtype(np.object_)), ('image_type', get_dtype(ImageType)), ('image_quantitative_type', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(ImageQuantitativeType))], align=True)), ('image_index', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('image_series_index', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('user_int', np.dtype(np.object_)), ('user_float', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(ImageMetaValue, np.dtype(np.object_))
     dtype_map.setdefault(Image, lambda type_args: np.dtype([('head', get_dtype(ImageHeader)), ('data', np.dtype(np.object_)), ('meta', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(ImageUint16, get_dtype(types.GenericAlias(Image, (yardl.UInt16,))))

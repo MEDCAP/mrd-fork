@@ -4,10 +4,17 @@ import numpy as np
 
 from typing import Generator
 
-import mrd
+from pathlib import Path    # append mrd-fork/python/ to Path to import mrd module locally
+import sys
+path_root = Path(__file__).parents[2]   
+sys.path.insert(0, str(path_root))  # Insert at beginning to prioritize local version
+# Remove conda paths that might interfere
+conda_paths = [p for p in sys.path if '.medcap' in p]
+for p in conda_paths:
+    sys.path.remove(p)
+import mrd  # local library mrd not from conda
 from mrd.tools import simulation
 from mrd.tools.transform import image_to_kspace
-
 
 def generate(output_file, matrix, coils, oversampling, repetitions, noise_level):
     output = sys.stdout.buffer
@@ -85,7 +92,6 @@ def generate(output_file, matrix, coils, oversampling, repetitions, noise_level)
             noise = generate_noise((coils, nkx), noise_level)
             # Here's where we would make the noise correlated
             acq.head.scan_counter = scan_counter
-            print("noise loop", acq.head.scan_counter)
             scan_counter += 1
             acq.head.flags = mrd.AcquisitionFlags.IS_NOISE_MEASUREMENT
             acq.data[:] = noise
@@ -100,8 +106,6 @@ def generate(output_file, matrix, coils, oversampling, repetitions, noise_level)
 
             for line in range(nky):
                 acq.head.scan_counter = scan_counter
-                print("repetition loop", acq.head.scan_counter)
-
                 scan_counter += 1
 
                 acq.head.flags = mrd.AcquisitionFlags(0)

@@ -91,7 +91,6 @@ from .types import (
     SubjectInformationType,
     ThreeDimensionalFloat,
     Trajectory,
-    TrajectoryData,
     TrajectoryDescriptionType,
     UserParameterBase64Type,
     UserParameterDoubleType,

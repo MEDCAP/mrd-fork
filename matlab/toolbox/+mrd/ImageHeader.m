@@ -68,8 +68,8 @@ classdef ImageHeader < handle
         kwargs.phase = yardl.None;
         kwargs.repetition = yardl.None;
         kwargs.set = yardl.None;
-        kwargs.acquisition_time_stamp_ns = uint64(0);
-        kwargs.physiology_time_stamp_ns = uint64(0);
+        kwargs.acquisition_time_stamp_ns = yardl.None;
+        kwargs.physiology_time_stamp_ns = uint64.empty();
         kwargs.image_type;
         kwargs.image_quantitative_type = yardl.None;
         kwargs.image_index = yardl.None;
