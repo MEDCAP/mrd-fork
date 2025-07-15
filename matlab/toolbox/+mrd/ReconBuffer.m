@@ -2,10 +2,15 @@
 
 classdef ReconBuffer < handle
   properties
+    % Buffered Acquisition data
     data
+    % Buffered Trajectory data
     trajectory
+    % Buffered Density weights
     density
+    % Buffered AcquisitionHeaders
     headers
+    % Sampling details for these Acquisitions
     sampling
   end
 

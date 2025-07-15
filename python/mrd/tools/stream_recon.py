@@ -3,6 +3,14 @@ import argparse
 import numpy as np
 from typing import BinaryIO, Iterable, Union
 
+from pathlib import Path
+import sys
+path_root = Path(__file__).parents[2]
+sys.path.insert(0, str(path_root))  # Insert at beginning to prioritize local version
+# Remove conda paths that might interfere
+conda_paths = [p for p in sys.path if '.medcap' in p]
+for p in conda_paths:
+    sys.path.remove(p)
 import mrd
 from mrd.tools.transform import kspace_to_image, image_to_kspace
 
@@ -147,7 +155,7 @@ def accumulate_fft(head: mrd.Header, input: Iterable[mrd.Acquisition]) -> Iterab
             # Reset buffer
             if acq.data.shape[-1] == eNx:
                 readout_length = eNx
-            else: 
+            else:
                 readout_length = rNx  # Readout oversampling has been removed upstream
 
             buffer = np.zeros((ncontrasts, nslices, ncoils, eNz, eNy, readout_length), dtype=np.complex64)
