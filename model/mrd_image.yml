@@ -52,6 +52,8 @@ ImageHeader: !record
     measurementUid: uint
     # NMR frequency of this measurement (Hz) SKADD 2/7/25
     measurementFreq: uint
+    # NMR label of the measurementFreq
+    measurementFreqLabel: string?
     # Physical size (in mm) in each of the 3 dimensions in the image
     fieldOfView: float[3]
     # Center of the excited volume, in LPS coordinates relative to isocenter in millimeters

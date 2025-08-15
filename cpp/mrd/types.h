@@ -947,6 +947,8 @@ struct ImageHeader {
   uint32_t measurement_uid{};
   // NMR frequency of this measurement (Hz) SKADD 2/7/25
   uint32_t measurement_freq{};
+  // NMR label of the measurementFreq
+  std::optional<std::string> measurement_freq_label{};
   // Physical size (in mm) in each of the 3 dimensions in the image
   yardl::FixedNDArray<float, 3> field_of_view{};
   // Center of the excited volume, in LPS coordinates relative to isocenter in millimeters
@@ -992,6 +994,7 @@ struct ImageHeader {
     return flags == other.flags &&
       measurement_uid == other.measurement_uid &&
       measurement_freq == other.measurement_freq &&
+      measurement_freq_label == other.measurement_freq_label &&
       field_of_view == other.field_of_view &&
       position == other.position &&
       col_dir == other.col_dir &&

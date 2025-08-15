@@ -8,6 +8,8 @@ classdef ImageHeader < handle
     measurement_uid
     % NMR frequency of this measurement (Hz) SKADD 2/7/25
     measurement_freq
+    % NMR label of the measurementFreq
+    measurement_freq_label
     % Physical size (in mm) in each of the 3 dimensions in the image
     field_of_view
     % Center of the excited volume, in LPS coordinates relative to isocenter in millimeters
@@ -56,6 +58,7 @@ classdef ImageHeader < handle
         kwargs.flags = mrd.ImageFlags(0);
         kwargs.measurement_uid = uint32(0);
         kwargs.measurement_freq = uint32(0);
+        kwargs.measurement_freq_label = yardl.None;
         kwargs.field_of_view = repelem(single(0), 3, 1);
         kwargs.position = repelem(single(0), 3, 1);
         kwargs.col_dir = repelem(single(0), 3, 1);
@@ -80,6 +83,7 @@ classdef ImageHeader < handle
       self.flags = kwargs.flags;
       self.measurement_uid = kwargs.measurement_uid;
       self.measurement_freq = kwargs.measurement_freq;
+      self.measurement_freq_label = kwargs.measurement_freq_label;
       self.field_of_view = kwargs.field_of_view;
       self.position = kwargs.position;
       self.col_dir = kwargs.col_dir;
@@ -111,6 +115,7 @@ classdef ImageHeader < handle
         isequal({self.flags}, {other.flags}) && ...
         isequal({self.measurement_uid}, {other.measurement_uid}) && ...
         isequal({self.measurement_freq}, {other.measurement_freq}) && ...
+        isequal({self.measurement_freq_label}, {other.measurement_freq_label}) && ...
         isequal({self.field_of_view}, {other.field_of_view}) && ...
         isequal({self.position}, {other.position}) && ...
         isequal({self.col_dir}, {other.col_dir}) && ...

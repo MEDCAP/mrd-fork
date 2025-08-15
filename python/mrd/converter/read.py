@@ -6,7 +6,7 @@ path_root = Path(__file__).parents[2]
 sys.path.append(str(path_root))
 import mrd  # local library mrd not from conda
 
-filename = 'dynamic.mrd2'    
+filename = 'phantom.bin'    
 def read_mrd(filename):
     with mrd.BinaryMrdReader(filename) as r:
         head = r.read_header()

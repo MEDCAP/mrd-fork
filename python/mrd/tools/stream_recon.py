@@ -53,7 +53,7 @@ def remove_oversampling(head: mrd.Header,input: Iterable[mrd.Acquisition]) -> It
             acq.data = image_to_kspace(xline, [1])
         yield acq
 
-def accumulate_fft(head: mrd.Header, input: Iterable[mrd.Acquisition]) -> Iterable[mrd.Image[np.float32]]:
+def accumulate_fft(head: mrd.Header, input: Iterable[mrd.Acquisition]) -> Union[Iterable[mrd.Image[np.float32]], Iterable[mrd.Acquisition]]:
     enc = head.encoding[0]
 
     # Matrix size
@@ -147,6 +147,7 @@ def accumulate_fft(head: mrd.Header, input: Iterable[mrd.Acquisition]) -> Iterab
                 yield mrd_image
 
     for acq in input:
+        yield acq
         if acq.head.idx.repetition != current_rep:
             # If we have a current buffer pass it on
             if buffer is not None and reference_acquisition is not None:
@@ -183,10 +184,10 @@ def reconstruct_mrd_stream(input: BinaryIO, output: BinaryIO):
                 raise Exception("Could not read header")
             writer.write_header(head)
             writer.write_data(
-                stream_item_sink(
-                    accumulate_fft(head,
-                        remove_oversampling(head,
-                            acquisition_reader(reader.read_data())))))
+                stream_item_sink(   # acq, image -> streamItem
+                    accumulate_fft(head,    # acq->UNION(img, acq)
+                        remove_oversampling(head,   # acq->acq
+                            acquisition_reader(reader.read_data())))))  # stream->acq
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Reconstructs an MRD stream")
