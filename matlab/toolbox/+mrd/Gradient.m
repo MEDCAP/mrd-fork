@@ -2,9 +2,7 @@
 
 classdef Gradient < handle
   properties
-    % Grad header
     head
-    % gradient directions
     rl
     ap
     fh
@@ -25,7 +23,6 @@ classdef Gradient < handle
     end
 
     function res = samples(self)
-      % EDIT: Assuming writer sets rl,ap,fh gradients, all have the same size. Computed fields are in ns
       res = size(self.rl, ndims(self.rl)-(0));
       return
     end

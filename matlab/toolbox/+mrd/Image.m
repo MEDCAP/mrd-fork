@@ -2,11 +2,8 @@
 
 classdef Image < handle
   properties
-    % Image header
     head
-    % Image data array
     data
-    % Meta attributes
     meta
   end
 

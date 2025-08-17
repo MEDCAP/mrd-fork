@@ -2,45 +2,24 @@
 
 classdef AcquisitionHeader < handle
   properties
-    % A bit mask of common attributes applicable to individual acquisition
     flags
-    % Encoding loop counters
     idx
-    % Unique ID corresponding to the readout
     measurement_uid
-    % Zero-indexed incrementing counter for readouts
     scan_counter
-    % Clock time stamp (e.g. nanoseconds since midnight)
     acquisition_time_stamp_ns
-    % Time stamps relative to physiological triggering in nanoseconds
     physiology_time_stamp_ns
-    % Channel numbers
     channel_order
-    % Number of readout samples to be discarded at the beginning
-    %   (e.g. if the ADC is active during gradient events)
     discard_pre
-    % Number of readout samples to be discarded at the end
-    %   (e.g. if the ADC is active during gradient events)
     discard_post
-    % Index of the readout sample corresponing to k-space center (zero indexed)
     center_sample
-    % Indexed reference to the encoding spaces enumerated in the MRD Header
     encoding_space_ref
-    % Readout bandwidth, as time between samples in nanoseconds
     sample_time_ns
-    % Center of the excited volume, in LPS coordinates relative to isocenter in millimeters
     position
-    % Directional cosine of readout/frequency encoding
     read_dir
-    % Directional cosine of phase encoding (2D)
     phase_dir
-    % Directional cosine of slice normal, i.e. cross-product of read_dir and phase_dir
     slice_dir
-    % Offset position of the patient table, in LPS coordinates
     patient_table_position
-    % User-defined integer parameters
     user_int
-    % User-defined float parameters
     user_float
   end
 

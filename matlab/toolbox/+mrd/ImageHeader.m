@@ -2,53 +2,29 @@
 
 classdef ImageHeader < handle
   properties
-    % A bit mask of common attributes applicable to individual images
     flags
-    % Unique ID corresponding to the image
     measurement_uid
-    % NMR frequency of this measurement (Hz) SKADD 2/7/25
     measurement_freq
-    % NMR label of the measurementFreq
     measurement_freq_label
-    % Physical size (in mm) in each of the 3 dimensions in the image
     field_of_view
-    % Center of the excited volume, in LPS coordinates relative to isocenter in millimeters
     position
-    % Directional cosine of readout/frequency encoding
     col_dir
-    % Directional cosine of phase encoding (2D)
     line_dir
-    % Directional cosine of 3D phase encoding direction
     slice_dir
-    % Offset position of the patient table, in LPS coordinates
     patient_table_position
-    % Signal average
     average
-    % Slice number (multi-slice 2D)
     slice
-    % Echo number in multi-echo
     contrast
-    % Cardiac phase
     phase
-    % Counter in repeated/dynamic acquisitions
     repetition
-    % Sets of different preparation, e.g. flow encoding, diffusion weighting
     set
-    % Clock time stamp, ns since midnight
     acquisition_time_stamp_ns
-    % Time stamp ns relative to physiological triggering, e.g. ECG, pulse oximetry, respiratory
     physiology_time_stamp_ns
-    % Interpretation type of the image
     image_type
-    % Quantitative interpretation type of the image
     image_quantitative_type
-    % Image index number within a series of images, corresponding to DICOM InstanceNumber (0020,0013)
     image_index
-    % Series index, used to separate images into different series, corresponding to DICOM SeriesNumber (0020,0011)
     image_series_index
-    % User-defined int parameters
     user_int
-    % User-defined float parameters
     user_float
   end
 
@@ -57,7 +33,7 @@ classdef ImageHeader < handle
       arguments
         kwargs.flags = mrd.ImageFlags(0);
         kwargs.measurement_uid = uint32(0);
-        kwargs.measurement_freq = uint32(0);
+        kwargs.measurement_freq = yardl.None;
         kwargs.measurement_freq_label = yardl.None;
         kwargs.field_of_view = repelem(single(0), 3, 1);
         kwargs.position = repelem(single(0), 3, 1);

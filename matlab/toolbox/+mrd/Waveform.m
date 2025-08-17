@@ -2,19 +2,12 @@
 
 classdef Waveform < handle
   properties
-    % Bit field of flags. Currently unused
     flags
-    % Unique ID for this measurement
     measurement_uid
-    % Number of the acquisition after this waveform
     scan_counter
-    % EDIT: Starting timestamp of this waveform, nanoseconds since midnight
     time_stamp_ns
-    % EDIT: Time between samples in nanoseconds
     sample_time_ns
-    % ID matching the waveform in the MRD header
     waveform_id
-    % Waveform sample array
     data
   end
 

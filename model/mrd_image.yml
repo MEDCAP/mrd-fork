@@ -43,6 +43,7 @@ ImageData<Y>: !array
     z:
     y:
     x:
+    freq: # SKADD 8/17/25
 
 ImageHeader: !record
   fields:
@@ -50,10 +51,10 @@ ImageHeader: !record
     flags: ImageFlags
     # Unique ID corresponding to the image
     measurementUid: uint
-    # NMR frequency of this measurement (Hz) SKADD 2/7/25
-    measurementFreq: uint
-    # NMR label of the measurementFreq
-    measurementFreqLabel: string?
+    # NMR frequencies of this measurement (Hz). Same size as ImageData freq dimension SKADD 2/7/25
+    measurementFreq: uint[]?
+    # NMR label of the measurementFreqs. Same size as measurementFreq. SKADD 8/17/25
+    measurementFreqLabel: string[]?
     # Physical size (in mm) in each of the 3 dimensions in the image
     fieldOfView: float[3]
     # Center of the excited volume, in LPS coordinates relative to isocenter in millimeters

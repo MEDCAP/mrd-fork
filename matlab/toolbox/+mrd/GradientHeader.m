@@ -2,11 +2,8 @@
 
 classdef GradientHeader < handle
   properties
-    % Clock time stamp, nanoseconds since midnight
     gradient_time_stamp_ns
-    % Gradient sample duration in nanoseconds
     gradient_sample_time_ns
-    % Grad calibration (T/m/A). Can be here or as a calGradMap calibration image or neither
     pulse_calibration
   end
 

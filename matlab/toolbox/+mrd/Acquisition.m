@@ -2,9 +2,7 @@
 
 classdef Acquisition < handle
   properties
-    % Acquisition header
     head
-    % Raw k-space samples array
     data
     phase
   end

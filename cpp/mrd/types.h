@@ -47,25 +47,15 @@ struct AcquisitionFlags : yardl::BaseFlags<uint64_t, AcquisitionFlags> {
 };
 
 struct EncodingCounters {
-  // Phase encoding line
   std::optional<uint32_t> kspace_encode_step_1{};
-  // Partition encoding
   std::optional<uint32_t> kspace_encode_step_2{};
-  // Signal average
   std::optional<uint32_t> average{};
-  // Slice number (multi-slice 2D)
   std::optional<uint32_t> slice{};
-  // Echo number in multi-echo
   std::optional<uint32_t> contrast{};
-  // Cardiac phase
   std::optional<uint32_t> phase{};
-  // Counter in repeated/dynamic acquisitions
   std::optional<uint32_t> repetition{};
-  // Sets of different preparation, e.g. flow encoding, diffusion weighting
   std::optional<uint32_t> set{};
-  // Counter for segmented acquisitions
   std::optional<uint32_t> segment{};
-  // User-defined counters
   std::vector<uint32_t> user{};
 
   bool operator==(const EncodingCounters& other) const {
@@ -91,45 +81,24 @@ using AcquisitionData = yardl::NDArray<std::complex<float>, 2>;
 using AcquisitionPhase = yardl::NDArray<float, 1>;
 
 struct AcquisitionHeader {
-  // A bit mask of common attributes applicable to individual acquisition
   mrd::AcquisitionFlags flags{};
-  // Encoding loop counters
   mrd::EncodingCounters idx{};
-  // Unique ID corresponding to the readout
   uint32_t measurement_uid{};
-  // Zero-indexed incrementing counter for readouts
   std::optional<uint32_t> scan_counter{};
-  // Clock time stamp (e.g. nanoseconds since midnight)
   std::optional<uint64_t> acquisition_time_stamp_ns{};
-  // Time stamps relative to physiological triggering in nanoseconds
   std::vector<uint64_t> physiology_time_stamp_ns{};
-  // Channel numbers
   std::vector<uint32_t> channel_order{};
-  // Number of readout samples to be discarded at the beginning
-  //   (e.g. if the ADC is active during gradient events)
   std::optional<uint32_t> discard_pre{};
-  // Number of readout samples to be discarded at the end
-  //   (e.g. if the ADC is active during gradient events)
   std::optional<uint32_t> discard_post{};
-  // Index of the readout sample corresponing to k-space center (zero indexed)
   std::optional<uint32_t> center_sample{};
-  // Indexed reference to the encoding spaces enumerated in the MRD Header
   std::optional<uint32_t> encoding_space_ref{};
-  // Readout bandwidth, as time between samples in nanoseconds
   std::optional<uint64_t> sample_time_ns{};
-  // Center of the excited volume, in LPS coordinates relative to isocenter in millimeters
   yardl::FixedNDArray<float, 3> position{};
-  // Directional cosine of readout/frequency encoding
   yardl::FixedNDArray<float, 3> read_dir{};
-  // Directional cosine of phase encoding (2D)
   yardl::FixedNDArray<float, 3> phase_dir{};
-  // Directional cosine of slice normal, i.e. cross-product of read_dir and phase_dir
   yardl::FixedNDArray<float, 3> slice_dir{};
-  // Offset position of the patient table, in LPS coordinates
   yardl::FixedNDArray<float, 3> patient_table_position{};
-  // User-defined integer parameters
   std::vector<int32_t> user_int{};
-  // User-defined float parameters
   std::vector<float> user_float{};
 
   bool operator==(const AcquisitionHeader& other) const {
@@ -160,9 +129,7 @@ struct AcquisitionHeader {
 };
 
 struct Acquisition {
-  // Acquisition header
   mrd::AcquisitionHeader head{};
-  // Raw k-space samples array
   mrd::AcquisitionData data{};
   mrd::AcquisitionPhase phase{};
 
@@ -189,15 +156,11 @@ struct Acquisition {
   }
 };
 
-// gradient xyz stored as 1D array shape (samples)
 using GradientData = yardl::NDArray<float, 1>;
 
 struct GradientHeader {
-  // Clock time stamp, nanoseconds since midnight
   uint64_t gradient_time_stamp_ns{};
-  // Gradient sample duration in nanoseconds
   uint32_t gradient_sample_time_ns{};
-  // Grad calibration (T/m/A). Can be here or as a calGradMap calibration image or neither
   std::optional<std::vector<float>> pulse_calibration{};
 
   bool operator==(const GradientHeader& other) const {
@@ -212,14 +175,11 @@ struct GradientHeader {
 };
 
 struct Gradient {
-  // Grad header
   mrd::GradientHeader head{};
-  // gradient directions
   mrd::GradientData rl{};
   mrd::GradientData ap{};
   mrd::GradientData fh{};
 
-  // EDIT: Assuming writer sets rl,ap,fh gradients, all have the same size. Computed fields are in ns
   yardl::Size Samples() const {
     return yardl::shape(rl, 0);
   }
@@ -924,8 +884,6 @@ enum class ImageType {
   kComplex = 5,
 };
 
-// EDIT: Added new type-
-// Quantitative Image Type. Used flags to allow requests for multiple types with one command
 struct ImageQuantitativeType : yardl::BaseFlags<uint64_t, ImageQuantitativeType> {
   using BaseFlags::BaseFlags;
   static const ImageQuantitativeType kQuantSpinDensity;
@@ -938,56 +896,32 @@ struct ImageQuantitativeType : yardl::BaseFlags<uint64_t, ImageQuantitativeType>
 };
 
 template <typename Y>
-using ImageData = yardl::NDArray<Y, 4>;
+using ImageData = yardl::NDArray<Y, 5>;
 
 struct ImageHeader {
-  // A bit mask of common attributes applicable to individual images
   mrd::ImageFlags flags{};
-  // Unique ID corresponding to the image
   uint32_t measurement_uid{};
-  // NMR frequency of this measurement (Hz) SKADD 2/7/25
-  uint32_t measurement_freq{};
-  // NMR label of the measurementFreq
-  std::optional<std::string> measurement_freq_label{};
-  // Physical size (in mm) in each of the 3 dimensions in the image
+  std::optional<yardl::DynamicNDArray<uint32_t>> measurement_freq{};
+  std::optional<yardl::DynamicNDArray<std::string>> measurement_freq_label{};
   yardl::FixedNDArray<float, 3> field_of_view{};
-  // Center of the excited volume, in LPS coordinates relative to isocenter in millimeters
   yardl::FixedNDArray<float, 3> position{};
-  // Directional cosine of readout/frequency encoding
   yardl::FixedNDArray<float, 3> col_dir{};
-  // Directional cosine of phase encoding (2D)
   yardl::FixedNDArray<float, 3> line_dir{};
-  // Directional cosine of 3D phase encoding direction
   yardl::FixedNDArray<float, 3> slice_dir{};
-  // Offset position of the patient table, in LPS coordinates
   yardl::FixedNDArray<float, 3> patient_table_position{};
-  // Signal average
   std::optional<uint32_t> average{};
-  // Slice number (multi-slice 2D)
   std::optional<uint32_t> slice{};
-  // Echo number in multi-echo
   std::optional<uint32_t> contrast{};
-  // Cardiac phase
   std::optional<uint32_t> phase{};
-  // Counter in repeated/dynamic acquisitions
   std::optional<uint32_t> repetition{};
-  // Sets of different preparation, e.g. flow encoding, diffusion weighting
   std::optional<uint32_t> set{};
-  // Clock time stamp, ns since midnight
   std::optional<uint64_t> acquisition_time_stamp_ns{};
-  // Time stamp ns relative to physiological triggering, e.g. ECG, pulse oximetry, respiratory
   std::vector<uint64_t> physiology_time_stamp_ns{};
-  // Interpretation type of the image
   mrd::ImageType image_type{};
-  // Quantitative interpretation type of the image
   std::optional<mrd::ImageQuantitativeType> image_quantitative_type{};
-  // Image index number within a series of images, corresponding to DICOM InstanceNumber (0020,0013)
   std::optional<uint32_t> image_index{};
-  // Series index, used to separate images into different series, corresponding to DICOM SeriesNumber (0020,0011)
   std::optional<uint32_t> image_series_index{};
-  // User-defined int parameters
   std::vector<int32_t> user_int{};
-  // User-defined float parameters
   std::vector<float> user_float{};
 
   bool operator==(const ImageHeader& other) const {
@@ -1028,11 +962,8 @@ using ImageMeta = std::unordered_map<std::string, std::vector<mrd::ImageMetaValu
 
 template <typename T>
 struct Image {
-  // Image header
   mrd::ImageHeader head{};
-  // Image data array
   mrd::ImageData<T> data{};
-  // Meta attributes
   mrd::ImageMeta meta{};
 
   yardl::Size Channels() const {
@@ -1078,19 +1009,13 @@ using ImageComplexFloat = mrd::Image<std::complex<float>>;
 
 using ImageComplexDouble = mrd::Image<std::complex<double>>;
 
-// Union of all MRD Image types
 using AnyImage = std::variant<mrd::ImageUint16, mrd::ImageInt16, mrd::ImageUint32, mrd::ImageInt32, mrd::ImageFloat, mrd::ImageDouble, mrd::ImageComplexFloat, mrd::ImageComplexDouble>;
 
 struct NoiseCovariance {
-  // Comes from Header.acquisitionSystemInformation.coilLabel
   std::vector<mrd::CoilLabelType> coil_labels{};
-  // Comes from Header.acquisitionSystemInformation.relativeReceiverNoiseBandwidth
   float receiver_noise_bandwidth{};
-  // Comes from Acquisition.sampleTimeUs
   float noise_dwell_time_us{};
-  // Number of samples used to compute matrix
   yardl::Size sample_count{};
-  // Noise covariance matrix with dimensions [coil, coil]
   yardl::NDArray<std::complex<float>, 2> matrix{};
 
   bool operator==(const NoiseCovariance& other) const {
@@ -1111,19 +1036,12 @@ using WaveformSamples = yardl::NDArray<T, 2>;
 
 template <typename T>
 struct Waveform {
-  // Bit field of flags. Currently unused
   uint64_t flags{};
-  // Unique ID for this measurement
   uint32_t measurement_uid{};
-  // Number of the acquisition after this waveform
   uint32_t scan_counter{};
-  // EDIT: Starting timestamp of this waveform, nanoseconds since midnight
   uint64_t time_stamp_ns{};
-  // EDIT: Time between samples in nanoseconds
   uint64_t sample_time_ns{};
-  // ID matching the waveform in the MRD header
   uint32_t waveform_id{};
-  // Waveform sample array
   mrd::WaveformSamples<T> data{};
 
   yardl::Size Channels() const {
@@ -1171,7 +1089,6 @@ struct AcquisitionBucket {
   }
 };
 
-// Sampled range along E0, E1, E2 (for asymmetric echo and partial fourier)
 struct SamplingLimits {
   mrd::LimitType kspace_encoding_step_0{};
   mrd::LimitType kspace_encoding_step_1{};
@@ -1209,15 +1126,10 @@ struct SamplingDescription {
 };
 
 struct ReconBuffer {
-  // Buffered Acquisition data
   yardl::NDArray<std::complex<float>, 7> data{};
-  // Buffered Trajectory data
   yardl::NDArray<float, 7> trajectory{};
-  // Buffered Density weights
   std::optional<yardl::NDArray<float, 6>> density{};
-  // Buffered AcquisitionHeaders
   yardl::NDArray<mrd::AcquisitionHeader, 5> headers{};
-  // Sampling details for these Acquisitions
   mrd::SamplingDescription sampling{};
 
   bool operator==(const ReconBuffer& other) const {
@@ -1283,13 +1195,9 @@ using Array = yardl::DynamicNDArray<T>;
 using ArrayComplexFloat = mrd::Array<std::complex<float>>;
 
 struct PulseHeader {
-  // Clock time stamp nanoseconds since midnight
   uint64_t pulse_time_stamp_ns{};
-  // Channel numbers
   std::vector<uint32_t> channel_order{};
-  // Sample time in ns
   uint32_t sample_time_ns{};
-  // Pulse calibration (rad/s/V). Can be here or as a calB1Map calibration image or neither
   std::optional<std::vector<float>> pulse_calibration{};
 
   bool operator==(const PulseHeader& other) const {
@@ -1311,14 +1219,11 @@ using PulsePhase = yardl::NDArray<float, 1>;
 using PulsePhaseOffset = yardl::NDArray<float, 1>;
 
 struct Pulse {
-  // Pulse header
   mrd::PulseHeader head{};
-  // Raw pulse amplitude/phase array
   mrd::PulseData amplitude{};
   mrd::PulsePhase phase{};
   mrd::PulsePhaseOffset phase_offset{};
 
-  // Assuming writer sets amp and phase array the same size
   yardl::Size Coils() const {
     return yardl::shape(amplitude, 0);
   }
@@ -1343,7 +1248,6 @@ struct Pulse {
   }
 };
 
-// Union of all primary types that can be streamed in the MRD Protocol
 using StreamItem = std::variant<mrd::Acquisition, mrd::Pulse, mrd::Gradient, mrd::WaveformUint32, mrd::ImageUint16, mrd::ImageInt16, mrd::ImageUint32, mrd::ImageInt32, mrd::ImageFloat, mrd::ImageDouble, mrd::ImageComplexFloat, mrd::ImageComplexDouble, mrd::AcquisitionBucket, mrd::ReconData, mrd::ArrayComplexFloat, mrd::ImageArray>;
 
 } // namespace mrd

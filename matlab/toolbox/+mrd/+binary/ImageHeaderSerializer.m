@@ -5,8 +5,8 @@ classdef ImageHeaderSerializer < yardl.binary.RecordSerializer
     function self = ImageHeaderSerializer()
       field_serializers{1} = yardl.binary.EnumSerializer('mrd.ImageFlags', @mrd.ImageFlags, yardl.binary.Uint64Serializer);
       field_serializers{2} = yardl.binary.Uint32Serializer;
-      field_serializers{3} = yardl.binary.Uint32Serializer;
-      field_serializers{4} = yardl.binary.OptionalSerializer(yardl.binary.StringSerializer);
+      field_serializers{3} = yardl.binary.OptionalSerializer(yardl.binary.DynamicNDArraySerializer(yardl.binary.Uint32Serializer));
+      field_serializers{4} = yardl.binary.OptionalSerializer(yardl.binary.DynamicNDArraySerializer(yardl.binary.StringSerializer));
       field_serializers{5} = yardl.binary.FixedNDArraySerializer(yardl.binary.Float32Serializer, [3]);
       field_serializers{6} = yardl.binary.FixedNDArraySerializer(yardl.binary.Float32Serializer, [3]);
       field_serializers{7} = yardl.binary.FixedNDArraySerializer(yardl.binary.Float32Serializer, [3]);
