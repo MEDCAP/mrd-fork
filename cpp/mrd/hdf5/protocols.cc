@@ -767,21 +767,6 @@ namespace {
   return t;
 }
 
-[[maybe_unused]] H5::EnumType GetImageTypeHdf5Ddl() {
-  H5::EnumType t(H5::PredType::NATIVE_INT32);
-  int32_t i = 1;
-  t.insert("magnitude", &i);
-  i = 2;
-  t.insert("phase", &i);
-  i = 3;
-  t.insert("real", &i);
-  i = 4;
-  t.insert("imag", &i);
-  i = 5;
-  t.insert("complex", &i);
-  return t;
-}
-
 struct _Inner_EncodingCounters {
   _Inner_EncodingCounters() {} 
   _Inner_EncodingCounters(mrd::EncodingCounters const& o) 
@@ -1529,7 +1514,6 @@ struct _Inner_ImageHeader {
       acquisition_time_stamp_ns(o.acquisition_time_stamp_ns),
       physiology_time_stamp_ns(o.physiology_time_stamp_ns),
       image_type(o.image_type),
-      image_quantitative_type(o.image_quantitative_type),
       image_index(o.image_index),
       image_series_index(o.image_series_index),
       user_int(o.user_int),
@@ -1556,7 +1540,6 @@ struct _Inner_ImageHeader {
     yardl::hdf5::ToOuter(acquisition_time_stamp_ns, o.acquisition_time_stamp_ns);
     yardl::hdf5::ToOuter(physiology_time_stamp_ns, o.physiology_time_stamp_ns);
     yardl::hdf5::ToOuter(image_type, o.image_type);
-    yardl::hdf5::ToOuter(image_quantitative_type, o.image_quantitative_type);
     yardl::hdf5::ToOuter(image_index, o.image_index);
     yardl::hdf5::ToOuter(image_series_index, o.image_series_index);
     yardl::hdf5::ToOuter(user_int, o.user_int);
@@ -1582,7 +1565,6 @@ struct _Inner_ImageHeader {
   yardl::hdf5::InnerOptional<uint64_t, uint64_t> acquisition_time_stamp_ns;
   yardl::hdf5::InnerVlen<uint64_t, uint64_t> physiology_time_stamp_ns;
   mrd::ImageType image_type;
-  yardl::hdf5::InnerOptional<mrd::ImageQuantitativeType, mrd::ImageQuantitativeType> image_quantitative_type;
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> image_index;
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> image_series_index;
   yardl::hdf5::InnerVlen<int32_t, int32_t> user_int;
@@ -2219,8 +2201,7 @@ struct _Inner_Pulse {
   t.insertMember("set", HOFFSET(RecordType, set), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
   t.insertMember("acquisitionTimeStampNs", HOFFSET(RecordType, acquisition_time_stamp_ns), yardl::hdf5::OptionalTypeDdl<uint64_t, uint64_t>(H5::PredType::NATIVE_UINT64));
   t.insertMember("physiologyTimeStampNs", HOFFSET(RecordType, physiology_time_stamp_ns), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_UINT64));
-  t.insertMember("imageType", HOFFSET(RecordType, image_type), mrd::hdf5::GetImageTypeHdf5Ddl());
-  t.insertMember("imageQuantitativeType", HOFFSET(RecordType, image_quantitative_type), yardl::hdf5::OptionalTypeDdl<mrd::ImageQuantitativeType, mrd::ImageQuantitativeType>(H5::PredType::NATIVE_UINT64));
+  t.insertMember("imageType", HOFFSET(RecordType, image_type), H5::PredType::NATIVE_UINT64);
   t.insertMember("imageIndex", HOFFSET(RecordType, image_index), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
   t.insertMember("imageSeriesIndex", HOFFSET(RecordType, image_series_index), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
   t.insertMember("userInt", HOFFSET(RecordType, user_int), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_INT32));

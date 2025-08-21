@@ -2510,19 +2510,16 @@ image_type_name_to_value_map = {
     "real": ImageType.REAL,
     "imag": ImageType.IMAG,
     "complex": ImageType.COMPLEX,
+    "spinDensity": ImageType.SPIN_DENSITY,
+    "t1": ImageType.T1,
+    "t2": ImageType.T2,
+    "t2star": ImageType.T2STAR,
+    "adc": ImageType.ADC,
+    "b1Map": ImageType.B1_MAP,
+    "sensitivityMap": ImageType.SENSITIVITY_MAP,
+    "userMap": ImageType.USER_MAP,
 }
 image_type_value_to_name_map = {v: n for n, v in image_type_name_to_value_map.items()}
-
-image_quantitative_type_name_to_value_map = {
-    "quantSpinDensity": ImageQuantitativeType.QUANT_SPIN_DENSITY,
-    "quantT1": ImageQuantitativeType.QUANT_T1,
-    "quantT2": ImageQuantitativeType.QUANT_T2,
-    "quantT2star": ImageQuantitativeType.QUANT_T2STAR,
-    "quantADC": ImageQuantitativeType.QUANT_ADC,
-    "quantB1Map": ImageQuantitativeType.QUANT_B1_MAP,
-    "quantSensitivityMap": ImageQuantitativeType.QUANT_SENSITIVITY_MAP,
-}
-image_quantitative_type_value_to_name_map = {v: n for n, v in image_quantitative_type_name_to_value_map.items()}
 
 class ImageHeaderConverter(_ndjson.JsonConverter[ImageHeader, np.void]):
     def __init__(self) -> None:
@@ -2544,8 +2541,7 @@ class ImageHeaderConverter(_ndjson.JsonConverter[ImageHeader, np.void]):
         self._set_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
         self._acquisition_time_stamp_ns_converter = _ndjson.OptionalConverter(_ndjson.uint64_converter)
         self._physiology_time_stamp_ns_converter = _ndjson.VectorConverter(_ndjson.uint64_converter)
-        self._image_type_converter = _ndjson.EnumConverter(ImageType, np.int32, image_type_name_to_value_map, image_type_value_to_name_map)
-        self._image_quantitative_type_converter = _ndjson.OptionalConverter(_ndjson.FlagsConverter(ImageQuantitativeType, np.uint64, image_quantitative_type_name_to_value_map, image_quantitative_type_value_to_name_map))
+        self._image_type_converter = _ndjson.FlagsConverter(ImageType, np.uint64, image_type_name_to_value_map, image_type_value_to_name_map)
         self._image_index_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
         self._image_series_index_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
         self._user_int_converter = _ndjson.VectorConverter(_ndjson.int32_converter)
@@ -2570,7 +2566,6 @@ class ImageHeaderConverter(_ndjson.JsonConverter[ImageHeader, np.void]):
             ("acquisition_time_stamp_ns", self._acquisition_time_stamp_ns_converter.overall_dtype()),
             ("physiology_time_stamp_ns", self._physiology_time_stamp_ns_converter.overall_dtype()),
             ("image_type", self._image_type_converter.overall_dtype()),
-            ("image_quantitative_type", self._image_quantitative_type_converter.overall_dtype()),
             ("image_index", self._image_index_converter.overall_dtype()),
             ("image_series_index", self._image_series_index_converter.overall_dtype()),
             ("user_int", self._user_int_converter.overall_dtype()),
@@ -2610,8 +2605,6 @@ class ImageHeaderConverter(_ndjson.JsonConverter[ImageHeader, np.void]):
             json_object["acquisitionTimeStampNs"] = self._acquisition_time_stamp_ns_converter.to_json(value.acquisition_time_stamp_ns)
         json_object["physiologyTimeStampNs"] = self._physiology_time_stamp_ns_converter.to_json(value.physiology_time_stamp_ns)
         json_object["imageType"] = self._image_type_converter.to_json(value.image_type)
-        if value.image_quantitative_type is not None:
-            json_object["imageQuantitativeType"] = self._image_quantitative_type_converter.to_json(value.image_quantitative_type)
         if value.image_index is not None:
             json_object["imageIndex"] = self._image_index_converter.to_json(value.image_index)
         if value.image_series_index is not None:
@@ -2653,8 +2646,6 @@ class ImageHeaderConverter(_ndjson.JsonConverter[ImageHeader, np.void]):
             json_object["acquisitionTimeStampNs"] = self._acquisition_time_stamp_ns_converter.numpy_to_json(field_val)
         json_object["physiologyTimeStampNs"] = self._physiology_time_stamp_ns_converter.numpy_to_json(value["physiology_time_stamp_ns"])
         json_object["imageType"] = self._image_type_converter.numpy_to_json(value["image_type"])
-        if (field_val := value["image_quantitative_type"]) is not None:
-            json_object["imageQuantitativeType"] = self._image_quantitative_type_converter.numpy_to_json(field_val)
         if (field_val := value["image_index"]) is not None:
             json_object["imageIndex"] = self._image_index_converter.numpy_to_json(field_val)
         if (field_val := value["image_series_index"]) is not None:
@@ -2686,7 +2677,6 @@ class ImageHeaderConverter(_ndjson.JsonConverter[ImageHeader, np.void]):
             acquisition_time_stamp_ns=self._acquisition_time_stamp_ns_converter.from_json(json_object.get("acquisitionTimeStampNs")),
             physiology_time_stamp_ns=self._physiology_time_stamp_ns_converter.from_json(json_object["physiologyTimeStampNs"],),
             image_type=self._image_type_converter.from_json(json_object["imageType"],),
-            image_quantitative_type=self._image_quantitative_type_converter.from_json(json_object.get("imageQuantitativeType")),
             image_index=self._image_index_converter.from_json(json_object.get("imageIndex")),
             image_series_index=self._image_series_index_converter.from_json(json_object.get("imageSeriesIndex")),
             user_int=self._user_int_converter.from_json(json_object["userInt"],),
@@ -2716,7 +2706,6 @@ class ImageHeaderConverter(_ndjson.JsonConverter[ImageHeader, np.void]):
             self._acquisition_time_stamp_ns_converter.from_json_to_numpy(json_object.get("acquisitionTimeStampNs")),
             self._physiology_time_stamp_ns_converter.from_json_to_numpy(json_object["physiologyTimeStampNs"]),
             self._image_type_converter.from_json_to_numpy(json_object["imageType"]),
-            self._image_quantitative_type_converter.from_json_to_numpy(json_object.get("imageQuantitativeType")),
             self._image_index_converter.from_json_to_numpy(json_object.get("imageIndex")),
             self._image_series_index_converter.from_json_to_numpy(json_object.get("imageSeriesIndex")),
             self._user_int_converter.from_json_to_numpy(json_object["userInt"]),

@@ -876,23 +876,21 @@ struct ImageFlags : yardl::BaseFlags<uint64_t, ImageFlags> {
   static const ImageFlags kLastInSet;
 };
 
-enum class ImageType {
-  kMagnitude = 1,
-  kPhase = 2,
-  kReal = 3,
-  kImag = 4,
-  kComplex = 5,
-};
-
-struct ImageQuantitativeType : yardl::BaseFlags<uint64_t, ImageQuantitativeType> {
+struct ImageType : yardl::BaseFlags<uint64_t, ImageType> {
   using BaseFlags::BaseFlags;
-  static const ImageQuantitativeType kQuantSpinDensity;
-  static const ImageQuantitativeType kQuantT1;
-  static const ImageQuantitativeType kQuantT2;
-  static const ImageQuantitativeType kQuantT2star;
-  static const ImageQuantitativeType kQuantADC;
-  static const ImageQuantitativeType kQuantB1Map;
-  static const ImageQuantitativeType kQuantSensitivityMap;
+  static const ImageType kMagnitude;
+  static const ImageType kPhase;
+  static const ImageType kReal;
+  static const ImageType kImag;
+  static const ImageType kComplex;
+  static const ImageType kSpinDensity;
+  static const ImageType kT1;
+  static const ImageType kT2;
+  static const ImageType kT2star;
+  static const ImageType kAdc;
+  static const ImageType kB1Map;
+  static const ImageType kSensitivityMap;
+  static const ImageType kUserMap;
 };
 
 template <typename Y>
@@ -918,7 +916,6 @@ struct ImageHeader {
   std::optional<uint64_t> acquisition_time_stamp_ns{};
   std::vector<uint64_t> physiology_time_stamp_ns{};
   mrd::ImageType image_type{};
-  std::optional<mrd::ImageQuantitativeType> image_quantitative_type{};
   std::optional<uint32_t> image_index{};
   std::optional<uint32_t> image_series_index{};
   std::vector<int32_t> user_int{};
@@ -944,7 +941,6 @@ struct ImageHeader {
       acquisition_time_stamp_ns == other.acquisition_time_stamp_ns &&
       physiology_time_stamp_ns == other.physiology_time_stamp_ns &&
       image_type == other.image_type &&
-      image_quantitative_type == other.image_quantitative_type &&
       image_index == other.image_index &&
       image_series_index == other.image_series_index &&
       user_int == other.user_int &&

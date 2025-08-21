@@ -60,7 +60,6 @@ from .types import (
     ImageInt32,
     ImageMeta,
     ImageMetaValue,
-    ImageQuantitativeType,
     ImageType,
     ImageUint16,
     ImageUint32,

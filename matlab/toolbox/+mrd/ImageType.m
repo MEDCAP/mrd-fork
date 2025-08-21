@@ -9,13 +9,37 @@ classdef ImageType < uint64
       v = mrd.ImageType(2);
     end
     function v = REAL
-      v = mrd.ImageType(3);
-    end
-    function v = IMAG
       v = mrd.ImageType(4);
     end
+    function v = IMAG
+      v = mrd.ImageType(8);
+    end
     function v = COMPLEX
-      v = mrd.ImageType(5);
+      v = mrd.ImageType(16);
+    end
+    function v = SPIN_DENSITY
+      v = mrd.ImageType(32);
+    end
+    function v = T1
+      v = mrd.ImageType(64);
+    end
+    function v = T2
+      v = mrd.ImageType(128);
+    end
+    function v = T2STAR
+      v = mrd.ImageType(256);
+    end
+    function v = ADC
+      v = mrd.ImageType(512);
+    end
+    function v = B1_MAP
+      v = mrd.ImageType(1024);
+    end
+    function v = SENSITIVITY_MAP
+      v = mrd.ImageType(2048);
+    end
+    function v = USER_MAP
+      v = mrd.ImageType(4096);
     end
 
     function z = zeros(varargin)
@@ -29,6 +53,34 @@ classdef ImageType < uint64
         sz = [sz, sz];
       end
       z = reshape(repelem(elem, prod(sz)), sz);
+    end
+  end
+
+  methods
+    function self = ImageType(varargin)
+      if nargin == 0
+        value = 0;
+      elseif nargin == 1
+        value = varargin{1};
+      else
+        value = 0;
+        for i = 1:nargin
+          value = bitor(value, varargin{i});
+        end
+      end
+      self@uint64(value);
+    end
+
+    function res = has_flags(self, flag)
+      res = bitand(self, flag) == flag;
+    end
+
+    function res = with_flags(self, flag)
+      res = mrd.ImageType(bitor(self, flag));
+    end
+
+    function res = without_flags(self, flag)
+      res = mrd.ImageType(bitand(self, bitcmp(flag)));
     end
   end
 end

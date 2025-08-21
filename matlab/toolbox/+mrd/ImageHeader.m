@@ -21,7 +21,6 @@ classdef ImageHeader < handle
     acquisition_time_stamp_ns
     physiology_time_stamp_ns
     image_type
-    image_quantitative_type
     image_index
     image_series_index
     user_int
@@ -49,8 +48,7 @@ classdef ImageHeader < handle
         kwargs.set = yardl.None;
         kwargs.acquisition_time_stamp_ns = yardl.None;
         kwargs.physiology_time_stamp_ns = uint64.empty();
-        kwargs.image_type;
-        kwargs.image_quantitative_type = yardl.None;
+        kwargs.image_type = mrd.ImageType(0);
         kwargs.image_index = yardl.None;
         kwargs.image_series_index = yardl.None;
         kwargs.user_int = int32.empty();
@@ -74,11 +72,7 @@ classdef ImageHeader < handle
       self.set = kwargs.set;
       self.acquisition_time_stamp_ns = kwargs.acquisition_time_stamp_ns;
       self.physiology_time_stamp_ns = kwargs.physiology_time_stamp_ns;
-      if ~isfield(kwargs, "image_type")
-        throw(yardl.TypeError("Missing required keyword argument 'image_type'"))
-      end
       self.image_type = kwargs.image_type;
-      self.image_quantitative_type = kwargs.image_quantitative_type;
       self.image_index = kwargs.image_index;
       self.image_series_index = kwargs.image_series_index;
       self.user_int = kwargs.user_int;
@@ -107,7 +101,6 @@ classdef ImageHeader < handle
         isequal({self.acquisition_time_stamp_ns}, {other.acquisition_time_stamp_ns}) && ...
         isequal({self.physiology_time_stamp_ns}, {other.physiology_time_stamp_ns}) && ...
         isequal({self.image_type}, {other.image_type}) && ...
-        isequal({self.image_quantitative_type}, {other.image_quantitative_type}) && ...
         isequal({self.image_index}, {other.image_index}) && ...
         isequal({self.image_series_index}, {other.image_series_index}) && ...
         isequal({self.user_int}, {other.user_int}) && ...
@@ -125,7 +118,7 @@ classdef ImageHeader < handle
 
   methods (Static)
     function z = zeros(varargin)
-      elem = mrd.ImageHeader(image_type=yardl.None);
+      elem = mrd.ImageHeader();
       if nargin == 0
         z = elem;
         return;

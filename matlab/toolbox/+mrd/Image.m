@@ -10,12 +10,9 @@ classdef Image < handle
   methods
     function self = Image(kwargs)
       arguments
-        kwargs.head;
+        kwargs.head = mrd.ImageHeader();
         kwargs.data;
         kwargs.meta = yardl.Map;
-      end
-      if ~isfield(kwargs, "head")
-        throw(yardl.TypeError("Missing required keyword argument 'head'"))
       end
       self.head = kwargs.head;
       if ~isfield(kwargs, "data")
@@ -65,7 +62,7 @@ classdef Image < handle
 
   methods (Static)
     function z = zeros(varargin)
-      elem = mrd.Image(head=yardl.None, data=yardl.None);
+      elem = mrd.Image(data=yardl.None);
       if nargin == 0
         z = elem;
         return;
