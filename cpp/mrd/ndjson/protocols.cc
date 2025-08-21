@@ -837,6 +837,9 @@ void to_json(ordered_json& j, mrd::AcquisitionHeader const& value) {
   if (yardl::ndjson::ShouldSerializeFieldValue(value.discard_post)) {
     j.push_back({"discardPost", value.discard_post});
   }
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.num_echoes)) {
+    j.push_back({"numEchoes", value.num_echoes});
+  }
   if (yardl::ndjson::ShouldSerializeFieldValue(value.center_sample)) {
     j.push_back({"centerSample", value.center_sample});
   }
@@ -896,6 +899,9 @@ void from_json(ordered_json const& j, mrd::AcquisitionHeader& value) {
   }
   if (auto it = j.find("discardPost"); it != j.end()) {
     it->get_to(value.discard_post);
+  }
+  if (auto it = j.find("numEchoes"); it != j.end()) {
+    it->get_to(value.num_echoes);
   }
   if (auto it = j.find("centerSample"); it != j.end()) {
     it->get_to(value.center_sample);

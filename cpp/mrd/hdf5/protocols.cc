@@ -819,6 +819,7 @@ struct _Inner_AcquisitionHeader {
       channel_order(o.channel_order),
       discard_pre(o.discard_pre),
       discard_post(o.discard_post),
+      num_echoes(o.num_echoes),
       center_sample(o.center_sample),
       encoding_space_ref(o.encoding_space_ref),
       sample_time_ns(o.sample_time_ns),
@@ -841,6 +842,7 @@ struct _Inner_AcquisitionHeader {
     yardl::hdf5::ToOuter(channel_order, o.channel_order);
     yardl::hdf5::ToOuter(discard_pre, o.discard_pre);
     yardl::hdf5::ToOuter(discard_post, o.discard_post);
+    yardl::hdf5::ToOuter(num_echoes, o.num_echoes);
     yardl::hdf5::ToOuter(center_sample, o.center_sample);
     yardl::hdf5::ToOuter(encoding_space_ref, o.encoding_space_ref);
     yardl::hdf5::ToOuter(sample_time_ns, o.sample_time_ns);
@@ -862,6 +864,7 @@ struct _Inner_AcquisitionHeader {
   yardl::hdf5::InnerVlen<uint32_t, uint32_t> channel_order;
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> discard_pre;
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> discard_post;
+  yardl::hdf5::InnerOptional<uint32_t, uint32_t> num_echoes;
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> center_sample;
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> encoding_space_ref;
   yardl::hdf5::InnerOptional<uint64_t, uint64_t> sample_time_ns;
@@ -1821,6 +1824,7 @@ struct _Inner_Pulse {
   t.insertMember("channelOrder", HOFFSET(RecordType, channel_order), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_UINT32));
   t.insertMember("discardPre", HOFFSET(RecordType, discard_pre), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
   t.insertMember("discardPost", HOFFSET(RecordType, discard_post), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
+  t.insertMember("numEchoes", HOFFSET(RecordType, num_echoes), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
   t.insertMember("centerSample", HOFFSET(RecordType, center_sample), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
   t.insertMember("encodingSpaceRef", HOFFSET(RecordType, encoding_space_ref), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
   t.insertMember("sampleTimeNs", HOFFSET(RecordType, sample_time_ns), yardl::hdf5::OptionalTypeDdl<uint64_t, uint64_t>(H5::PredType::NATIVE_UINT64));

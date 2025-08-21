@@ -95,6 +95,8 @@ AcquisitionHeader: !record
     # Number of readout samples to be discarded at the end
     #   (e.g. if the ADC is active during gradient events)
     discardPost: uint?
+    # Number of echoes for multi-echo readout (e.g., EPSI) SKADD 8/21/25
+    numEchoes: uint?
     # Index of the readout sample corresponing to k-space center (zero indexed)
     centerSample: uint?
     # Indexed reference to the encoding spaces enumerated in the MRD Header

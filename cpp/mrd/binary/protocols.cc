@@ -47,6 +47,7 @@ struct IsTriviallySerializable<mrd::AcquisitionHeader> {
     IsTriviallySerializable<decltype(__T__::channel_order)>::value &&
     IsTriviallySerializable<decltype(__T__::discard_pre)>::value &&
     IsTriviallySerializable<decltype(__T__::discard_post)>::value &&
+    IsTriviallySerializable<decltype(__T__::num_echoes)>::value &&
     IsTriviallySerializable<decltype(__T__::center_sample)>::value &&
     IsTriviallySerializable<decltype(__T__::encoding_space_ref)>::value &&
     IsTriviallySerializable<decltype(__T__::sample_time_ns)>::value &&
@@ -57,8 +58,8 @@ struct IsTriviallySerializable<mrd::AcquisitionHeader> {
     IsTriviallySerializable<decltype(__T__::patient_table_position)>::value &&
     IsTriviallySerializable<decltype(__T__::user_int)>::value &&
     IsTriviallySerializable<decltype(__T__::user_float)>::value &&
-    (sizeof(__T__) == (sizeof(__T__::flags) + sizeof(__T__::idx) + sizeof(__T__::measurement_uid) + sizeof(__T__::scan_counter) + sizeof(__T__::acquisition_time_stamp_ns) + sizeof(__T__::physiology_time_stamp_ns) + sizeof(__T__::channel_order) + sizeof(__T__::discard_pre) + sizeof(__T__::discard_post) + sizeof(__T__::center_sample) + sizeof(__T__::encoding_space_ref) + sizeof(__T__::sample_time_ns) + sizeof(__T__::position) + sizeof(__T__::read_dir) + sizeof(__T__::phase_dir) + sizeof(__T__::slice_dir) + sizeof(__T__::patient_table_position) + sizeof(__T__::user_int) + sizeof(__T__::user_float))) &&
-    offsetof(__T__, flags) < offsetof(__T__, idx) && offsetof(__T__, idx) < offsetof(__T__, measurement_uid) && offsetof(__T__, measurement_uid) < offsetof(__T__, scan_counter) && offsetof(__T__, scan_counter) < offsetof(__T__, acquisition_time_stamp_ns) && offsetof(__T__, acquisition_time_stamp_ns) < offsetof(__T__, physiology_time_stamp_ns) && offsetof(__T__, physiology_time_stamp_ns) < offsetof(__T__, channel_order) && offsetof(__T__, channel_order) < offsetof(__T__, discard_pre) && offsetof(__T__, discard_pre) < offsetof(__T__, discard_post) && offsetof(__T__, discard_post) < offsetof(__T__, center_sample) && offsetof(__T__, center_sample) < offsetof(__T__, encoding_space_ref) && offsetof(__T__, encoding_space_ref) < offsetof(__T__, sample_time_ns) && offsetof(__T__, sample_time_ns) < offsetof(__T__, position) && offsetof(__T__, position) < offsetof(__T__, read_dir) && offsetof(__T__, read_dir) < offsetof(__T__, phase_dir) && offsetof(__T__, phase_dir) < offsetof(__T__, slice_dir) && offsetof(__T__, slice_dir) < offsetof(__T__, patient_table_position) && offsetof(__T__, patient_table_position) < offsetof(__T__, user_int) && offsetof(__T__, user_int) < offsetof(__T__, user_float);
+    (sizeof(__T__) == (sizeof(__T__::flags) + sizeof(__T__::idx) + sizeof(__T__::measurement_uid) + sizeof(__T__::scan_counter) + sizeof(__T__::acquisition_time_stamp_ns) + sizeof(__T__::physiology_time_stamp_ns) + sizeof(__T__::channel_order) + sizeof(__T__::discard_pre) + sizeof(__T__::discard_post) + sizeof(__T__::num_echoes) + sizeof(__T__::center_sample) + sizeof(__T__::encoding_space_ref) + sizeof(__T__::sample_time_ns) + sizeof(__T__::position) + sizeof(__T__::read_dir) + sizeof(__T__::phase_dir) + sizeof(__T__::slice_dir) + sizeof(__T__::patient_table_position) + sizeof(__T__::user_int) + sizeof(__T__::user_float))) &&
+    offsetof(__T__, flags) < offsetof(__T__, idx) && offsetof(__T__, idx) < offsetof(__T__, measurement_uid) && offsetof(__T__, measurement_uid) < offsetof(__T__, scan_counter) && offsetof(__T__, scan_counter) < offsetof(__T__, acquisition_time_stamp_ns) && offsetof(__T__, acquisition_time_stamp_ns) < offsetof(__T__, physiology_time_stamp_ns) && offsetof(__T__, physiology_time_stamp_ns) < offsetof(__T__, channel_order) && offsetof(__T__, channel_order) < offsetof(__T__, discard_pre) && offsetof(__T__, discard_pre) < offsetof(__T__, discard_post) && offsetof(__T__, discard_post) < offsetof(__T__, num_echoes) && offsetof(__T__, num_echoes) < offsetof(__T__, center_sample) && offsetof(__T__, center_sample) < offsetof(__T__, encoding_space_ref) && offsetof(__T__, encoding_space_ref) < offsetof(__T__, sample_time_ns) && offsetof(__T__, sample_time_ns) < offsetof(__T__, position) && offsetof(__T__, position) < offsetof(__T__, read_dir) && offsetof(__T__, read_dir) < offsetof(__T__, phase_dir) && offsetof(__T__, phase_dir) < offsetof(__T__, slice_dir) && offsetof(__T__, slice_dir) < offsetof(__T__, patient_table_position) && offsetof(__T__, patient_table_position) < offsetof(__T__, user_int) && offsetof(__T__, user_int) < offsetof(__T__, user_float);
 };
 
 template <>
@@ -1134,6 +1135,7 @@ namespace {
   yardl::binary::WriteVector<uint32_t, yardl::binary::WriteInteger>(stream, value.channel_order);
   yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.discard_pre);
   yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.discard_post);
+  yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.num_echoes);
   yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.center_sample);
   yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.encoding_space_ref);
   yardl::binary::WriteOptional<uint64_t, yardl::binary::WriteInteger>(stream, value.sample_time_ns);
@@ -1161,6 +1163,7 @@ namespace {
   yardl::binary::ReadVector<uint32_t, yardl::binary::ReadInteger>(stream, value.channel_order);
   yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.discard_pre);
   yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.discard_post);
+  yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.num_echoes);
   yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.center_sample);
   yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.encoding_space_ref);
   yardl::binary::ReadOptional<uint64_t, yardl::binary::ReadInteger>(stream, value.sample_time_ns);

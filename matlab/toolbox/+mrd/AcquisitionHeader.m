@@ -11,6 +11,7 @@ classdef AcquisitionHeader < handle
     channel_order
     discard_pre
     discard_post
+    num_echoes
     center_sample
     encoding_space_ref
     sample_time_ns
@@ -35,6 +36,7 @@ classdef AcquisitionHeader < handle
         kwargs.channel_order = uint32.empty();
         kwargs.discard_pre = yardl.None;
         kwargs.discard_post = yardl.None;
+        kwargs.num_echoes = yardl.None;
         kwargs.center_sample = yardl.None;
         kwargs.encoding_space_ref = yardl.None;
         kwargs.sample_time_ns = yardl.None;
@@ -55,6 +57,7 @@ classdef AcquisitionHeader < handle
       self.channel_order = kwargs.channel_order;
       self.discard_pre = kwargs.discard_pre;
       self.discard_post = kwargs.discard_post;
+      self.num_echoes = kwargs.num_echoes;
       self.center_sample = kwargs.center_sample;
       self.encoding_space_ref = kwargs.encoding_space_ref;
       self.sample_time_ns = kwargs.sample_time_ns;
@@ -79,6 +82,7 @@ classdef AcquisitionHeader < handle
         isequal({self.channel_order}, {other.channel_order}) && ...
         isequal({self.discard_pre}, {other.discard_pre}) && ...
         isequal({self.discard_post}, {other.discard_post}) && ...
+        isequal({self.num_echoes}, {other.num_echoes}) && ...
         isequal({self.center_sample}, {other.center_sample}) && ...
         isequal({self.encoding_space_ref}, {other.encoding_space_ref}) && ...
         isequal({self.sample_time_ns}, {other.sample_time_ns}) && ...

@@ -175,6 +175,7 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
         self._channel_order_converter = _ndjson.VectorConverter(_ndjson.uint32_converter)
         self._discard_pre_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
         self._discard_post_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
+        self._num_echoes_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
         self._center_sample_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
         self._encoding_space_ref_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
         self._sample_time_ns_converter = _ndjson.OptionalConverter(_ndjson.uint64_converter)
@@ -195,6 +196,7 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
             ("channel_order", self._channel_order_converter.overall_dtype()),
             ("discard_pre", self._discard_pre_converter.overall_dtype()),
             ("discard_post", self._discard_post_converter.overall_dtype()),
+            ("num_echoes", self._num_echoes_converter.overall_dtype()),
             ("center_sample", self._center_sample_converter.overall_dtype()),
             ("encoding_space_ref", self._encoding_space_ref_converter.overall_dtype()),
             ("sample_time_ns", self._sample_time_ns_converter.overall_dtype()),
@@ -225,6 +227,8 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
             json_object["discardPre"] = self._discard_pre_converter.to_json(value.discard_pre)
         if value.discard_post is not None:
             json_object["discardPost"] = self._discard_post_converter.to_json(value.discard_post)
+        if value.num_echoes is not None:
+            json_object["numEchoes"] = self._num_echoes_converter.to_json(value.num_echoes)
         if value.center_sample is not None:
             json_object["centerSample"] = self._center_sample_converter.to_json(value.center_sample)
         if value.encoding_space_ref is not None:
@@ -258,6 +262,8 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
             json_object["discardPre"] = self._discard_pre_converter.numpy_to_json(field_val)
         if (field_val := value["discard_post"]) is not None:
             json_object["discardPost"] = self._discard_post_converter.numpy_to_json(field_val)
+        if (field_val := value["num_echoes"]) is not None:
+            json_object["numEchoes"] = self._num_echoes_converter.numpy_to_json(field_val)
         if (field_val := value["center_sample"]) is not None:
             json_object["centerSample"] = self._center_sample_converter.numpy_to_json(field_val)
         if (field_val := value["encoding_space_ref"]) is not None:
@@ -286,6 +292,7 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
             channel_order=self._channel_order_converter.from_json(json_object["channelOrder"],),
             discard_pre=self._discard_pre_converter.from_json(json_object.get("discardPre")),
             discard_post=self._discard_post_converter.from_json(json_object.get("discardPost")),
+            num_echoes=self._num_echoes_converter.from_json(json_object.get("numEchoes")),
             center_sample=self._center_sample_converter.from_json(json_object.get("centerSample")),
             encoding_space_ref=self._encoding_space_ref_converter.from_json(json_object.get("encodingSpaceRef")),
             sample_time_ns=self._sample_time_ns_converter.from_json(json_object.get("sampleTimeNs")),
@@ -311,6 +318,7 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
             self._channel_order_converter.from_json_to_numpy(json_object["channelOrder"]),
             self._discard_pre_converter.from_json_to_numpy(json_object.get("discardPre")),
             self._discard_post_converter.from_json_to_numpy(json_object.get("discardPost")),
+            self._num_echoes_converter.from_json_to_numpy(json_object.get("numEchoes")),
             self._center_sample_converter.from_json_to_numpy(json_object.get("centerSample")),
             self._encoding_space_ref_converter.from_json_to_numpy(json_object.get("encodingSpaceRef")),
             self._sample_time_ns_converter.from_json_to_numpy(json_object.get("sampleTimeNs")),

@@ -90,6 +90,7 @@ struct AcquisitionHeader {
   std::vector<uint32_t> channel_order{};
   std::optional<uint32_t> discard_pre{};
   std::optional<uint32_t> discard_post{};
+  std::optional<uint32_t> num_echoes{};
   std::optional<uint32_t> center_sample{};
   std::optional<uint32_t> encoding_space_ref{};
   std::optional<uint64_t> sample_time_ns{};
@@ -111,6 +112,7 @@ struct AcquisitionHeader {
       channel_order == other.channel_order &&
       discard_pre == other.discard_pre &&
       discard_post == other.discard_post &&
+      num_echoes == other.num_echoes &&
       center_sample == other.center_sample &&
       encoding_space_ref == other.encoding_space_ref &&
       sample_time_ns == other.sample_time_ns &&
