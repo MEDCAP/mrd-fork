@@ -83,6 +83,8 @@ AcquisitionHeader: !record
     measurementUid: uint
     # Zero-indexed incrementing counter for readouts
     scanCounter: uint?
+    # Acquisition center frequency (Hz) SKADD 8/21/25
+    acquisitionCenterFrequency: uint64
     # Clock time stamp (e.g. nanoseconds since midnight)
     acquisitionTimeStampNs: uint64?
     # Time stamps relative to physiological triggering in nanoseconds

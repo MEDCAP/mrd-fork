@@ -170,6 +170,7 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
         self._idx_converter = EncodingCountersConverter()
         self._measurement_uid_converter = _ndjson.uint32_converter
         self._scan_counter_converter = _ndjson.OptionalConverter(_ndjson.uint32_converter)
+        self._acquisition_center_frequency_converter = _ndjson.uint64_converter
         self._acquisition_time_stamp_ns_converter = _ndjson.OptionalConverter(_ndjson.uint64_converter)
         self._physiology_time_stamp_ns_converter = _ndjson.VectorConverter(_ndjson.uint64_converter)
         self._channel_order_converter = _ndjson.VectorConverter(_ndjson.uint32_converter)
@@ -191,6 +192,7 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
             ("idx", self._idx_converter.overall_dtype()),
             ("measurement_uid", self._measurement_uid_converter.overall_dtype()),
             ("scan_counter", self._scan_counter_converter.overall_dtype()),
+            ("acquisition_center_frequency", self._acquisition_center_frequency_converter.overall_dtype()),
             ("acquisition_time_stamp_ns", self._acquisition_time_stamp_ns_converter.overall_dtype()),
             ("physiology_time_stamp_ns", self._physiology_time_stamp_ns_converter.overall_dtype()),
             ("channel_order", self._channel_order_converter.overall_dtype()),
@@ -219,6 +221,7 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
         json_object["measurementUid"] = self._measurement_uid_converter.to_json(value.measurement_uid)
         if value.scan_counter is not None:
             json_object["scanCounter"] = self._scan_counter_converter.to_json(value.scan_counter)
+        json_object["acquisitionCenterFrequency"] = self._acquisition_center_frequency_converter.to_json(value.acquisition_center_frequency)
         if value.acquisition_time_stamp_ns is not None:
             json_object["acquisitionTimeStampNs"] = self._acquisition_time_stamp_ns_converter.to_json(value.acquisition_time_stamp_ns)
         json_object["physiologyTimeStampNs"] = self._physiology_time_stamp_ns_converter.to_json(value.physiology_time_stamp_ns)
@@ -254,6 +257,7 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
         json_object["measurementUid"] = self._measurement_uid_converter.numpy_to_json(value["measurement_uid"])
         if (field_val := value["scan_counter"]) is not None:
             json_object["scanCounter"] = self._scan_counter_converter.numpy_to_json(field_val)
+        json_object["acquisitionCenterFrequency"] = self._acquisition_center_frequency_converter.numpy_to_json(value["acquisition_center_frequency"])
         if (field_val := value["acquisition_time_stamp_ns"]) is not None:
             json_object["acquisitionTimeStampNs"] = self._acquisition_time_stamp_ns_converter.numpy_to_json(field_val)
         json_object["physiologyTimeStampNs"] = self._physiology_time_stamp_ns_converter.numpy_to_json(value["physiology_time_stamp_ns"])
@@ -287,6 +291,7 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
             idx=self._idx_converter.from_json(json_object["idx"],),
             measurement_uid=self._measurement_uid_converter.from_json(json_object["measurementUid"],),
             scan_counter=self._scan_counter_converter.from_json(json_object.get("scanCounter")),
+            acquisition_center_frequency=self._acquisition_center_frequency_converter.from_json(json_object["acquisitionCenterFrequency"],),
             acquisition_time_stamp_ns=self._acquisition_time_stamp_ns_converter.from_json(json_object.get("acquisitionTimeStampNs")),
             physiology_time_stamp_ns=self._physiology_time_stamp_ns_converter.from_json(json_object["physiologyTimeStampNs"],),
             channel_order=self._channel_order_converter.from_json(json_object["channelOrder"],),
@@ -313,6 +318,7 @@ class AcquisitionHeaderConverter(_ndjson.JsonConverter[AcquisitionHeader, np.voi
             self._idx_converter.from_json_to_numpy(json_object["idx"]),
             self._measurement_uid_converter.from_json_to_numpy(json_object["measurementUid"]),
             self._scan_counter_converter.from_json_to_numpy(json_object.get("scanCounter")),
+            self._acquisition_center_frequency_converter.from_json_to_numpy(json_object["acquisitionCenterFrequency"]),
             self._acquisition_time_stamp_ns_converter.from_json_to_numpy(json_object.get("acquisitionTimeStampNs")),
             self._physiology_time_stamp_ns_converter.from_json_to_numpy(json_object["physiologyTimeStampNs"]),
             self._channel_order_converter.from_json_to_numpy(json_object["channelOrder"]),

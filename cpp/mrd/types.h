@@ -85,6 +85,7 @@ struct AcquisitionHeader {
   mrd::EncodingCounters idx{};
   uint32_t measurement_uid{};
   std::optional<uint32_t> scan_counter{};
+  uint64_t acquisition_center_frequency{};
   std::optional<uint64_t> acquisition_time_stamp_ns{};
   std::vector<uint64_t> physiology_time_stamp_ns{};
   std::vector<uint32_t> channel_order{};
@@ -107,6 +108,7 @@ struct AcquisitionHeader {
       idx == other.idx &&
       measurement_uid == other.measurement_uid &&
       scan_counter == other.scan_counter &&
+      acquisition_center_frequency == other.acquisition_center_frequency &&
       acquisition_time_stamp_ns == other.acquisition_time_stamp_ns &&
       physiology_time_stamp_ns == other.physiology_time_stamp_ns &&
       channel_order == other.channel_order &&

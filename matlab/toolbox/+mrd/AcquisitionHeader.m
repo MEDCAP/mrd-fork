@@ -6,6 +6,7 @@ classdef AcquisitionHeader < handle
     idx
     measurement_uid
     scan_counter
+    acquisition_center_frequency
     acquisition_time_stamp_ns
     physiology_time_stamp_ns
     channel_order
@@ -31,6 +32,7 @@ classdef AcquisitionHeader < handle
         kwargs.idx = mrd.EncodingCounters();
         kwargs.measurement_uid = uint32(0);
         kwargs.scan_counter = yardl.None;
+        kwargs.acquisition_center_frequency = uint64(0);
         kwargs.acquisition_time_stamp_ns = yardl.None;
         kwargs.physiology_time_stamp_ns = uint64.empty();
         kwargs.channel_order = uint32.empty();
@@ -52,6 +54,7 @@ classdef AcquisitionHeader < handle
       self.idx = kwargs.idx;
       self.measurement_uid = kwargs.measurement_uid;
       self.scan_counter = kwargs.scan_counter;
+      self.acquisition_center_frequency = kwargs.acquisition_center_frequency;
       self.acquisition_time_stamp_ns = kwargs.acquisition_time_stamp_ns;
       self.physiology_time_stamp_ns = kwargs.physiology_time_stamp_ns;
       self.channel_order = kwargs.channel_order;
@@ -77,6 +80,7 @@ classdef AcquisitionHeader < handle
         isequal({self.idx}, {other.idx}) && ...
         isequal({self.measurement_uid}, {other.measurement_uid}) && ...
         isequal({self.scan_counter}, {other.scan_counter}) && ...
+        isequal({self.acquisition_center_frequency}, {other.acquisition_center_frequency}) && ...
         isequal({self.acquisition_time_stamp_ns}, {other.acquisition_time_stamp_ns}) && ...
         isequal({self.physiology_time_stamp_ns}, {other.physiology_time_stamp_ns}) && ...
         isequal({self.channel_order}, {other.channel_order}) && ...

@@ -822,6 +822,9 @@ void to_json(ordered_json& j, mrd::AcquisitionHeader const& value) {
   if (yardl::ndjson::ShouldSerializeFieldValue(value.scan_counter)) {
     j.push_back({"scanCounter", value.scan_counter});
   }
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.acquisition_center_frequency)) {
+    j.push_back({"acquisitionCenterFrequency", value.acquisition_center_frequency});
+  }
   if (yardl::ndjson::ShouldSerializeFieldValue(value.acquisition_time_stamp_ns)) {
     j.push_back({"acquisitionTimeStampNs", value.acquisition_time_stamp_ns});
   }
@@ -884,6 +887,9 @@ void from_json(ordered_json const& j, mrd::AcquisitionHeader& value) {
   }
   if (auto it = j.find("scanCounter"); it != j.end()) {
     it->get_to(value.scan_counter);
+  }
+  if (auto it = j.find("acquisitionCenterFrequency"); it != j.end()) {
+    it->get_to(value.acquisition_center_frequency);
   }
   if (auto it = j.find("acquisitionTimeStampNs"); it != j.end()) {
     it->get_to(value.acquisition_time_stamp_ns);
