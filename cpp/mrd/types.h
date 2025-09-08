@@ -887,11 +887,13 @@ struct ImageType : yardl::BaseFlags<uint64_t, ImageType> {
   static const ImageType kReal;
   static const ImageType kImag;
   static const ImageType kComplex;
-  static const ImageType kSpinDensity;
-  static const ImageType kT1;
-  static const ImageType kT2;
-  static const ImageType kT2star;
-  static const ImageType kAdc;
+  static const ImageType kBitmap;
+  static const ImageType kSpinDensityMap;
+  static const ImageType kT1Map;
+  static const ImageType kT2Map;
+  static const ImageType kT2starMap;
+  static const ImageType kAdcMap;
+  static const ImageType kB0Map;
   static const ImageType kB1Map;
   static const ImageType kSensitivityMap;
   static const ImageType kUserMap;

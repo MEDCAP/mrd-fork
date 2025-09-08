@@ -51,13 +51,15 @@ const ImageType ImageType::kPhase = ImageType(2ULL);
 const ImageType ImageType::kReal = ImageType(4ULL);
 const ImageType ImageType::kImag = ImageType(8ULL);
 const ImageType ImageType::kComplex = ImageType(16ULL);
-const ImageType ImageType::kSpinDensity = ImageType(32ULL);
-const ImageType ImageType::kT1 = ImageType(64ULL);
-const ImageType ImageType::kT2 = ImageType(128ULL);
-const ImageType ImageType::kT2star = ImageType(256ULL);
-const ImageType ImageType::kAdc = ImageType(512ULL);
-const ImageType ImageType::kB1Map = ImageType(1024ULL);
-const ImageType ImageType::kSensitivityMap = ImageType(2048ULL);
-const ImageType ImageType::kUserMap = ImageType(4096ULL);
+const ImageType ImageType::kBitmap = ImageType(32ULL);
+const ImageType ImageType::kSpinDensityMap = ImageType(64ULL);
+const ImageType ImageType::kT1Map = ImageType(128ULL);
+const ImageType ImageType::kT2Map = ImageType(256ULL);
+const ImageType ImageType::kT2starMap = ImageType(512ULL);
+const ImageType ImageType::kAdcMap = ImageType(1024ULL);
+const ImageType ImageType::kB0Map = ImageType(2048ULL);
+const ImageType ImageType::kB1Map = ImageType(4096ULL);
+const ImageType ImageType::kSensitivityMap = ImageType(8192ULL);
+const ImageType ImageType::kUserMap = ImageType(16384ULL);
 } // namespace mrd
 

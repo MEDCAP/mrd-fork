@@ -2636,11 +2636,13 @@ std::unordered_map<std::string, mrd::ImageType> const __ImageType_values = {
   {"real", mrd::ImageType::kReal},
   {"imag", mrd::ImageType::kImag},
   {"complex", mrd::ImageType::kComplex},
-  {"spinDensity", mrd::ImageType::kSpinDensity},
-  {"t1", mrd::ImageType::kT1},
-  {"t2", mrd::ImageType::kT2},
-  {"t2star", mrd::ImageType::kT2star},
-  {"adc", mrd::ImageType::kAdc},
+  {"bitmap", mrd::ImageType::kBitmap},
+  {"spinDensityMap", mrd::ImageType::kSpinDensityMap},
+  {"t1Map", mrd::ImageType::kT1Map},
+  {"t2Map", mrd::ImageType::kT2Map},
+  {"t2starMap", mrd::ImageType::kT2starMap},
+  {"adcMap", mrd::ImageType::kAdcMap},
+  {"b0Map", mrd::ImageType::kB0Map},
   {"b1Map", mrd::ImageType::kB1Map},
   {"sensitivityMap", mrd::ImageType::kSensitivityMap},
   {"userMap", mrd::ImageType::kUserMap},
@@ -2694,41 +2696,57 @@ void to_json(ordered_json& j, mrd::ImageType const& value) {
       return;
     }
   }
-  if (remaining.HasFlags(mrd::ImageType::kSpinDensity)) {
-    remaining.UnsetFlags(mrd::ImageType::kSpinDensity);
-    arr.push_back("spinDensity");
+  if (remaining.HasFlags(mrd::ImageType::kBitmap)) {
+    remaining.UnsetFlags(mrd::ImageType::kBitmap);
+    arr.push_back("bitmap");
     if (remaining == 0) {
       j = arr;
       return;
     }
   }
-  if (remaining.HasFlags(mrd::ImageType::kT1)) {
-    remaining.UnsetFlags(mrd::ImageType::kT1);
-    arr.push_back("t1");
+  if (remaining.HasFlags(mrd::ImageType::kSpinDensityMap)) {
+    remaining.UnsetFlags(mrd::ImageType::kSpinDensityMap);
+    arr.push_back("spinDensityMap");
     if (remaining == 0) {
       j = arr;
       return;
     }
   }
-  if (remaining.HasFlags(mrd::ImageType::kT2)) {
-    remaining.UnsetFlags(mrd::ImageType::kT2);
-    arr.push_back("t2");
+  if (remaining.HasFlags(mrd::ImageType::kT1Map)) {
+    remaining.UnsetFlags(mrd::ImageType::kT1Map);
+    arr.push_back("t1Map");
     if (remaining == 0) {
       j = arr;
       return;
     }
   }
-  if (remaining.HasFlags(mrd::ImageType::kT2star)) {
-    remaining.UnsetFlags(mrd::ImageType::kT2star);
-    arr.push_back("t2star");
+  if (remaining.HasFlags(mrd::ImageType::kT2Map)) {
+    remaining.UnsetFlags(mrd::ImageType::kT2Map);
+    arr.push_back("t2Map");
     if (remaining == 0) {
       j = arr;
       return;
     }
   }
-  if (remaining.HasFlags(mrd::ImageType::kAdc)) {
-    remaining.UnsetFlags(mrd::ImageType::kAdc);
-    arr.push_back("adc");
+  if (remaining.HasFlags(mrd::ImageType::kT2starMap)) {
+    remaining.UnsetFlags(mrd::ImageType::kT2starMap);
+    arr.push_back("t2starMap");
+    if (remaining == 0) {
+      j = arr;
+      return;
+    }
+  }
+  if (remaining.HasFlags(mrd::ImageType::kAdcMap)) {
+    remaining.UnsetFlags(mrd::ImageType::kAdcMap);
+    arr.push_back("adcMap");
+    if (remaining == 0) {
+      j = arr;
+      return;
+    }
+  }
+  if (remaining.HasFlags(mrd::ImageType::kB0Map)) {
+    remaining.UnsetFlags(mrd::ImageType::kB0Map);
+    arr.push_back("b0Map");
     if (remaining == 0) {
       j = arr;
       return;

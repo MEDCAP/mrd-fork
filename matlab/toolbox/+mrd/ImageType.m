@@ -17,29 +17,35 @@ classdef ImageType < uint64
     function v = COMPLEX
       v = mrd.ImageType(16);
     end
-    function v = SPIN_DENSITY
+    function v = BITMAP
       v = mrd.ImageType(32);
     end
-    function v = T1
+    function v = SPIN_DENSITY_MAP
       v = mrd.ImageType(64);
     end
-    function v = T2
+    function v = T1_MAP
       v = mrd.ImageType(128);
     end
-    function v = T2STAR
+    function v = T2_MAP
       v = mrd.ImageType(256);
     end
-    function v = ADC
+    function v = T2STAR_MAP
       v = mrd.ImageType(512);
     end
-    function v = B1_MAP
+    function v = ADC_MAP
       v = mrd.ImageType(1024);
     end
-    function v = SENSITIVITY_MAP
+    function v = B0_MAP
       v = mrd.ImageType(2048);
     end
-    function v = USER_MAP
+    function v = B1_MAP
       v = mrd.ImageType(4096);
+    end
+    function v = SENSITIVITY_MAP
+      v = mrd.ImageType(8192);
+    end
+    function v = USER_MAP
+      v = mrd.ImageType(16384);
     end
 
     function z = zeros(varargin)

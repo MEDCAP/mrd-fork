@@ -24,15 +24,16 @@ ImageType: !flags
     real: 0x4
     imag: 0x8
     complex: 0x10
-    spinDensityMap: 0x20   # in mol/m^3
-    t1Map: 0x40            # in s
-    t2Map: 0x80            # in s
-    t2starMap: 0x100       # in s
-    adcMap: 0x200          # in s/m^2
-    b0Map: 0x400           # in Hz (offset from Image.head.measurementFreq[0])
-    b1Map: 0x800           # in rad/s/V, channel dimension is xmit channels
-    sensitivityMap: 0x1000 # in Vm^3/mol, channel dimension is rcv channels
-    userMap: 0x2000        # details found in free form text descriptor in image metadata (Image.meta)
+    bitmap: 0x20           # a uint32 image in which MSB = R, G, B, LSB = alpha
+    spinDensityMap: 0x40   # in mol/m^3
+    t1Map: 0x80            # in s
+    t2Map: 0x100           # in s
+    t2starMap: 0x200       # in s
+    adcMap: 0x400          # in s/m^2
+    b0Map: 0x800           # in Hz (offset from Image.head.measurementFreq[0])
+    b1Map: 0x1000          # in rad/s/V, channel dimension is xmit channels
+    sensitivityMap: 0x2000 # in Vm^3/mol, channel dimension is rcv channels
+    userMap: 0x4000        # details found in free form text descriptor in image metadata (Image.meta)
 
 ImageData<Y>: !array
   items: Y

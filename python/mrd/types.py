@@ -1495,14 +1495,16 @@ class ImageType(enum.IntFlag):
     REAL = 4
     IMAG = 8
     COMPLEX = 16
-    SPIN_DENSITY = 32
-    T1 = 64
-    T2 = 128
-    T2STAR = 256
-    ADC = 512
-    B1_MAP = 1024
-    SENSITIVITY_MAP = 2048
-    USER_MAP = 4096
+    BITMAP = 32
+    SPIN_DENSITY_MAP = 64
+    T1_MAP = 128
+    T2_MAP = 256
+    T2STAR_MAP = 512
+    ADC_MAP = 1024
+    B0_MAP = 2048
+    B1_MAP = 4096
+    SENSITIVITY_MAP = 8192
+    USER_MAP = 16384
 
     def __eq__(self, other: object) -> bool:
         return isinstance(other, ImageType) and self.value == other.value
