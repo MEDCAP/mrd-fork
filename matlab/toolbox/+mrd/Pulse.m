@@ -2,9 +2,13 @@
 
 classdef Pulse < handle
   properties
+    % Pulse header
     head
+    % Raw pulse amplitude array
     amplitude
+    % Full profile of pulse phase array
     phase
+    % Pulse phase offset
     phase_offset
   end
 
@@ -12,9 +16,9 @@ classdef Pulse < handle
     function self = Pulse(kwargs)
       arguments
         kwargs.head = mrd.PulseHeader();
-        kwargs.amplitude = single.empty();
-        kwargs.phase = single.empty();
-        kwargs.phase_offset = single.empty();
+        kwargs.amplitude = single.empty(0, 0);
+        kwargs.phase = single.empty(0);
+        kwargs.phase_offset = single.empty(0);
       end
       self.head = kwargs.head;
       self.amplitude = kwargs.amplitude;
@@ -23,6 +27,7 @@ classdef Pulse < handle
     end
 
     function res = coils(self)
+      % Assuming writer sets amp and phase array the same size
       res = size(self.amplitude, ndims(self.amplitude)-(0));
       return
     end
@@ -41,18 +46,14 @@ classdef Pulse < handle
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.Pulse") && ...
-        isequal({self.head}, {other.head}) && ...
-        isequal({self.amplitude}, {other.amplitude}) && ...
-        isequal({self.phase}, {other.phase}) && ...
-        isequal({self.phase_offset}, {other.phase_offset});
+        isequal(self.head, other.head) && ...
+        isequal(self.amplitude, other.amplitude) && ...
+        isequal(self.phase, other.phase) && ...
+        isequal(self.phase_offset, other.phase_offset);
     end
 
     function res = ne(self, other)
       res = ~self.eq(other);
-    end
-
-    function res = isequal(self, other)
-      res = all(eq(self, other));
     end
   end
 

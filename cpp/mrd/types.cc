@@ -46,20 +46,5 @@ const ImageFlags ImageFlags::kFirstInRepetition = ImageFlags(4096ULL);
 const ImageFlags ImageFlags::kLastInRepetition = ImageFlags(8192ULL);
 const ImageFlags ImageFlags::kFirstInSet = ImageFlags(16384ULL);
 const ImageFlags ImageFlags::kLastInSet = ImageFlags(32768ULL);
-const ImageType ImageType::kMagnitude = ImageType(1ULL);
-const ImageType ImageType::kPhase = ImageType(2ULL);
-const ImageType ImageType::kReal = ImageType(4ULL);
-const ImageType ImageType::kImag = ImageType(8ULL);
-const ImageType ImageType::kComplex = ImageType(16ULL);
-const ImageType ImageType::kBitmap = ImageType(32ULL);
-const ImageType ImageType::kSpinDensityMap = ImageType(64ULL);
-const ImageType ImageType::kT1Map = ImageType(128ULL);
-const ImageType ImageType::kT2Map = ImageType(256ULL);
-const ImageType ImageType::kT2starMap = ImageType(512ULL);
-const ImageType ImageType::kAdcMap = ImageType(1024ULL);
-const ImageType ImageType::kB0Map = ImageType(2048ULL);
-const ImageType ImageType::kB1Map = ImageType(4096ULL);
-const ImageType ImageType::kSensitivityMap = ImageType(8192ULL);
-const ImageType ImageType::kUserMap = ImageType(16384ULL);
 } // namespace mrd
 

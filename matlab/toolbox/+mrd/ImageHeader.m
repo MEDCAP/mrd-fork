@@ -2,28 +2,51 @@
 
 classdef ImageHeader < handle
   properties
+    % A bit mask of common attributes applicable to individual images
     flags
+    % Unique ID corresponding to the image
     measurement_uid
-    measurement_freq
-    measurement_freq_label
+    % NMR frequencies of this measurement (Hz). Same size as ImageData freq dimension
+    measurement_frequency
+    % NMR label of the measurementFreqs. Same size as measurementFrequency
+    measurement_frequency_label
+    % Physical size (in mm) in each of the 3 dimensions in the image
     field_of_view
+    % Center of the excited volume, in LPS coordinates relative to isocenter in millimeters
     position
+    % Directional cosine of readout/frequency encoding
     col_dir
+    % Directional cosine of phase encoding (2D)
     line_dir
+    % Directional cosine of 3D phase encoding direction
     slice_dir
+    % Offset position of the patient table, in LPS coordinates
     patient_table_position
+    % Signal average
     average
+    % Slice number (multi-slice 2D)
     slice
+    % Echo number in multi-echo
     contrast
+    % Cardiac phase
     phase
+    % Counter in repeated/dynamic acquisitions
     repetition
+    % Sets of different preparation, e.g. flow encoding, diffusion weighting
     set
+    % Clock time stamp, ns since midnight
     acquisition_time_stamp_ns
+    % Time stamp ns relative to physiological triggering, e.g. ECG, pulse oximetry, respiratory
     physiology_time_stamp_ns
+    % Interpretation type of the image
     image_type
+    % Image index number within a series of images, corresponding to DICOM InstanceNumber (0020,0013)
     image_index
+    % Series index, used to separate images into different series, corresponding to DICOM SeriesNumber (0020,0011)
     image_series_index
+    % User-defined int parameters
     user_int
+    % User-defined float parameters
     user_float
   end
 
@@ -32,8 +55,8 @@ classdef ImageHeader < handle
       arguments
         kwargs.flags = mrd.ImageFlags(0);
         kwargs.measurement_uid = uint32(0);
-        kwargs.measurement_freq = yardl.None;
-        kwargs.measurement_freq_label = yardl.None;
+        kwargs.measurement_frequency = yardl.None;
+        kwargs.measurement_frequency_label = yardl.None;
         kwargs.field_of_view = repelem(single(0), 3, 1);
         kwargs.position = repelem(single(0), 3, 1);
         kwargs.col_dir = repelem(single(0), 3, 1);
@@ -48,7 +71,7 @@ classdef ImageHeader < handle
         kwargs.set = yardl.None;
         kwargs.acquisition_time_stamp_ns = yardl.None;
         kwargs.physiology_time_stamp_ns = uint64.empty();
-        kwargs.image_type = mrd.ImageType(0);
+        kwargs.image_type;
         kwargs.image_index = yardl.None;
         kwargs.image_series_index = yardl.None;
         kwargs.user_int = int32.empty();
@@ -56,8 +79,8 @@ classdef ImageHeader < handle
       end
       self.flags = kwargs.flags;
       self.measurement_uid = kwargs.measurement_uid;
-      self.measurement_freq = kwargs.measurement_freq;
-      self.measurement_freq_label = kwargs.measurement_freq_label;
+      self.measurement_frequency = kwargs.measurement_frequency;
+      self.measurement_frequency_label = kwargs.measurement_frequency_label;
       self.field_of_view = kwargs.field_of_view;
       self.position = kwargs.position;
       self.col_dir = kwargs.col_dir;
@@ -72,6 +95,9 @@ classdef ImageHeader < handle
       self.set = kwargs.set;
       self.acquisition_time_stamp_ns = kwargs.acquisition_time_stamp_ns;
       self.physiology_time_stamp_ns = kwargs.physiology_time_stamp_ns;
+      if ~isfield(kwargs, "image_type")
+        throw(yardl.TypeError("Missing required keyword argument 'image_type'"))
+      end
       self.image_type = kwargs.image_type;
       self.image_index = kwargs.image_index;
       self.image_series_index = kwargs.image_series_index;
@@ -82,52 +108,34 @@ classdef ImageHeader < handle
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.ImageHeader") && ...
-        isequal({self.flags}, {other.flags}) && ...
-        isequal({self.measurement_uid}, {other.measurement_uid}) && ...
-        isequal({self.measurement_freq}, {other.measurement_freq}) && ...
-        isequal({self.measurement_freq_label}, {other.measurement_freq_label}) && ...
-        isequal({self.field_of_view}, {other.field_of_view}) && ...
-        isequal({self.position}, {other.position}) && ...
-        isequal({self.col_dir}, {other.col_dir}) && ...
-        isequal({self.line_dir}, {other.line_dir}) && ...
-        isequal({self.slice_dir}, {other.slice_dir}) && ...
-        isequal({self.patient_table_position}, {other.patient_table_position}) && ...
-        isequal({self.average}, {other.average}) && ...
-        isequal({self.slice}, {other.slice}) && ...
-        isequal({self.contrast}, {other.contrast}) && ...
-        isequal({self.phase}, {other.phase}) && ...
-        isequal({self.repetition}, {other.repetition}) && ...
-        isequal({self.set}, {other.set}) && ...
-        isequal({self.acquisition_time_stamp_ns}, {other.acquisition_time_stamp_ns}) && ...
-        isequal({self.physiology_time_stamp_ns}, {other.physiology_time_stamp_ns}) && ...
-        isequal({self.image_type}, {other.image_type}) && ...
-        isequal({self.image_index}, {other.image_index}) && ...
-        isequal({self.image_series_index}, {other.image_series_index}) && ...
-        isequal({self.user_int}, {other.user_int}) && ...
-        isequal({self.user_float}, {other.user_float});
+        isequal(self.flags, other.flags) && ...
+        isequal(self.measurement_uid, other.measurement_uid) && ...
+        isequal(self.measurement_frequency, other.measurement_frequency) && ...
+        isequal(self.measurement_frequency_label, other.measurement_frequency_label) && ...
+        isequal(self.field_of_view, other.field_of_view) && ...
+        isequal(self.position, other.position) && ...
+        isequal(self.col_dir, other.col_dir) && ...
+        isequal(self.line_dir, other.line_dir) && ...
+        isequal(self.slice_dir, other.slice_dir) && ...
+        isequal(self.patient_table_position, other.patient_table_position) && ...
+        isequal(self.average, other.average) && ...
+        isequal(self.slice, other.slice) && ...
+        isequal(self.contrast, other.contrast) && ...
+        isequal(self.phase, other.phase) && ...
+        isequal(self.repetition, other.repetition) && ...
+        isequal(self.set, other.set) && ...
+        isequal(self.acquisition_time_stamp_ns, other.acquisition_time_stamp_ns) && ...
+        isequal(self.physiology_time_stamp_ns, other.physiology_time_stamp_ns) && ...
+        isequal(self.image_type, other.image_type) && ...
+        isequal(self.image_index, other.image_index) && ...
+        isequal(self.image_series_index, other.image_series_index) && ...
+        isequal(self.user_int, other.user_int) && ...
+        isequal(self.user_float, other.user_float);
     end
 
     function res = ne(self, other)
       res = ~self.eq(other);
     end
-
-    function res = isequal(self, other)
-      res = all(eq(self, other));
-    end
   end
 
-  methods (Static)
-    function z = zeros(varargin)
-      elem = mrd.ImageHeader();
-      if nargin == 0
-        z = elem;
-        return;
-      end
-      sz = [varargin{:}];
-      if isscalar(sz)
-        sz = [sz, sz];
-      end
-      z = reshape(repelem(elem, prod(sz)), sz);
-    end
-  end
 end

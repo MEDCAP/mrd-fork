@@ -2,32 +2,32 @@
 
 classdef Gradient < handle
   properties
+    % Grad header
     head
-    rl
-    ap
-    fh
+    % gradient data
+    data
   end
 
   methods
     function self = Gradient(kwargs)
       arguments
-        kwargs.head = mrd.GradientHeader();
-        kwargs.rl = single.empty();
-        kwargs.ap = single.empty();
-        kwargs.fh = single.empty();
+        kwargs.head;
+        kwargs.data = single.empty(0);
+      end
+      if ~isfield(kwargs, "head")
+        throw(yardl.TypeError("Missing required keyword argument 'head'"))
       end
       self.head = kwargs.head;
-      self.rl = kwargs.rl;
-      self.ap = kwargs.ap;
-      self.fh = kwargs.fh;
+      self.data = kwargs.data;
     end
 
     function res = samples(self)
-      res = size(self.rl, ndims(self.rl)-(0));
+      res = size(self.data, ndims(self.data)-(0));
       return
     end
 
     function res = starttime(self)
+      % timestamps in ns
       res = self.head.gradient_time_stamp_ns;
       return
     end
@@ -41,33 +41,13 @@ classdef Gradient < handle
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.Gradient") && ...
-        isequal({self.head}, {other.head}) && ...
-        isequal({self.rl}, {other.rl}) && ...
-        isequal({self.ap}, {other.ap}) && ...
-        isequal({self.fh}, {other.fh});
+        isequal(self.head, other.head) && ...
+        isequal(self.data, other.data);
     end
 
     function res = ne(self, other)
       res = ~self.eq(other);
     end
-
-    function res = isequal(self, other)
-      res = all(eq(self, other));
-    end
   end
 
-  methods (Static)
-    function z = zeros(varargin)
-      elem = mrd.Gradient();
-      if nargin == 0
-        z = elem;
-        return;
-      end
-      sz = [varargin{:}];
-      if isscalar(sz)
-        sz = [sz, sz];
-      end
-      z = reshape(repelem(elem, prod(sz)), sz);
-    end
-  end
 end

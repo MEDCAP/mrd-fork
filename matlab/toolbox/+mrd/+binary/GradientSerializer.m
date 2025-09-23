@@ -5,8 +5,6 @@ classdef GradientSerializer < yardl.binary.RecordSerializer
     function self = GradientSerializer()
       field_serializers{1} = mrd.binary.GradientHeaderSerializer();
       field_serializers{2} = yardl.binary.NDArraySerializer(yardl.binary.Float32Serializer, 1);
-      field_serializers{3} = yardl.binary.NDArraySerializer(yardl.binary.Float32Serializer, 1);
-      field_serializers{4} = yardl.binary.NDArraySerializer(yardl.binary.Float32Serializer, 1);
       self@yardl.binary.RecordSerializer('mrd.Gradient', field_serializers);
     end
 
@@ -16,12 +14,12 @@ classdef GradientSerializer < yardl.binary.RecordSerializer
         outstream (1,1) yardl.binary.CodedOutputStream
         value (1,1) mrd.Gradient
       end
-      self.write_(outstream, value.head, value.rl, value.ap, value.fh);
+      self.write_(outstream, value.head, value.data);
     end
 
     function value = read(self, instream)
       fields = self.read_(instream);
-      value = mrd.Gradient(head=fields{1}, rl=fields{2}, ap=fields{3}, fh=fields{4});
+      value = mrd.Gradient(head=fields{1}, data=fields{2});
     end
   end
 end

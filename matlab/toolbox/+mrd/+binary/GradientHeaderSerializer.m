@@ -6,6 +6,7 @@ classdef GradientHeaderSerializer < yardl.binary.RecordSerializer
       field_serializers{1} = yardl.binary.Uint64Serializer;
       field_serializers{2} = yardl.binary.Uint32Serializer;
       field_serializers{3} = yardl.binary.OptionalSerializer(yardl.binary.VectorSerializer(yardl.binary.Float32Serializer));
+      field_serializers{4} = yardl.binary.EnumSerializer('mrd.GradientAxis', @mrd.GradientAxis, yardl.binary.Int32Serializer);
       self@yardl.binary.RecordSerializer('mrd.GradientHeader', field_serializers);
     end
 
@@ -15,12 +16,12 @@ classdef GradientHeaderSerializer < yardl.binary.RecordSerializer
         outstream (1,1) yardl.binary.CodedOutputStream
         value (1,1) mrd.GradientHeader
       end
-      self.write_(outstream, value.gradient_time_stamp_ns, value.gradient_sample_time_ns, value.pulse_calibration);
+      self.write_(outstream, value.gradient_time_stamp_ns, value.gradient_sample_time_ns, value.pulse_calibration, value.gradient_axis);
     end
 
     function value = read(self, instream)
       fields = self.read_(instream);
-      value = mrd.GradientHeader(gradient_time_stamp_ns=fields{1}, gradient_sample_time_ns=fields{2}, pulse_calibration=fields{3});
+      value = mrd.GradientHeader(gradient_time_stamp_ns=fields{1}, gradient_sample_time_ns=fields{2}, pulse_calibration=fields{3}, gradient_axis=fields{4});
     end
   end
 end

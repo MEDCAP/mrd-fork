@@ -15,15 +15,14 @@ classdef AcquisitionHeaderSerializer < yardl.binary.RecordSerializer
       field_serializers{10} = yardl.binary.OptionalSerializer(yardl.binary.Uint32Serializer);
       field_serializers{11} = yardl.binary.OptionalSerializer(yardl.binary.Uint32Serializer);
       field_serializers{12} = yardl.binary.OptionalSerializer(yardl.binary.Uint32Serializer);
-      field_serializers{13} = yardl.binary.OptionalSerializer(yardl.binary.Uint32Serializer);
-      field_serializers{14} = yardl.binary.OptionalSerializer(yardl.binary.Uint64Serializer);
+      field_serializers{13} = yardl.binary.OptionalSerializer(yardl.binary.Uint64Serializer);
+      field_serializers{14} = yardl.binary.FixedNDArraySerializer(yardl.binary.Float32Serializer, [3]);
       field_serializers{15} = yardl.binary.FixedNDArraySerializer(yardl.binary.Float32Serializer, [3]);
       field_serializers{16} = yardl.binary.FixedNDArraySerializer(yardl.binary.Float32Serializer, [3]);
       field_serializers{17} = yardl.binary.FixedNDArraySerializer(yardl.binary.Float32Serializer, [3]);
       field_serializers{18} = yardl.binary.FixedNDArraySerializer(yardl.binary.Float32Serializer, [3]);
-      field_serializers{19} = yardl.binary.FixedNDArraySerializer(yardl.binary.Float32Serializer, [3]);
-      field_serializers{20} = yardl.binary.VectorSerializer(yardl.binary.Int32Serializer);
-      field_serializers{21} = yardl.binary.VectorSerializer(yardl.binary.Float32Serializer);
+      field_serializers{19} = yardl.binary.VectorSerializer(yardl.binary.Int32Serializer);
+      field_serializers{20} = yardl.binary.VectorSerializer(yardl.binary.Float32Serializer);
       self@yardl.binary.RecordSerializer('mrd.AcquisitionHeader', field_serializers);
     end
 
@@ -33,12 +32,12 @@ classdef AcquisitionHeaderSerializer < yardl.binary.RecordSerializer
         outstream (1,1) yardl.binary.CodedOutputStream
         value (1,1) mrd.AcquisitionHeader
       end
-      self.write_(outstream, value.flags, value.idx, value.measurement_uid, value.scan_counter, value.acquisition_center_frequency, value.acquisition_time_stamp_ns, value.physiology_time_stamp_ns, value.channel_order, value.discard_pre, value.discard_post, value.num_echoes, value.center_sample, value.encoding_space_ref, value.sample_time_ns, value.position, value.read_dir, value.phase_dir, value.slice_dir, value.patient_table_position, value.user_int, value.user_float);
+      self.write_(outstream, value.flags, value.idx, value.measurement_uid, value.scan_counter, value.acquisition_center_frequency, value.acquisition_time_stamp_ns, value.physiology_time_stamp_ns, value.channel_order, value.discard_pre, value.discard_post, value.center_sample, value.encoding_space_ref, value.sample_time_ns, value.position, value.read_dir, value.phase_dir, value.slice_dir, value.patient_table_position, value.user_int, value.user_float);
     end
 
     function value = read(self, instream)
       fields = self.read_(instream);
-      value = mrd.AcquisitionHeader(flags=fields{1}, idx=fields{2}, measurement_uid=fields{3}, scan_counter=fields{4}, acquisition_center_frequency=fields{5}, acquisition_time_stamp_ns=fields{6}, physiology_time_stamp_ns=fields{7}, channel_order=fields{8}, discard_pre=fields{9}, discard_post=fields{10}, num_echoes=fields{11}, center_sample=fields{12}, encoding_space_ref=fields{13}, sample_time_ns=fields{14}, position=fields{15}, read_dir=fields{16}, phase_dir=fields{17}, slice_dir=fields{18}, patient_table_position=fields{19}, user_int=fields{20}, user_float=fields{21});
+      value = mrd.AcquisitionHeader(flags=fields{1}, idx=fields{2}, measurement_uid=fields{3}, scan_counter=fields{4}, acquisition_center_frequency=fields{5}, acquisition_time_stamp_ns=fields{6}, physiology_time_stamp_ns=fields{7}, channel_order=fields{8}, discard_pre=fields{9}, discard_post=fields{10}, center_sample=fields{11}, encoding_space_ref=fields{12}, sample_time_ns=fields{13}, position=fields{14}, read_dir=fields{15}, phase_dir=fields{16}, slice_dir=fields{17}, patient_table_position=fields{18}, user_int=fields{19}, user_float=fields{20});
     end
   end
 end

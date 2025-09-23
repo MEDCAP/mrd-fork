@@ -18,6 +18,9 @@ void from_json(ordered_json const& j, mrd::AcquisitionHeader& value);
 void to_json(ordered_json& j, mrd::Acquisition const& value);
 void from_json(ordered_json const& j, mrd::Acquisition& value);
 
+void to_json(ordered_json& j, mrd::GradientAxis const& value);
+void from_json(ordered_json const& j, mrd::GradientAxis& value);
+
 void to_json(ordered_json& j, mrd::GradientHeader const& value);
 void from_json(ordered_json const& j, mrd::GradientHeader& value);
 
@@ -840,9 +843,6 @@ void to_json(ordered_json& j, mrd::AcquisitionHeader const& value) {
   if (yardl::ndjson::ShouldSerializeFieldValue(value.discard_post)) {
     j.push_back({"discardPost", value.discard_post});
   }
-  if (yardl::ndjson::ShouldSerializeFieldValue(value.num_echoes)) {
-    j.push_back({"numEchoes", value.num_echoes});
-  }
   if (yardl::ndjson::ShouldSerializeFieldValue(value.center_sample)) {
     j.push_back({"centerSample", value.center_sample});
   }
@@ -906,9 +906,6 @@ void from_json(ordered_json const& j, mrd::AcquisitionHeader& value) {
   if (auto it = j.find("discardPost"); it != j.end()) {
     it->get_to(value.discard_post);
   }
-  if (auto it = j.find("numEchoes"); it != j.end()) {
-    it->get_to(value.num_echoes);
-  }
   if (auto it = j.find("centerSample"); it != j.end()) {
     it->get_to(value.center_sample);
   }
@@ -952,6 +949,9 @@ void to_json(ordered_json& j, mrd::Acquisition const& value) {
   if (yardl::ndjson::ShouldSerializeFieldValue(value.phase)) {
     j.push_back({"phase", value.phase});
   }
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.trajectory)) {
+    j.push_back({"trajectory", value.trajectory});
+  }
 }
 
 void from_json(ordered_json const& j, mrd::Acquisition& value) {
@@ -964,6 +964,48 @@ void from_json(ordered_json const& j, mrd::Acquisition& value) {
   if (auto it = j.find("phase"); it != j.end()) {
     it->get_to(value.phase);
   }
+  if (auto it = j.find("trajectory"); it != j.end()) {
+    it->get_to(value.trajectory);
+  }
+}
+
+namespace {
+std::unordered_map<std::string, mrd::GradientAxis> const __GradientAxis_values = {
+  {"z", mrd::GradientAxis::kZ},
+  {"y", mrd::GradientAxis::kY},
+  {"x", mrd::GradientAxis::kX},
+};
+} //namespace
+
+void to_json(ordered_json& j, mrd::GradientAxis const& value) {
+  switch (value) {
+    case mrd::GradientAxis::kZ:
+      j = "z";
+      break;
+    case mrd::GradientAxis::kY:
+      j = "y";
+      break;
+    case mrd::GradientAxis::kX:
+      j = "x";
+      break;
+    default:
+      using underlying_type = typename std::underlying_type<mrd::GradientAxis>::type;
+      j = static_cast<underlying_type>(value);
+      break;
+  }
+}
+
+void from_json(ordered_json const& j, mrd::GradientAxis& value) {
+  if (j.is_string()) {
+    auto symbol = j.get<std::string>();
+    if (auto res = __GradientAxis_values.find(symbol); res != __GradientAxis_values.end()) {
+      value = res->second;
+      return;
+    }
+    throw std::runtime_error("Invalid enum value '" + symbol + "' for enum mrd::GradientAxis");
+  }
+  using underlying_type = typename std::underlying_type<mrd::GradientAxis>::type;
+  value = static_cast<mrd::GradientAxis>(j.get<underlying_type>());
 }
 
 void to_json(ordered_json& j, mrd::GradientHeader const& value) {
@@ -977,6 +1019,9 @@ void to_json(ordered_json& j, mrd::GradientHeader const& value) {
   if (yardl::ndjson::ShouldSerializeFieldValue(value.pulse_calibration)) {
     j.push_back({"pulseCalibration", value.pulse_calibration});
   }
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.gradient_axis)) {
+    j.push_back({"gradientAxis", value.gradient_axis});
+  }
 }
 
 void from_json(ordered_json const& j, mrd::GradientHeader& value) {
@@ -989,6 +1034,9 @@ void from_json(ordered_json const& j, mrd::GradientHeader& value) {
   if (auto it = j.find("pulseCalibration"); it != j.end()) {
     it->get_to(value.pulse_calibration);
   }
+  if (auto it = j.find("gradientAxis"); it != j.end()) {
+    it->get_to(value.gradient_axis);
+  }
 }
 
 void to_json(ordered_json& j, mrd::Gradient const& value) {
@@ -996,14 +1044,8 @@ void to_json(ordered_json& j, mrd::Gradient const& value) {
   if (yardl::ndjson::ShouldSerializeFieldValue(value.head)) {
     j.push_back({"head", value.head});
   }
-  if (yardl::ndjson::ShouldSerializeFieldValue(value.rl)) {
-    j.push_back({"rl", value.rl});
-  }
-  if (yardl::ndjson::ShouldSerializeFieldValue(value.ap)) {
-    j.push_back({"ap", value.ap});
-  }
-  if (yardl::ndjson::ShouldSerializeFieldValue(value.fh)) {
-    j.push_back({"fh", value.fh});
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.data)) {
+    j.push_back({"data", value.data});
   }
 }
 
@@ -1011,14 +1053,8 @@ void from_json(ordered_json const& j, mrd::Gradient& value) {
   if (auto it = j.find("head"); it != j.end()) {
     it->get_to(value.head);
   }
-  if (auto it = j.find("rl"); it != j.end()) {
-    it->get_to(value.rl);
-  }
-  if (auto it = j.find("ap"); it != j.end()) {
-    it->get_to(value.ap);
-  }
-  if (auto it = j.find("fh"); it != j.end()) {
-    it->get_to(value.fh);
+  if (auto it = j.find("data"); it != j.end()) {
+    it->get_to(value.data);
   }
 }
 
@@ -2650,150 +2686,70 @@ std::unordered_map<std::string, mrd::ImageType> const __ImageType_values = {
 } //namespace
 
 void to_json(ordered_json& j, mrd::ImageType const& value) {
-  auto arr = ordered_json::array();
-  if (value == 0) {
-    j = arr;
-    return;
+  switch (value) {
+    case mrd::ImageType::kMagnitude:
+      j = "magnitude";
+      break;
+    case mrd::ImageType::kPhase:
+      j = "phase";
+      break;
+    case mrd::ImageType::kReal:
+      j = "real";
+      break;
+    case mrd::ImageType::kImag:
+      j = "imag";
+      break;
+    case mrd::ImageType::kComplex:
+      j = "complex";
+      break;
+    case mrd::ImageType::kBitmap:
+      j = "bitmap";
+      break;
+    case mrd::ImageType::kSpinDensityMap:
+      j = "spinDensityMap";
+      break;
+    case mrd::ImageType::kT1Map:
+      j = "t1Map";
+      break;
+    case mrd::ImageType::kT2Map:
+      j = "t2Map";
+      break;
+    case mrd::ImageType::kT2starMap:
+      j = "t2starMap";
+      break;
+    case mrd::ImageType::kAdcMap:
+      j = "adcMap";
+      break;
+    case mrd::ImageType::kB0Map:
+      j = "b0Map";
+      break;
+    case mrd::ImageType::kB1Map:
+      j = "b1Map";
+      break;
+    case mrd::ImageType::kSensitivityMap:
+      j = "sensitivityMap";
+      break;
+    case mrd::ImageType::kUserMap:
+      j = "userMap";
+      break;
+    default:
+      using underlying_type = typename std::underlying_type<mrd::ImageType>::type;
+      j = static_cast<underlying_type>(value);
+      break;
   }
-  auto remaining = value;
-  if (remaining.HasFlags(mrd::ImageType::kMagnitude)) {
-    remaining.UnsetFlags(mrd::ImageType::kMagnitude);
-    arr.push_back("magnitude");
-    if (remaining == 0) {
-      j = arr;
-      return;
-    }
-  }
-  if (remaining.HasFlags(mrd::ImageType::kPhase)) {
-    remaining.UnsetFlags(mrd::ImageType::kPhase);
-    arr.push_back("phase");
-    if (remaining == 0) {
-      j = arr;
-      return;
-    }
-  }
-  if (remaining.HasFlags(mrd::ImageType::kReal)) {
-    remaining.UnsetFlags(mrd::ImageType::kReal);
-    arr.push_back("real");
-    if (remaining == 0) {
-      j = arr;
-      return;
-    }
-  }
-  if (remaining.HasFlags(mrd::ImageType::kImag)) {
-    remaining.UnsetFlags(mrd::ImageType::kImag);
-    arr.push_back("imag");
-    if (remaining == 0) {
-      j = arr;
-      return;
-    }
-  }
-  if (remaining.HasFlags(mrd::ImageType::kComplex)) {
-    remaining.UnsetFlags(mrd::ImageType::kComplex);
-    arr.push_back("complex");
-    if (remaining == 0) {
-      j = arr;
-      return;
-    }
-  }
-  if (remaining.HasFlags(mrd::ImageType::kBitmap)) {
-    remaining.UnsetFlags(mrd::ImageType::kBitmap);
-    arr.push_back("bitmap");
-    if (remaining == 0) {
-      j = arr;
-      return;
-    }
-  }
-  if (remaining.HasFlags(mrd::ImageType::kSpinDensityMap)) {
-    remaining.UnsetFlags(mrd::ImageType::kSpinDensityMap);
-    arr.push_back("spinDensityMap");
-    if (remaining == 0) {
-      j = arr;
-      return;
-    }
-  }
-  if (remaining.HasFlags(mrd::ImageType::kT1Map)) {
-    remaining.UnsetFlags(mrd::ImageType::kT1Map);
-    arr.push_back("t1Map");
-    if (remaining == 0) {
-      j = arr;
-      return;
-    }
-  }
-  if (remaining.HasFlags(mrd::ImageType::kT2Map)) {
-    remaining.UnsetFlags(mrd::ImageType::kT2Map);
-    arr.push_back("t2Map");
-    if (remaining == 0) {
-      j = arr;
-      return;
-    }
-  }
-  if (remaining.HasFlags(mrd::ImageType::kT2starMap)) {
-    remaining.UnsetFlags(mrd::ImageType::kT2starMap);
-    arr.push_back("t2starMap");
-    if (remaining == 0) {
-      j = arr;
-      return;
-    }
-  }
-  if (remaining.HasFlags(mrd::ImageType::kAdcMap)) {
-    remaining.UnsetFlags(mrd::ImageType::kAdcMap);
-    arr.push_back("adcMap");
-    if (remaining == 0) {
-      j = arr;
-      return;
-    }
-  }
-  if (remaining.HasFlags(mrd::ImageType::kB0Map)) {
-    remaining.UnsetFlags(mrd::ImageType::kB0Map);
-    arr.push_back("b0Map");
-    if (remaining == 0) {
-      j = arr;
-      return;
-    }
-  }
-  if (remaining.HasFlags(mrd::ImageType::kB1Map)) {
-    remaining.UnsetFlags(mrd::ImageType::kB1Map);
-    arr.push_back("b1Map");
-    if (remaining == 0) {
-      j = arr;
-      return;
-    }
-  }
-  if (remaining.HasFlags(mrd::ImageType::kSensitivityMap)) {
-    remaining.UnsetFlags(mrd::ImageType::kSensitivityMap);
-    arr.push_back("sensitivityMap");
-    if (remaining == 0) {
-      j = arr;
-      return;
-    }
-  }
-  if (remaining.HasFlags(mrd::ImageType::kUserMap)) {
-    remaining.UnsetFlags(mrd::ImageType::kUserMap);
-    arr.push_back("userMap");
-    if (remaining == 0) {
-      j = arr;
-      return;
-    }
-  }
-  j = value.Value();
 }
 
 void from_json(ordered_json const& j, mrd::ImageType& value) {
-  if (j.is_number()) {
-    using underlying_type = typename mrd::ImageType::value_type;
-    value = j.get<underlying_type>();
-    return;
-  }
-  std::vector<std::string> arr = j;
-  value = {};
-  for (auto const& item : arr) {
-    if (auto res = __ImageType_values.find(item); res != __ImageType_values.end()) {
-      value |= res->second;
-      continue;
+  if (j.is_string()) {
+    auto symbol = j.get<std::string>();
+    if (auto res = __ImageType_values.find(symbol); res != __ImageType_values.end()) {
+      value = res->second;
+      return;
     }
-    throw std::runtime_error("Invalid enum value '" + item + "' for enum mrd::ImageType");
+    throw std::runtime_error("Invalid enum value '" + symbol + "' for enum mrd::ImageType");
   }
+  using underlying_type = typename std::underlying_type<mrd::ImageType>::type;
+  value = static_cast<mrd::ImageType>(j.get<underlying_type>());
 }
 
 void to_json(ordered_json& j, mrd::ImageHeader const& value) {
@@ -2804,11 +2760,11 @@ void to_json(ordered_json& j, mrd::ImageHeader const& value) {
   if (yardl::ndjson::ShouldSerializeFieldValue(value.measurement_uid)) {
     j.push_back({"measurementUid", value.measurement_uid});
   }
-  if (yardl::ndjson::ShouldSerializeFieldValue(value.measurement_freq)) {
-    j.push_back({"measurementFreq", value.measurement_freq});
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.measurement_frequency)) {
+    j.push_back({"measurementFrequency", value.measurement_frequency});
   }
-  if (yardl::ndjson::ShouldSerializeFieldValue(value.measurement_freq_label)) {
-    j.push_back({"measurementFreqLabel", value.measurement_freq_label});
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.measurement_frequency_label)) {
+    j.push_back({"measurementFrequencyLabel", value.measurement_frequency_label});
   }
   if (yardl::ndjson::ShouldSerializeFieldValue(value.field_of_view)) {
     j.push_back({"fieldOfView", value.field_of_view});
@@ -2876,11 +2832,11 @@ void from_json(ordered_json const& j, mrd::ImageHeader& value) {
   if (auto it = j.find("measurementUid"); it != j.end()) {
     it->get_to(value.measurement_uid);
   }
-  if (auto it = j.find("measurementFreq"); it != j.end()) {
-    it->get_to(value.measurement_freq);
+  if (auto it = j.find("measurementFrequency"); it != j.end()) {
+    it->get_to(value.measurement_frequency);
   }
-  if (auto it = j.find("measurementFreqLabel"); it != j.end()) {
-    it->get_to(value.measurement_freq_label);
+  if (auto it = j.find("measurementFrequencyLabel"); it != j.end()) {
+    it->get_to(value.measurement_frequency_label);
   }
   if (auto it = j.find("fieldOfView"); it != j.end()) {
     it->get_to(value.field_of_view);

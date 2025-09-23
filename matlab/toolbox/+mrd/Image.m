@@ -2,17 +2,23 @@
 
 classdef Image < handle
   properties
+    % Image header
     head
+    % Image data array
     data
+    % Meta attributes
     meta
   end
 
   methods
     function self = Image(kwargs)
       arguments
-        kwargs.head = mrd.ImageHeader();
+        kwargs.head;
         kwargs.data;
-        kwargs.meta = yardl.Map;
+        kwargs.meta = dictionary;
+      end
+      if ~isfield(kwargs, "head")
+        throw(yardl.TypeError("Missing required keyword argument 'head'"))
       end
       self.head = kwargs.head;
       if ~isfield(kwargs, "data")
@@ -42,36 +48,23 @@ classdef Image < handle
       return
     end
 
+    function res = frequencies(self)
+      res = size(self.data, ndims(self.data)-(4));
+      return
+    end
+
 
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.Image") && ...
-        isequal({self.head}, {other.head}) && ...
-        isequal({self.data}, {other.data}) && ...
-        isequal({self.meta}, {other.meta});
+        isequal(self.head, other.head) && ...
+        isequal(self.data, other.data) && ...
+        isequal(self.meta, other.meta);
     end
 
     function res = ne(self, other)
       res = ~self.eq(other);
     end
-
-    function res = isequal(self, other)
-      res = all(eq(self, other));
-    end
   end
 
-  methods (Static)
-    function z = zeros(varargin)
-      elem = mrd.Image(data=yardl.None);
-      if nargin == 0
-        z = elem;
-        return;
-      end
-      sz = [varargin{:}];
-      if isscalar(sz)
-        sz = [sz, sz];
-      end
-      z = reshape(repelem(elem, prod(sz)), sz);
-    end
-  end
 end
