@@ -1,5 +1,3 @@
-# ADD: pulse field
-
 PulseData: !array
   items: float
   dimensions:
@@ -18,8 +16,8 @@ PulsePhaseOffset: !array
 
 PulseHeader: !record
   fields:
-    # Clock time stamp nanoseconds since midnight
-    pulseTimeStampNs: uint64 
+    # Clock time stamp (e.g. nanoseconds since midnight)
+    pulseTimeStampNs: uint64
     # Channel numbers
     channelOrder: uint*
     # Sample time in ns
@@ -31,9 +29,11 @@ Pulse: !record
   fields:
     # Pulse header
     head: PulseHeader
-    # Raw pulse amplitude/phase array
+    # Raw pulse amplitude array
     amplitude: PulseData
+    # Full profile of pulse phase array
     phase: PulsePhase
+    # Pulse phase offset
     phaseOffset: PulsePhaseOffset
   computedFields:
     # Assuming writer sets amp and phase array the same size

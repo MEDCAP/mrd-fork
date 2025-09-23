@@ -67,11 +67,11 @@ AcquisitionPhase: !array
   dimensions:
     samples:
 
-# TrajectoryData: !array
-#   items: float
-#   dimensions:
-#     basis:
-#     samples:
+TrajectoryData: !array
+  items: float
+  dimensions:
+    basis:
+    samples:
 
 AcquisitionHeader: !record
   fields:
@@ -83,7 +83,7 @@ AcquisitionHeader: !record
     measurementUid: uint
     # Zero-indexed incrementing counter for readouts
     scanCounter: uint?
-    # Acquisition center frequency (Hz) SKADD 8/21/25
+    # Acquisition center frequency in Hz
     acquisitionCenterFrequency: uint64
     # Clock time stamp (e.g. nanoseconds since midnight)
     acquisitionTimeStampNs: uint64?
@@ -97,8 +97,6 @@ AcquisitionHeader: !record
     # Number of readout samples to be discarded at the end
     #   (e.g. if the ADC is active during gradient events)
     discardPost: uint?
-    # Number of echoes for multi-echo readout (e.g., EPSI) SKADD 8/21/25
-    numEchoes: uint?
     # Index of the readout sample corresponing to k-space center (zero indexed)
     centerSample: uint?
     # Indexed reference to the encoding spaces enumerated in the MRD Header
@@ -126,12 +124,13 @@ Acquisition: !record
     head: AcquisitionHeader
     # Raw k-space samples array
     data: AcquisitionData
+    # Phase offset array
     phase: AcquisitionPhase
-    # Trajectory array EDIT: REMOVED
-    #trajectory: TrajectoryData
+    # Trajectory array
+    trajectory: TrajectoryData
   computedFields:
     coils: size(data, "coils")
     samples: size(data, "samples")
     activeChannels: size(head.channelOrder)
-    #trajectoryDimensions: size(trajectory, "basis")
-    #trajectorySamples: size(trajectory, "samples")
+    trajectoryDimensions: size(trajectory, "basis")
+    trajectorySamples: size(trajectory, "samples")

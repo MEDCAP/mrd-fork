@@ -15,15 +15,14 @@ ImageFlags: !flags
     firstInSet: 0x4000
     lastInSet: 0x8000
 
-# EDIT: Image Type. Used flags to allow requests for multiple types with one command. Added 'quantitative' types
-ImageType: !flags
+ImageType: !enum
   base: uint64
   values:
     magnitude: 0x1
     phase: 0x2
-    real: 0x4
-    imag: 0x8
-    complex: 0x10
+    real: 0x3
+    imag: 0x4
+    complex: 0x5
     bitmap: 0x20           # a uint32 image in which MSB = R, G, B, LSB = alpha
     spinDensityMap: 0x40   # in mol/m^3
     t1Map: 0x80            # in s
@@ -33,7 +32,7 @@ ImageType: !flags
     b0Map: 0x800           # in Hz (offset from Image.head.measurementFreq[0])
     b1Map: 0x1000          # in rad/s/V, channel dimension is xmit channels
     sensitivityMap: 0x2000 # in Vm^3/mol, channel dimension is rcv channels
-    userMap: 0x4000        # details found in free form text descriptor in image metadata (Image.meta)
+    userMap: 0x4000        # custom image type with description at ImageMeta
 
 ImageData<Y>: !array
   items: Y
@@ -42,7 +41,7 @@ ImageData<Y>: !array
     z:
     y:
     x:
-    freq: # SKADD 8/17/25
+    frequency:
 
 ImageHeader: !record
   fields:
@@ -50,10 +49,10 @@ ImageHeader: !record
     flags: ImageFlags
     # Unique ID corresponding to the image
     measurementUid: uint
-    # NMR frequencies of this measurement (Hz). Same size as ImageData freq dimension SKADD 2/7/25
-    measurementFreq: uint[]?
-    # NMR label of the measurementFreqs. Same size as measurementFreq. SKADD 8/17/25
-    measurementFreqLabel: string[]?
+    # NMR frequencies of this measurement (Hz). Same size as ImageData freq dimension
+    measurementFrequency: uint[]?
+    # NMR label of the measurementFreqs. Same size as measurementFrequency
+    measurementFrequencyLabel: string[]?
     # Physical size (in mm) in each of the 3 dimensions in the image
     fieldOfView: float[3]
     # Center of the excited volume, in LPS coordinates relative to isocenter in millimeters
@@ -110,6 +109,7 @@ Image<T>: !record
     slices: size(data, "z")
     rows: size(data, "y")
     cols: size(data, "x")
+    frequencies: size(data, "frequency")
 
 ImageUint16: Image<uint16>
 ImageInt16: Image<int16>
