@@ -363,7 +363,7 @@ class GradientHeader:
     pulse_calibration: typing.Optional[list[yardl.Float32]]
     """Grad calibration (T/m/A). Can be here or as a calGradMap calibration image or neither"""
 
-    gradient_axis: GradientAxis
+    gradient_axis: typing.Optional[GradientAxis]
     """Gradient axis as enum"""
 
 
@@ -371,7 +371,7 @@ class GradientHeader:
         gradient_time_stamp_ns: yardl.UInt64 = 0,
         gradient_sample_time_ns: yardl.UInt32 = 0,
         pulse_calibration: typing.Optional[list[yardl.Float32]] = None,
-        gradient_axis: GradientAxis,
+        gradient_axis: typing.Optional[GradientAxis] = None,
     ):
         self.gradient_time_stamp_ns = gradient_time_stamp_ns
         self.gradient_sample_time_ns = gradient_sample_time_ns
@@ -403,10 +403,10 @@ class Gradient:
 
 
     def __init__(self, *,
-        head: GradientHeader,
+        head: typing.Optional[GradientHeader] = None,
         data: typing.Optional[GradientData] = None,
     ):
-        self.head = head
+        self.head = head if head is not None else GradientHeader()
         self.data = data if data is not None else np.zeros((0), dtype=np.dtype(np.float32))
 
     def samples(self) -> yardl.Size:
@@ -2364,7 +2364,7 @@ def _mk_get_dtype():
     dtype_map.setdefault(AcquisitionHeader, np.dtype([('flags', get_dtype(AcquisitionFlags)), ('idx', get_dtype(EncodingCounters)), ('measurement_uid', np.dtype(np.uint32)), ('scan_counter', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('acquisition_center_frequency', np.dtype(np.uint64)), ('acquisition_time_stamp_ns', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint64))], align=True)), ('physiology_time_stamp_ns', np.dtype(np.object_)), ('channel_order', np.dtype(np.object_)), ('discard_pre', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('discard_post', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('center_sample', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('encoding_space_ref', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint32))], align=True)), ('sample_time_ns', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint64))], align=True)), ('position', np.dtype(np.float32), (3,)), ('read_dir', np.dtype(np.float32), (3,)), ('phase_dir', np.dtype(np.float32), (3,)), ('slice_dir', np.dtype(np.float32), (3,)), ('patient_table_position', np.dtype(np.float32), (3,)), ('user_int', np.dtype(np.object_)), ('user_float', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(Acquisition, np.dtype([('head', get_dtype(AcquisitionHeader)), ('data', np.dtype(np.object_)), ('phase', np.dtype(np.object_)), ('trajectory', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(GradientAxis, np.dtype(np.int32))
-    dtype_map.setdefault(GradientHeader, np.dtype([('gradient_time_stamp_ns', np.dtype(np.uint64)), ('gradient_sample_time_ns', np.dtype(np.uint32)), ('pulse_calibration', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('gradient_axis', get_dtype(GradientAxis))], align=True))
+    dtype_map.setdefault(GradientHeader, np.dtype([('gradient_time_stamp_ns', np.dtype(np.uint64)), ('gradient_sample_time_ns', np.dtype(np.uint32)), ('pulse_calibration', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('gradient_axis', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(GradientAxis))], align=True))], align=True))
     dtype_map.setdefault(Gradient, np.dtype([('head', get_dtype(GradientHeader)), ('data', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(PatientGender, np.dtype(np.int32))
     dtype_map.setdefault(SubjectInformationType, np.dtype([('patient_name', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('patient_weight_kg', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.float32))], align=True)), ('patient_height_m', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.float32))], align=True)), ('patient_id', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('patient_birthdate', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.datetime64))], align=True)), ('patient_gender', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(PatientGender))], align=True))], align=True))

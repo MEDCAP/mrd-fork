@@ -18,29 +18,44 @@ classdef GradientHeader < handle
         kwargs.gradient_time_stamp_ns = uint64(0);
         kwargs.gradient_sample_time_ns = uint32(0);
         kwargs.pulse_calibration = yardl.None;
-        kwargs.gradient_axis;
+        kwargs.gradient_axis = yardl.None;
       end
       self.gradient_time_stamp_ns = kwargs.gradient_time_stamp_ns;
       self.gradient_sample_time_ns = kwargs.gradient_sample_time_ns;
       self.pulse_calibration = kwargs.pulse_calibration;
-      if ~isfield(kwargs, "gradient_axis")
-        throw(yardl.TypeError("Missing required keyword argument 'gradient_axis'"))
-      end
       self.gradient_axis = kwargs.gradient_axis;
     end
 
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.GradientHeader") && ...
-        isequal(self.gradient_time_stamp_ns, other.gradient_time_stamp_ns) && ...
-        isequal(self.gradient_sample_time_ns, other.gradient_sample_time_ns) && ...
-        isequal(self.pulse_calibration, other.pulse_calibration) && ...
-        isequal(self.gradient_axis, other.gradient_axis);
+        isequal({self.gradient_time_stamp_ns}, {other.gradient_time_stamp_ns}) && ...
+        isequal({self.gradient_sample_time_ns}, {other.gradient_sample_time_ns}) && ...
+        isequal({self.pulse_calibration}, {other.pulse_calibration}) && ...
+        isequal({self.gradient_axis}, {other.gradient_axis});
     end
 
     function res = ne(self, other)
       res = ~self.eq(other);
     end
+
+    function res = isequal(self, other)
+      res = all(eq(self, other));
+    end
   end
 
+  methods (Static)
+    function z = zeros(varargin)
+      elem = mrd.GradientHeader();
+      if nargin == 0
+        z = elem;
+        return;
+      end
+      sz = [varargin{:}];
+      if isscalar(sz)
+        sz = [sz, sz];
+      end
+      z = reshape(repelem(elem, prod(sz)), sz);
+    end
+  end
 end

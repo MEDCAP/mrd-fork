@@ -398,7 +398,7 @@ class GradientHeaderConverter(_ndjson.JsonConverter[GradientHeader, np.void]):
         self._gradient_time_stamp_ns_converter = _ndjson.uint64_converter
         self._gradient_sample_time_ns_converter = _ndjson.uint32_converter
         self._pulse_calibration_converter = _ndjson.OptionalConverter(_ndjson.VectorConverter(_ndjson.float32_converter))
-        self._gradient_axis_converter = _ndjson.EnumConverter(GradientAxis, np.int32, gradient_axis_name_to_value_map, gradient_axis_value_to_name_map)
+        self._gradient_axis_converter = _ndjson.OptionalConverter(_ndjson.EnumConverter(GradientAxis, np.int32, gradient_axis_name_to_value_map, gradient_axis_value_to_name_map))
         super().__init__(np.dtype([
             ("gradient_time_stamp_ns", self._gradient_time_stamp_ns_converter.overall_dtype()),
             ("gradient_sample_time_ns", self._gradient_sample_time_ns_converter.overall_dtype()),
@@ -415,7 +415,8 @@ class GradientHeaderConverter(_ndjson.JsonConverter[GradientHeader, np.void]):
         json_object["gradientSampleTimeNs"] = self._gradient_sample_time_ns_converter.to_json(value.gradient_sample_time_ns)
         if value.pulse_calibration is not None:
             json_object["pulseCalibration"] = self._pulse_calibration_converter.to_json(value.pulse_calibration)
-        json_object["gradientAxis"] = self._gradient_axis_converter.to_json(value.gradient_axis)
+        if value.gradient_axis is not None:
+            json_object["gradientAxis"] = self._gradient_axis_converter.to_json(value.gradient_axis)
         return json_object
 
     def numpy_to_json(self, value: np.void) -> object:
@@ -427,7 +428,8 @@ class GradientHeaderConverter(_ndjson.JsonConverter[GradientHeader, np.void]):
         json_object["gradientSampleTimeNs"] = self._gradient_sample_time_ns_converter.numpy_to_json(value["gradient_sample_time_ns"])
         if (field_val := value["pulse_calibration"]) is not None:
             json_object["pulseCalibration"] = self._pulse_calibration_converter.numpy_to_json(field_val)
-        json_object["gradientAxis"] = self._gradient_axis_converter.numpy_to_json(value["gradient_axis"])
+        if (field_val := value["gradient_axis"]) is not None:
+            json_object["gradientAxis"] = self._gradient_axis_converter.numpy_to_json(field_val)
         return json_object
 
     def from_json(self, json_object: object) -> GradientHeader:
@@ -437,7 +439,7 @@ class GradientHeaderConverter(_ndjson.JsonConverter[GradientHeader, np.void]):
             gradient_time_stamp_ns=self._gradient_time_stamp_ns_converter.from_json(json_object["gradientTimeStampNs"],),
             gradient_sample_time_ns=self._gradient_sample_time_ns_converter.from_json(json_object["gradientSampleTimeNs"],),
             pulse_calibration=self._pulse_calibration_converter.from_json(json_object.get("pulseCalibration")),
-            gradient_axis=self._gradient_axis_converter.from_json(json_object["gradientAxis"],),
+            gradient_axis=self._gradient_axis_converter.from_json(json_object.get("gradientAxis")),
         )
 
     def from_json_to_numpy(self, json_object: object) -> np.void:
@@ -447,7 +449,7 @@ class GradientHeaderConverter(_ndjson.JsonConverter[GradientHeader, np.void]):
             self._gradient_time_stamp_ns_converter.from_json_to_numpy(json_object["gradientTimeStampNs"]),
             self._gradient_sample_time_ns_converter.from_json_to_numpy(json_object["gradientSampleTimeNs"]),
             self._pulse_calibration_converter.from_json_to_numpy(json_object.get("pulseCalibration")),
-            self._gradient_axis_converter.from_json_to_numpy(json_object["gradientAxis"]),
+            self._gradient_axis_converter.from_json_to_numpy(json_object.get("gradientAxis")),
         ) # type:ignore 
 
 

@@ -1245,7 +1245,7 @@ namespace {
   yardl::binary::WriteInteger(stream, value.gradient_time_stamp_ns);
   yardl::binary::WriteInteger(stream, value.gradient_sample_time_ns);
   yardl::binary::WriteOptional<std::vector<float>, yardl::binary::WriteVector<float, yardl::binary::WriteFloatingPoint>>(stream, value.pulse_calibration);
-  yardl::binary::WriteEnum<mrd::GradientAxis>(stream, value.gradient_axis);
+  yardl::binary::WriteOptional<mrd::GradientAxis, yardl::binary::WriteEnum<mrd::GradientAxis>>(stream, value.gradient_axis);
 }
 
 [[maybe_unused]] void ReadGradientHeader(yardl::binary::CodedInputStream& stream, mrd::GradientHeader& value) {
@@ -1257,7 +1257,7 @@ namespace {
   yardl::binary::ReadInteger(stream, value.gradient_time_stamp_ns);
   yardl::binary::ReadInteger(stream, value.gradient_sample_time_ns);
   yardl::binary::ReadOptional<std::vector<float>, yardl::binary::ReadVector<float, yardl::binary::ReadFloatingPoint>>(stream, value.pulse_calibration);
-  yardl::binary::ReadEnum<mrd::GradientAxis>(stream, value.gradient_axis);
+  yardl::binary::ReadOptional<mrd::GradientAxis, yardl::binary::ReadEnum<mrd::GradientAxis>>(stream, value.gradient_axis);
 }
 
 [[maybe_unused]] void WriteGradient(yardl::binary::CodedOutputStream& stream, mrd::Gradient const& value) {

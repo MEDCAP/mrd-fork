@@ -6,7 +6,7 @@ classdef GradientHeaderSerializer < yardl.binary.RecordSerializer
       field_serializers{1} = yardl.binary.Uint64Serializer;
       field_serializers{2} = yardl.binary.Uint32Serializer;
       field_serializers{3} = yardl.binary.OptionalSerializer(yardl.binary.VectorSerializer(yardl.binary.Float32Serializer));
-      field_serializers{4} = yardl.binary.EnumSerializer('mrd.GradientAxis', @mrd.GradientAxis, yardl.binary.Int32Serializer);
+      field_serializers{4} = yardl.binary.OptionalSerializer(yardl.binary.EnumSerializer('mrd.GradientAxis', @mrd.GradientAxis, yardl.binary.Int32Serializer));
       self@yardl.binary.RecordSerializer('mrd.GradientHeader', field_serializers);
     end
 

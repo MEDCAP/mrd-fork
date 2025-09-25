@@ -19,7 +19,7 @@ GradientHeader: !record
     # Grad calibration (T/m/A). Can be here or as a calGradMap calibration image or neither
     pulseCalibration: float*?
     # Gradient axis as enum
-    gradientAxis: GradientAxis
+    gradientAxis: GradientAxis?
 
 Gradient: !record
   fields:

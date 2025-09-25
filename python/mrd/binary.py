@@ -139,7 +139,7 @@ class AcquisitionSerializer(_binary.RecordSerializer[Acquisition]):
 
 class GradientHeaderSerializer(_binary.RecordSerializer[GradientHeader]):
     def __init__(self) -> None:
-        super().__init__([("gradient_time_stamp_ns", _binary.uint64_serializer), ("gradient_sample_time_ns", _binary.uint32_serializer), ("pulse_calibration", _binary.OptionalSerializer(_binary.VectorSerializer(_binary.float32_serializer))), ("gradient_axis", _binary.EnumSerializer(_binary.int32_serializer, GradientAxis))])
+        super().__init__([("gradient_time_stamp_ns", _binary.uint64_serializer), ("gradient_sample_time_ns", _binary.uint32_serializer), ("pulse_calibration", _binary.OptionalSerializer(_binary.VectorSerializer(_binary.float32_serializer))), ("gradient_axis", _binary.OptionalSerializer(_binary.EnumSerializer(_binary.int32_serializer, GradientAxis)))])
 
     def write(self, stream: _binary.CodedOutputStream, value: GradientHeader) -> None:
         if isinstance(value, np.void):

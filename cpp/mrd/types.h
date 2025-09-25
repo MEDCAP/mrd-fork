@@ -223,7 +223,7 @@ struct GradientHeader {
   // Grad calibration (T/m/A). Can be here or as a calGradMap calibration image or neither
   std::optional<std::vector<float>> pulse_calibration{};
   // Gradient axis as enum
-  mrd::GradientAxis gradient_axis{};
+  std::optional<mrd::GradientAxis> gradient_axis{};
 
   bool operator==(const GradientHeader& other) const {
     return gradient_time_stamp_ns == other.gradient_time_stamp_ns &&

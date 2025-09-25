@@ -11,11 +11,8 @@ classdef Gradient < handle
   methods
     function self = Gradient(kwargs)
       arguments
-        kwargs.head;
-        kwargs.data = single.empty(0);
-      end
-      if ~isfield(kwargs, "head")
-        throw(yardl.TypeError("Missing required keyword argument 'head'"))
+        kwargs.head = mrd.GradientHeader();
+        kwargs.data = single.empty();
       end
       self.head = kwargs.head;
       self.data = kwargs.data;
@@ -41,13 +38,31 @@ classdef Gradient < handle
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.Gradient") && ...
-        isequal(self.head, other.head) && ...
-        isequal(self.data, other.data);
+        isequal({self.head}, {other.head}) && ...
+        isequal({self.data}, {other.data});
     end
 
     function res = ne(self, other)
       res = ~self.eq(other);
     end
+
+    function res = isequal(self, other)
+      res = all(eq(self, other));
+    end
   end
 
+  methods (Static)
+    function z = zeros(varargin)
+      elem = mrd.Gradient();
+      if nargin == 0
+        z = elem;
+        return;
+      end
+      sz = [varargin{:}];
+      if isscalar(sz)
+        sz = [sz, sz];
+      end
+      z = reshape(repelem(elem, prod(sz)), sz);
+    end
+  end
 end

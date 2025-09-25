@@ -964,7 +964,7 @@ struct _Inner_GradientHeader {
   uint64_t gradient_time_stamp_ns;
   uint32_t gradient_sample_time_ns;
   yardl::hdf5::InnerOptional<yardl::hdf5::InnerVlen<float, float>, std::vector<float>> pulse_calibration;
-  mrd::GradientAxis gradient_axis;
+  yardl::hdf5::InnerOptional<mrd::GradientAxis, mrd::GradientAxis> gradient_axis;
 };
 
 struct _Inner_Gradient {
@@ -1900,7 +1900,7 @@ struct _Inner_Pulse {
   t.insertMember("gradientTimeStampNs", HOFFSET(RecordType, gradient_time_stamp_ns), H5::PredType::NATIVE_UINT64);
   t.insertMember("gradientSampleTimeNs", HOFFSET(RecordType, gradient_sample_time_ns), H5::PredType::NATIVE_UINT32);
   t.insertMember("pulseCalibration", HOFFSET(RecordType, pulse_calibration), yardl::hdf5::OptionalTypeDdl<yardl::hdf5::InnerVlen<float, float>, std::vector<float>>(yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_FLOAT)));
-  t.insertMember("gradientAxis", HOFFSET(RecordType, gradient_axis), mrd::hdf5::GetGradientAxisHdf5Ddl());
+  t.insertMember("gradientAxis", HOFFSET(RecordType, gradient_axis), yardl::hdf5::OptionalTypeDdl<mrd::GradientAxis, mrd::GradientAxis>(mrd::hdf5::GetGradientAxisHdf5Ddl()));
   return t;
 }
 
