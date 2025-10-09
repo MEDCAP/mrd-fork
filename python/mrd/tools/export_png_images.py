@@ -3,10 +3,6 @@ import argparse
 import numpy as np
 from PIL import Image
 
-from pathlib import Path
-import sys
-path_root = Path(__file__).parents[2]
-sys.path.insert(0, str(path_root))
 import mrd
 
 

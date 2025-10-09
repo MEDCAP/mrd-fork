@@ -3,14 +3,6 @@ import argparse
 import numpy as np
 from typing import BinaryIO, Iterable, Union
 
-from pathlib import Path
-import sys
-path_root = Path(__file__).parents[2]
-sys.path.insert(0, str(path_root))  # Insert at beginning to prioritize local version
-# Remove conda paths that might interfere
-conda_paths = [p for p in sys.path if '.medcap' in p]
-for p in conda_paths:
-    sys.path.remove(p)
 import mrd
 from mrd.tools.transform import kspace_to_image, image_to_kspace
 
@@ -53,7 +45,7 @@ def remove_oversampling(head: mrd.Header,input: Iterable[mrd.Acquisition]) -> It
             acq.data = image_to_kspace(xline, [1])
         yield acq
 
-def accumulate_fft(head: mrd.Header, input: Iterable[mrd.Acquisition]) -> Union[Iterable[mrd.Image[np.float32]], Iterable[mrd.Acquisition]]:
+def accumulate_fft(head: mrd.Header, input: Iterable[mrd.Acquisition]) -> Iterable[mrd.Image[np.float32]]:
     enc = head.encoding[0]
 
     # Matrix size
@@ -147,7 +139,6 @@ def accumulate_fft(head: mrd.Header, input: Iterable[mrd.Acquisition]) -> Union[
                 yield mrd_image
 
     for acq in input:
-        yield acq
         if acq.head.idx.repetition != current_rep:
             # If we have a current buffer pass it on
             if buffer is not None and reference_acquisition is not None:
@@ -184,10 +175,10 @@ def reconstruct_mrd_stream(input: BinaryIO, output: BinaryIO):
                 raise Exception("Could not read header")
             writer.write_header(head)
             writer.write_data(
-                stream_item_sink(   # acq, image -> streamItem
-                    accumulate_fft(head,    # acq->UNION(img, acq)
-                        remove_oversampling(head,   # acq->acq
-                            acquisition_reader(reader.read_data())))))  # stream->acq
+                stream_item_sink(
+                    accumulate_fft(head,
+                        remove_oversampling(head,
+                            acquisition_reader(reader.read_data())))))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Reconstructs an MRD stream")

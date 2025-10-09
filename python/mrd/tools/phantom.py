@@ -1,17 +1,13 @@
 import sys
 import argparse
 import numpy as np
-import datetime
 
 from typing import Generator
 
-from pathlib import Path    # append mrd-fork/python/ to Path to import mrd module locally
-import sys
-path_root = Path(__file__).parents[2]   
-sys.path.insert(0, str(path_root))  # Insert at beginning to prioritize local version
-import mrd  # local library mrd not from conda
+import mrd
 from mrd.tools import simulation
 from mrd.tools.transform import image_to_kspace
+
 
 def generate(output_file, matrix, coils, oversampling, repetitions, noise_level):
     output = sys.stdout.buffer
@@ -28,15 +24,9 @@ def generate(output_file, matrix, coils, oversampling, repetitions, noise_level)
     h = mrd.Header()
 
     s = mrd.SubjectInformationType()
-    s.patient_id = "123"
-    s.patient_name = "shepp logan"
+    s.patient_id = "1234BGVF"
+    s.patient_name = "John Doe"
     h.subject_information = s
-
-    st = mrd.StudyInformationType()
-    st.study_date = datetime.date(2025, 7, 15)  # July 15, 2025
-    st.study_time = mrd.Time.from_components(10, 0, 0)  # 10:00:00
-    st.study_description = "example"
-    h.study_information = st
 
     exp = mrd.ExperimentalConditionsType()
     exp.h1resonance_frequency_hz = 128000000
@@ -44,13 +34,7 @@ def generate(output_file, matrix, coils, oversampling, repetitions, noise_level)
 
     sys_info = mrd.AcquisitionSystemInformationType()
     sys_info.receiver_channels = coils
-    sys_info.station_name = ""
     h.acquisition_system_information = sys_info
-
-    meas = mrd.MeasurementInformationType()
-    meas.protocol_name = "shepplogan_phantom.v2"
-    meas.measurement_id = "1234"
-    h.measurement_information = meas
 
     e = mrd.EncodingSpaceType()
     e.matrix_size = mrd.MatrixSizeType(x=nkx, y=nky, z=1)
@@ -132,21 +116,12 @@ def generate(output_file, matrix, coils, oversampling, repetitions, noise_level)
                 acq.head.idx.slice = 0
                 acq.head.idx.repetition = r
                 acq.data[:] = kspace[:, 0, line, :]
-                # print(acq.data.shape)   # 8, 512
                 yield mrd.StreamItem.Acquisition(acq)
 
     with mrd.BinaryMrdWriter(output) as w:
         w.write_header(h)
         w.write_data(generate_data())
-    with mrd.BinaryMrdReader(output) as r:
-        r.read_header()
-        data_stream = r.read_data()
-        counter = 0
-        for item in data_stream:
-            if isinstance(item, mrd.StreamItem.Acquisition):
-                print("first read acq", item.value.data.shape)
-                counter += 1
-        print("counter", counter)
+
 
 def generate_noise(shape, noise_sigma, mean=0.0):
     rng = np.random.default_rng()
