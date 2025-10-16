@@ -197,13 +197,13 @@ def _parse_definitions(lines: _LinesIterator) -> mrd.PulseqDefinitions:
             tokens = line.split(" ")
             key, *values = tokens
             if key == "GradientRasterTime":
-                definitions.gradient_raster_time = float(values[0])
+                definitions.gradient_raster_time_ns = np.uint64(values[0] * 1e9)   # convert seconds to ns
             elif key == "RadiofrequencyRasterTime":
-                definitions.radiofrequency_raster_time = float(values[0])
+                definitions.radiofrequency_raster_time_ns = np.uint64(values[0] * 1e9) # convert seconds to ns
             elif key == "AdcRasterTime":
-                definitions.adc_raster_time = float(values[0])
+                definitions.adc_raster_time_ns = np.uint64(values[0] * 1e9)  # convert seconds to ns
             elif key == "BlockDurationRaster":
-                definitions.block_duration_raster = float(values[0])
+                definitions.block_duration_raster_ns = np.uint64(values[0] * 1e9)  # convert seconds to ns
             elif key == "Name":
                 definitions.name = values[0]
             elif key == "FOV":
@@ -213,7 +213,7 @@ def _parse_definitions(lines: _LinesIterator) -> mrd.PulseqDefinitions:
                     x=float(values[0]), y=float(values[1]), z=float(values[2])
                 )
             elif key == "TotalDuration":
-                definitions.total_duration = float(values[0])
+                definitions.total_duration_ns = float(values[0] * 1e9)  # convert seconds to ns
             else:
                 definitions.custom[key] = " ".join(values)
         except Exception as e:
@@ -271,8 +271,8 @@ def _parse_rf_events(lines: _LinesIterator, version) -> list[mrd.RFEvent]:
                     mag_id=int(tokens[2]),
                     phase_id=int(tokens[3]),
                     time_id=int(tokens[4]),
-                    center=int(tokens[5]),
-                    delay=int(tokens[6]),
+                    center_ns=int(tokens[5]),       # in ns
+                    delay_ns=int(tokens[6]),        # in ns
                     freq_ppm=float(tokens[7]),
                     phase_ppm=float(tokens[8]),
                     freq_offset=float(tokens[9]),
@@ -290,7 +290,7 @@ def _parse_rf_events(lines: _LinesIterator, version) -> list[mrd.RFEvent]:
                     mag_id=int(tokens[2]),
                     phase_id=int(tokens[3]),
                     time_id=int(tokens[4]),
-                    delay=int(tokens[5]),
+                    delay_ns=int(tokens[5]),    # in ns
                     freq_offset=float(tokens[6]),
                     phase_offset=float(tokens[7]),
                 )
@@ -315,10 +315,10 @@ def _parse_trap_gradients(lines: _LinesIterator) -> list[mrd.TrapezoidalGradient
             trap_gradient = mrd.TrapezoidalGradient(
                 id=int(tokens[0]),
                 amp=float(tokens[1]),
-                rise=int(tokens[2]),
-                flat=int(tokens[3]),
-                fall=int(tokens[4]),
-                delay=int(tokens[5]),
+                rise_ns=int(tokens[2]),    # in ns
+                flat_ns=int(tokens[3]),    # in ns
+                fall_ns=int(tokens[4]),    # in ns
+                delay_ns=int(tokens[5]),   # in ns
             )
         except Exception as e:
             raise RuntimeError(
@@ -351,7 +351,7 @@ def _parse_arbitrary_gradients(
                     last=float(tokens[3]),
                     shape_id=int(tokens[4]),
                     time_id=int(tokens[5]),
-                    delay=int(tokens[6]),
+                    delay_ns=int(tokens[6]),   # in ns
                 )
             else:
                 if len(tokens) != 5:
@@ -363,7 +363,7 @@ def _parse_arbitrary_gradients(
                     amp=float(tokens[1]),
                     shape_id=int(tokens[2]),
                     time_id=int(tokens[3]),
-                    delay=int(tokens[4]),
+                    delay_ns=int(tokens[4]),   # in ns
                 )
             arbitrary_gradients.append(arbitrary_gradient)
         except Exception as e:
@@ -390,7 +390,7 @@ def _parse_adc_events(lines: _LinesIterator, version) -> list[mrd.ADCEvent]:
                     id=int(tokens[0]),
                     num=int(tokens[1]),
                     dwell=float(tokens[2]),
-                    delay=int(tokens[3]),
+                    delay_ns=int(tokens[3]),    # in ns
                     freq_ppm=float(tokens[4]),
                     phase_ppm=float(tokens[5]),
                     freq=float(tokens[6]),
@@ -405,8 +405,8 @@ def _parse_adc_events(lines: _LinesIterator, version) -> list[mrd.ADCEvent]:
             adc_event = mrd.ADCEvent(
                 id=int(tokens[0]),
                 num=int(tokens[1]),
-                dwell=float(tokens[2]),
-                delay=int(tokens[3]),
+                dwell_ns=float(tokens[2]),  # in ns
+                delay_ns=int(tokens[3]),
                 freq=float(tokens[4]),
                 phase=float(tokens[5]),
             )

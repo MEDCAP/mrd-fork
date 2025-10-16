@@ -10,7 +10,8 @@ classdef ADCEvent < handle
     % The ADC dwell time, specified in nanoseconds
     dwell
     % Delay between start of block and first sample, specified in microseconds
-    delay
+    % delay: uint64
+    delay_ns
     % Frequency offset of the ADC receiver relative to the system frequency,
     % specified in parts per million (ppm)
     freq_ppm
@@ -31,7 +32,7 @@ classdef ADCEvent < handle
         kwargs.id = int32(0);
         kwargs.num = uint64(0);
         kwargs.dwell = single(0);
-        kwargs.delay = uint64(0);
+        kwargs.delay_ns = uint64(0);
         kwargs.freq_ppm = double(0);
         kwargs.phase_ppm = double(0);
         kwargs.freq = double(0);
@@ -41,7 +42,7 @@ classdef ADCEvent < handle
       self.id = kwargs.id;
       self.num = kwargs.num;
       self.dwell = kwargs.dwell;
-      self.delay = kwargs.delay;
+      self.delay_ns = kwargs.delay_ns;
       self.freq_ppm = kwargs.freq_ppm;
       self.phase_ppm = kwargs.phase_ppm;
       self.freq = kwargs.freq;
@@ -55,7 +56,7 @@ classdef ADCEvent < handle
         isequal({self.id}, {other.id}) && ...
         isequal({self.num}, {other.num}) && ...
         isequal({self.dwell}, {other.dwell}) && ...
-        isequal({self.delay}, {other.delay}) && ...
+        isequal({self.delay_ns}, {other.delay_ns}) && ...
         isequal({self.freq_ppm}, {other.freq_ppm}) && ...
         isequal({self.phase_ppm}, {other.phase_ppm}) && ...
         isequal({self.freq}, {other.freq}) && ...

@@ -3,13 +3,13 @@
 classdef PulseqDefinitionsSerializer < yardl.binary.RecordSerializer
   methods
     function self = PulseqDefinitionsSerializer()
-      field_serializers{1} = yardl.binary.Float64Serializer;
-      field_serializers{2} = yardl.binary.Float64Serializer;
-      field_serializers{3} = yardl.binary.Float64Serializer;
-      field_serializers{4} = yardl.binary.Float64Serializer;
+      field_serializers{1} = yardl.binary.Uint64Serializer;
+      field_serializers{2} = yardl.binary.Uint64Serializer;
+      field_serializers{3} = yardl.binary.Uint64Serializer;
+      field_serializers{4} = yardl.binary.Uint64Serializer;
       field_serializers{5} = yardl.binary.OptionalSerializer(yardl.binary.StringSerializer);
       field_serializers{6} = yardl.binary.OptionalSerializer(mrd.binary.ThreeDimensionalFloatSerializer());
-      field_serializers{7} = yardl.binary.OptionalSerializer(yardl.binary.Float64Serializer);
+      field_serializers{7} = yardl.binary.OptionalSerializer(yardl.binary.Uint64Serializer);
       field_serializers{8} = yardl.binary.MapSerializer(yardl.binary.StringSerializer, yardl.binary.StringSerializer);
       self@yardl.binary.RecordSerializer('mrd.PulseqDefinitions', field_serializers);
     end
@@ -20,12 +20,12 @@ classdef PulseqDefinitionsSerializer < yardl.binary.RecordSerializer
         outstream (1,1) yardl.binary.CodedOutputStream
         value (1,1) mrd.PulseqDefinitions
       end
-      self.write_(outstream, value.gradient_raster_time, value.radiofrequency_raster_time, value.adc_raster_time, value.block_duration_raster, value.name, value.fov, value.total_duration, value.custom);
+      self.write_(outstream, value.gradient_raster_time_ns, value.radiofrequency_raster_time_ns, value.adc_raster_time_ns, value.block_duration_raster_ns, value.name, value.fov, value.total_duration_ns, value.custom);
     end
 
     function value = read(self, instream)
       fields = self.read_(instream);
-      value = mrd.PulseqDefinitions(gradient_raster_time=fields{1}, radiofrequency_raster_time=fields{2}, adc_raster_time=fields{3}, block_duration_raster=fields{4}, name=fields{5}, fov=fields{6}, total_duration=fields{7}, custom=fields{8});
+      value = mrd.PulseqDefinitions(gradient_raster_time_ns=fields{1}, radiofrequency_raster_time_ns=fields{2}, adc_raster_time_ns=fields{3}, block_duration_raster_ns=fields{4}, name=fields{5}, fov=fields{6}, total_duration_ns=fields{7}, custom=fields{8});
     end
   end
 end

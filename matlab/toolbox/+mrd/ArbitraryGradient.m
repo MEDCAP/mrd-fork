@@ -16,8 +16,9 @@ classdef ArbitraryGradient < handle
     % Shape ID for the time sampling points, specified in the units of GradientRasterTime.
     % 0 means default time raster, -1 means 1/2 of the default time raster (gradient oversampling case).
     time_id
-    % Delay before starting the gradient, specified in microseconds
-    delay
+    % Delay before starting the gradient, specified in microseconds 
+    % delay: uint64
+    delay_ns
   end
 
   methods
@@ -29,7 +30,7 @@ classdef ArbitraryGradient < handle
         kwargs.last = double(0);
         kwargs.shape_id = int32(0);
         kwargs.time_id = int32(0);
-        kwargs.delay = uint64(0);
+        kwargs.delay_ns = uint64(0);
       end
       self.id = kwargs.id;
       self.amp = kwargs.amp;
@@ -37,7 +38,7 @@ classdef ArbitraryGradient < handle
       self.last = kwargs.last;
       self.shape_id = kwargs.shape_id;
       self.time_id = kwargs.time_id;
-      self.delay = kwargs.delay;
+      self.delay_ns = kwargs.delay_ns;
     end
 
     function res = eq(self, other)
@@ -49,7 +50,7 @@ classdef ArbitraryGradient < handle
         isequal({self.last}, {other.last}) && ...
         isequal({self.shape_id}, {other.shape_id}) && ...
         isequal({self.time_id}, {other.time_id}) && ...
-        isequal({self.delay}, {other.delay});
+        isequal({self.delay_ns}, {other.delay_ns});
     end
 
     function res = ne(self, other)

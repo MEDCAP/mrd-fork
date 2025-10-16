@@ -1,28 +1,21 @@
 import numpy as np
 import argparse
-
-from pathlib import Path    # append mrd-fork/python/ to Path to import mrd module locally
 import sys
-path_root = Path(__file__).parents[2]   
-sys.path.insert(0, str(path_root))  # Insert at beginning to prioritize local version
+
+# from pathlib import Path    # append mrd-fork/python/ to Path to import mrd module locally
+# import sys
+# path_root = Path(__file__).parents[2]   
+# sys.path.insert(0, str(path_root))  # Insert at beginning to prioritize local version
 import mrd  # local library mrd not from conda
 
 import time
 
 def read_mrd(filename):
-    # Method 1: Raw byte reading
-    # start_time = time.time()
-    # with open(filename, 'rb') as file:
-    #     data = file.read(10096)
-    #     print(data)
-
-    # Method 2: MRD Reader
     # start_time = time.time()
     with mrd.BinaryMrdReader(filename) as r:
         head = r.read_header()
         # list all available keys in the header
-        print('Header fields: ', head.__dict__.keys())
-        print(head.encoding)
+        print('Header fields: ', head.__dict__.keys(), file=sys.stderr)
     #     # field-key-value-param
     #     for f in head.__dict__.keys():
     #         if f == "study_information":
@@ -60,19 +53,18 @@ def read_mrd(filename):
         for item in data_stream:
             if isinstance(item, mrd.StreamItem.Acquisition):
                 acq_counter += 1
-                print("acquisition", item.value.data.shape)
+                print("acquisition", item.value.data.shape, file=sys.stderr)
+                sys.stdout.buffer.write(item) # Write a byte string directly
+                sys.stdout.buffer.flush() # Flush the buffer to ensure immediate output
             elif isinstance(item, mrd.StreamItem.ImageFloat):
                 img_counter += 1
-                print("image", item.value.data.shape)
-                print('meas', item.value.head.repetition)
-                print('slice', item.value.head.slice)
-                print('metabolite', item.value.head.measurement_freq)
+                print("image", item.value.data.shape, file=sys.stderr)
+                print('meas', item.value.head.repetition, file=sys.stderr)
+                print('slice', item.value.head.slice, file=sys.stderr)
+                print('metabolite', item.value.head.measurement_freq, file=sys.stderr)
             elif isinstance(item, mrd.StreamItem.WaveformUint32):
                 wf_counter += 1
-                print("waveform", item.value.data.shape)
-        print("acq_counter", acq_counter)
-        print("img_counter", img_counter)
-        print("wf_counter", wf_counter)
+                print("waveform", item.value.data.shape, file=sys.stderr)
 
         # for item in data_stream:
         #     data_keys = item.value.__dict__.keys()

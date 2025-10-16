@@ -646,16 +646,16 @@ struct IsTriviallySerializable<mrd::PulseqDefinitions> {
   using __T__ = mrd::PulseqDefinitions;
   static constexpr bool value = 
     std::is_standard_layout_v<__T__> &&
-    IsTriviallySerializable<decltype(__T__::gradient_raster_time)>::value &&
-    IsTriviallySerializable<decltype(__T__::radiofrequency_raster_time)>::value &&
-    IsTriviallySerializable<decltype(__T__::adc_raster_time)>::value &&
-    IsTriviallySerializable<decltype(__T__::block_duration_raster)>::value &&
+    IsTriviallySerializable<decltype(__T__::gradient_raster_time_ns)>::value &&
+    IsTriviallySerializable<decltype(__T__::radiofrequency_raster_time_ns)>::value &&
+    IsTriviallySerializable<decltype(__T__::adc_raster_time_ns)>::value &&
+    IsTriviallySerializable<decltype(__T__::block_duration_raster_ns)>::value &&
     IsTriviallySerializable<decltype(__T__::name)>::value &&
     IsTriviallySerializable<decltype(__T__::fov)>::value &&
-    IsTriviallySerializable<decltype(__T__::total_duration)>::value &&
+    IsTriviallySerializable<decltype(__T__::total_duration_ns)>::value &&
     IsTriviallySerializable<decltype(__T__::custom)>::value &&
-    (sizeof(__T__) == (sizeof(__T__::gradient_raster_time) + sizeof(__T__::radiofrequency_raster_time) + sizeof(__T__::adc_raster_time) + sizeof(__T__::block_duration_raster) + sizeof(__T__::name) + sizeof(__T__::fov) + sizeof(__T__::total_duration) + sizeof(__T__::custom))) &&
-    offsetof(__T__, gradient_raster_time) < offsetof(__T__, radiofrequency_raster_time) && offsetof(__T__, radiofrequency_raster_time) < offsetof(__T__, adc_raster_time) && offsetof(__T__, adc_raster_time) < offsetof(__T__, block_duration_raster) && offsetof(__T__, block_duration_raster) < offsetof(__T__, name) && offsetof(__T__, name) < offsetof(__T__, fov) && offsetof(__T__, fov) < offsetof(__T__, total_duration) && offsetof(__T__, total_duration) < offsetof(__T__, custom);
+    (sizeof(__T__) == (sizeof(__T__::gradient_raster_time_ns) + sizeof(__T__::radiofrequency_raster_time_ns) + sizeof(__T__::adc_raster_time_ns) + sizeof(__T__::block_duration_raster_ns) + sizeof(__T__::name) + sizeof(__T__::fov) + sizeof(__T__::total_duration_ns) + sizeof(__T__::custom))) &&
+    offsetof(__T__, gradient_raster_time_ns) < offsetof(__T__, radiofrequency_raster_time_ns) && offsetof(__T__, radiofrequency_raster_time_ns) < offsetof(__T__, adc_raster_time_ns) && offsetof(__T__, adc_raster_time_ns) < offsetof(__T__, block_duration_raster_ns) && offsetof(__T__, block_duration_raster_ns) < offsetof(__T__, name) && offsetof(__T__, name) < offsetof(__T__, fov) && offsetof(__T__, fov) < offsetof(__T__, total_duration_ns) && offsetof(__T__, total_duration_ns) < offsetof(__T__, custom);
 };
 
 template <>
@@ -685,15 +685,15 @@ struct IsTriviallySerializable<mrd::RFEvent> {
     IsTriviallySerializable<decltype(__T__::mag_id)>::value &&
     IsTriviallySerializable<decltype(__T__::phase_id)>::value &&
     IsTriviallySerializable<decltype(__T__::time_id)>::value &&
-    IsTriviallySerializable<decltype(__T__::center)>::value &&
-    IsTriviallySerializable<decltype(__T__::delay)>::value &&
+    IsTriviallySerializable<decltype(__T__::center_ns)>::value &&
+    IsTriviallySerializable<decltype(__T__::delay_ns)>::value &&
     IsTriviallySerializable<decltype(__T__::freq_ppm)>::value &&
     IsTriviallySerializable<decltype(__T__::phase_ppm)>::value &&
     IsTriviallySerializable<decltype(__T__::freq_offset)>::value &&
     IsTriviallySerializable<decltype(__T__::phase_offset)>::value &&
     IsTriviallySerializable<decltype(__T__::use)>::value &&
-    (sizeof(__T__) == (sizeof(__T__::id) + sizeof(__T__::amp) + sizeof(__T__::mag_id) + sizeof(__T__::phase_id) + sizeof(__T__::time_id) + sizeof(__T__::center) + sizeof(__T__::delay) + sizeof(__T__::freq_ppm) + sizeof(__T__::phase_ppm) + sizeof(__T__::freq_offset) + sizeof(__T__::phase_offset) + sizeof(__T__::use))) &&
-    offsetof(__T__, id) < offsetof(__T__, amp) && offsetof(__T__, amp) < offsetof(__T__, mag_id) && offsetof(__T__, mag_id) < offsetof(__T__, phase_id) && offsetof(__T__, phase_id) < offsetof(__T__, time_id) && offsetof(__T__, time_id) < offsetof(__T__, center) && offsetof(__T__, center) < offsetof(__T__, delay) && offsetof(__T__, delay) < offsetof(__T__, freq_ppm) && offsetof(__T__, freq_ppm) < offsetof(__T__, phase_ppm) && offsetof(__T__, phase_ppm) < offsetof(__T__, freq_offset) && offsetof(__T__, freq_offset) < offsetof(__T__, phase_offset) && offsetof(__T__, phase_offset) < offsetof(__T__, use);
+    (sizeof(__T__) == (sizeof(__T__::id) + sizeof(__T__::amp) + sizeof(__T__::mag_id) + sizeof(__T__::phase_id) + sizeof(__T__::time_id) + sizeof(__T__::center_ns) + sizeof(__T__::delay_ns) + sizeof(__T__::freq_ppm) + sizeof(__T__::phase_ppm) + sizeof(__T__::freq_offset) + sizeof(__T__::phase_offset) + sizeof(__T__::use))) &&
+    offsetof(__T__, id) < offsetof(__T__, amp) && offsetof(__T__, amp) < offsetof(__T__, mag_id) && offsetof(__T__, mag_id) < offsetof(__T__, phase_id) && offsetof(__T__, phase_id) < offsetof(__T__, time_id) && offsetof(__T__, time_id) < offsetof(__T__, center_ns) && offsetof(__T__, center_ns) < offsetof(__T__, delay_ns) && offsetof(__T__, delay_ns) < offsetof(__T__, freq_ppm) && offsetof(__T__, freq_ppm) < offsetof(__T__, phase_ppm) && offsetof(__T__, phase_ppm) < offsetof(__T__, freq_offset) && offsetof(__T__, freq_offset) < offsetof(__T__, phase_offset) && offsetof(__T__, phase_offset) < offsetof(__T__, use);
 };
 
 template <>
@@ -707,9 +707,9 @@ struct IsTriviallySerializable<mrd::ArbitraryGradient> {
     IsTriviallySerializable<decltype(__T__::last)>::value &&
     IsTriviallySerializable<decltype(__T__::shape_id)>::value &&
     IsTriviallySerializable<decltype(__T__::time_id)>::value &&
-    IsTriviallySerializable<decltype(__T__::delay)>::value &&
-    (sizeof(__T__) == (sizeof(__T__::id) + sizeof(__T__::amp) + sizeof(__T__::first) + sizeof(__T__::last) + sizeof(__T__::shape_id) + sizeof(__T__::time_id) + sizeof(__T__::delay))) &&
-    offsetof(__T__, id) < offsetof(__T__, amp) && offsetof(__T__, amp) < offsetof(__T__, first) && offsetof(__T__, first) < offsetof(__T__, last) && offsetof(__T__, last) < offsetof(__T__, shape_id) && offsetof(__T__, shape_id) < offsetof(__T__, time_id) && offsetof(__T__, time_id) < offsetof(__T__, delay);
+    IsTriviallySerializable<decltype(__T__::delay_ns)>::value &&
+    (sizeof(__T__) == (sizeof(__T__::id) + sizeof(__T__::amp) + sizeof(__T__::first) + sizeof(__T__::last) + sizeof(__T__::shape_id) + sizeof(__T__::time_id) + sizeof(__T__::delay_ns))) &&
+    offsetof(__T__, id) < offsetof(__T__, amp) && offsetof(__T__, amp) < offsetof(__T__, first) && offsetof(__T__, first) < offsetof(__T__, last) && offsetof(__T__, last) < offsetof(__T__, shape_id) && offsetof(__T__, shape_id) < offsetof(__T__, time_id) && offsetof(__T__, time_id) < offsetof(__T__, delay_ns);
 };
 
 template <>
@@ -719,12 +719,12 @@ struct IsTriviallySerializable<mrd::TrapezoidalGradient> {
     std::is_standard_layout_v<__T__> &&
     IsTriviallySerializable<decltype(__T__::id)>::value &&
     IsTriviallySerializable<decltype(__T__::amp)>::value &&
-    IsTriviallySerializable<decltype(__T__::rise)>::value &&
-    IsTriviallySerializable<decltype(__T__::flat)>::value &&
-    IsTriviallySerializable<decltype(__T__::fall)>::value &&
-    IsTriviallySerializable<decltype(__T__::delay)>::value &&
-    (sizeof(__T__) == (sizeof(__T__::id) + sizeof(__T__::amp) + sizeof(__T__::rise) + sizeof(__T__::flat) + sizeof(__T__::fall) + sizeof(__T__::delay))) &&
-    offsetof(__T__, id) < offsetof(__T__, amp) && offsetof(__T__, amp) < offsetof(__T__, rise) && offsetof(__T__, rise) < offsetof(__T__, flat) && offsetof(__T__, flat) < offsetof(__T__, fall) && offsetof(__T__, fall) < offsetof(__T__, delay);
+    IsTriviallySerializable<decltype(__T__::rise_ns)>::value &&
+    IsTriviallySerializable<decltype(__T__::flat_ns)>::value &&
+    IsTriviallySerializable<decltype(__T__::fall_ns)>::value &&
+    IsTriviallySerializable<decltype(__T__::delay_ns)>::value &&
+    (sizeof(__T__) == (sizeof(__T__::id) + sizeof(__T__::amp) + sizeof(__T__::rise_ns) + sizeof(__T__::flat_ns) + sizeof(__T__::fall_ns) + sizeof(__T__::delay_ns))) &&
+    offsetof(__T__, id) < offsetof(__T__, amp) && offsetof(__T__, amp) < offsetof(__T__, rise_ns) && offsetof(__T__, rise_ns) < offsetof(__T__, flat_ns) && offsetof(__T__, flat_ns) < offsetof(__T__, fall_ns) && offsetof(__T__, fall_ns) < offsetof(__T__, delay_ns);
 };
 
 template <>
@@ -735,14 +735,14 @@ struct IsTriviallySerializable<mrd::ADCEvent> {
     IsTriviallySerializable<decltype(__T__::id)>::value &&
     IsTriviallySerializable<decltype(__T__::num)>::value &&
     IsTriviallySerializable<decltype(__T__::dwell)>::value &&
-    IsTriviallySerializable<decltype(__T__::delay)>::value &&
+    IsTriviallySerializable<decltype(__T__::delay_ns)>::value &&
     IsTriviallySerializable<decltype(__T__::freq_ppm)>::value &&
     IsTriviallySerializable<decltype(__T__::phase_ppm)>::value &&
     IsTriviallySerializable<decltype(__T__::freq)>::value &&
     IsTriviallySerializable<decltype(__T__::phase)>::value &&
     IsTriviallySerializable<decltype(__T__::phase_shape_id)>::value &&
-    (sizeof(__T__) == (sizeof(__T__::id) + sizeof(__T__::num) + sizeof(__T__::dwell) + sizeof(__T__::delay) + sizeof(__T__::freq_ppm) + sizeof(__T__::phase_ppm) + sizeof(__T__::freq) + sizeof(__T__::phase) + sizeof(__T__::phase_shape_id))) &&
-    offsetof(__T__, id) < offsetof(__T__, num) && offsetof(__T__, num) < offsetof(__T__, dwell) && offsetof(__T__, dwell) < offsetof(__T__, delay) && offsetof(__T__, delay) < offsetof(__T__, freq_ppm) && offsetof(__T__, freq_ppm) < offsetof(__T__, phase_ppm) && offsetof(__T__, phase_ppm) < offsetof(__T__, freq) && offsetof(__T__, freq) < offsetof(__T__, phase) && offsetof(__T__, phase) < offsetof(__T__, phase_shape_id);
+    (sizeof(__T__) == (sizeof(__T__::id) + sizeof(__T__::num) + sizeof(__T__::dwell) + sizeof(__T__::delay_ns) + sizeof(__T__::freq_ppm) + sizeof(__T__::phase_ppm) + sizeof(__T__::freq) + sizeof(__T__::phase) + sizeof(__T__::phase_shape_id))) &&
+    offsetof(__T__, id) < offsetof(__T__, num) && offsetof(__T__, num) < offsetof(__T__, dwell) && offsetof(__T__, dwell) < offsetof(__T__, delay_ns) && offsetof(__T__, delay_ns) < offsetof(__T__, freq_ppm) && offsetof(__T__, freq_ppm) < offsetof(__T__, phase_ppm) && offsetof(__T__, phase_ppm) < offsetof(__T__, freq) && offsetof(__T__, freq) < offsetof(__T__, phase) && offsetof(__T__, phase) < offsetof(__T__, phase_shape_id);
 };
 
 template <>
@@ -2701,13 +2701,13 @@ template<typename T, yardl::binary::Reader<T> ReadT>
     return;
   }
 
-  yardl::binary::WriteFloatingPoint(stream, value.gradient_raster_time);
-  yardl::binary::WriteFloatingPoint(stream, value.radiofrequency_raster_time);
-  yardl::binary::WriteFloatingPoint(stream, value.adc_raster_time);
-  yardl::binary::WriteFloatingPoint(stream, value.block_duration_raster);
+  yardl::binary::WriteInteger(stream, value.gradient_raster_time_ns);
+  yardl::binary::WriteInteger(stream, value.radiofrequency_raster_time_ns);
+  yardl::binary::WriteInteger(stream, value.adc_raster_time_ns);
+  yardl::binary::WriteInteger(stream, value.block_duration_raster_ns);
   yardl::binary::WriteOptional<std::string, yardl::binary::WriteString>(stream, value.name);
   yardl::binary::WriteOptional<mrd::ThreeDimensionalFloat, mrd::binary::WriteThreeDimensionalFloat>(stream, value.fov);
-  yardl::binary::WriteOptional<double, yardl::binary::WriteFloatingPoint>(stream, value.total_duration);
+  yardl::binary::WriteOptional<uint64_t, yardl::binary::WriteInteger>(stream, value.total_duration_ns);
   yardl::binary::WriteMap<std::string, std::string, yardl::binary::WriteString, yardl::binary::WriteString>(stream, value.custom);
 }
 
@@ -2717,13 +2717,13 @@ template<typename T, yardl::binary::Reader<T> ReadT>
     return;
   }
 
-  yardl::binary::ReadFloatingPoint(stream, value.gradient_raster_time);
-  yardl::binary::ReadFloatingPoint(stream, value.radiofrequency_raster_time);
-  yardl::binary::ReadFloatingPoint(stream, value.adc_raster_time);
-  yardl::binary::ReadFloatingPoint(stream, value.block_duration_raster);
+  yardl::binary::ReadInteger(stream, value.gradient_raster_time_ns);
+  yardl::binary::ReadInteger(stream, value.radiofrequency_raster_time_ns);
+  yardl::binary::ReadInteger(stream, value.adc_raster_time_ns);
+  yardl::binary::ReadInteger(stream, value.block_duration_raster_ns);
   yardl::binary::ReadOptional<std::string, yardl::binary::ReadString>(stream, value.name);
   yardl::binary::ReadOptional<mrd::ThreeDimensionalFloat, mrd::binary::ReadThreeDimensionalFloat>(stream, value.fov);
-  yardl::binary::ReadOptional<double, yardl::binary::ReadFloatingPoint>(stream, value.total_duration);
+  yardl::binary::ReadOptional<uint64_t, yardl::binary::ReadInteger>(stream, value.total_duration_ns);
   yardl::binary::ReadMap<std::string, std::string, yardl::binary::ReadString, yardl::binary::ReadString>(stream, value.custom);
 }
 
@@ -2770,8 +2770,8 @@ template<typename T, yardl::binary::Reader<T> ReadT>
   yardl::binary::WriteInteger(stream, value.mag_id);
   yardl::binary::WriteInteger(stream, value.phase_id);
   yardl::binary::WriteInteger(stream, value.time_id);
-  yardl::binary::WriteFloatingPoint(stream, value.center);
-  yardl::binary::WriteInteger(stream, value.delay);
+  yardl::binary::WriteInteger(stream, value.center_ns);
+  yardl::binary::WriteInteger(stream, value.delay_ns);
   yardl::binary::WriteFloatingPoint(stream, value.freq_ppm);
   yardl::binary::WriteFloatingPoint(stream, value.phase_ppm);
   yardl::binary::WriteFloatingPoint(stream, value.freq_offset);
@@ -2790,8 +2790,8 @@ template<typename T, yardl::binary::Reader<T> ReadT>
   yardl::binary::ReadInteger(stream, value.mag_id);
   yardl::binary::ReadInteger(stream, value.phase_id);
   yardl::binary::ReadInteger(stream, value.time_id);
-  yardl::binary::ReadFloatingPoint(stream, value.center);
-  yardl::binary::ReadInteger(stream, value.delay);
+  yardl::binary::ReadInteger(stream, value.center_ns);
+  yardl::binary::ReadInteger(stream, value.delay_ns);
   yardl::binary::ReadFloatingPoint(stream, value.freq_ppm);
   yardl::binary::ReadFloatingPoint(stream, value.phase_ppm);
   yardl::binary::ReadFloatingPoint(stream, value.freq_offset);
@@ -2811,7 +2811,7 @@ template<typename T, yardl::binary::Reader<T> ReadT>
   yardl::binary::WriteFloatingPoint(stream, value.last);
   yardl::binary::WriteInteger(stream, value.shape_id);
   yardl::binary::WriteInteger(stream, value.time_id);
-  yardl::binary::WriteInteger(stream, value.delay);
+  yardl::binary::WriteInteger(stream, value.delay_ns);
 }
 
 [[maybe_unused]] void ReadArbitraryGradient(yardl::binary::CodedInputStream& stream, mrd::ArbitraryGradient& value) {
@@ -2826,7 +2826,7 @@ template<typename T, yardl::binary::Reader<T> ReadT>
   yardl::binary::ReadFloatingPoint(stream, value.last);
   yardl::binary::ReadInteger(stream, value.shape_id);
   yardl::binary::ReadInteger(stream, value.time_id);
-  yardl::binary::ReadInteger(stream, value.delay);
+  yardl::binary::ReadInteger(stream, value.delay_ns);
 }
 
 [[maybe_unused]] void WriteTrapezoidalGradient(yardl::binary::CodedOutputStream& stream, mrd::TrapezoidalGradient const& value) {
@@ -2837,10 +2837,10 @@ template<typename T, yardl::binary::Reader<T> ReadT>
 
   yardl::binary::WriteInteger(stream, value.id);
   yardl::binary::WriteFloatingPoint(stream, value.amp);
-  yardl::binary::WriteInteger(stream, value.rise);
-  yardl::binary::WriteInteger(stream, value.flat);
-  yardl::binary::WriteInteger(stream, value.fall);
-  yardl::binary::WriteInteger(stream, value.delay);
+  yardl::binary::WriteInteger(stream, value.rise_ns);
+  yardl::binary::WriteInteger(stream, value.flat_ns);
+  yardl::binary::WriteInteger(stream, value.fall_ns);
+  yardl::binary::WriteInteger(stream, value.delay_ns);
 }
 
 [[maybe_unused]] void ReadTrapezoidalGradient(yardl::binary::CodedInputStream& stream, mrd::TrapezoidalGradient& value) {
@@ -2851,10 +2851,10 @@ template<typename T, yardl::binary::Reader<T> ReadT>
 
   yardl::binary::ReadInteger(stream, value.id);
   yardl::binary::ReadFloatingPoint(stream, value.amp);
-  yardl::binary::ReadInteger(stream, value.rise);
-  yardl::binary::ReadInteger(stream, value.flat);
-  yardl::binary::ReadInteger(stream, value.fall);
-  yardl::binary::ReadInteger(stream, value.delay);
+  yardl::binary::ReadInteger(stream, value.rise_ns);
+  yardl::binary::ReadInteger(stream, value.flat_ns);
+  yardl::binary::ReadInteger(stream, value.fall_ns);
+  yardl::binary::ReadInteger(stream, value.delay_ns);
 }
 
 [[maybe_unused]] void WriteADCEvent(yardl::binary::CodedOutputStream& stream, mrd::ADCEvent const& value) {
@@ -2866,7 +2866,7 @@ template<typename T, yardl::binary::Reader<T> ReadT>
   yardl::binary::WriteInteger(stream, value.id);
   yardl::binary::WriteInteger(stream, value.num);
   yardl::binary::WriteFloatingPoint(stream, value.dwell);
-  yardl::binary::WriteInteger(stream, value.delay);
+  yardl::binary::WriteInteger(stream, value.delay_ns);
   yardl::binary::WriteFloatingPoint(stream, value.freq_ppm);
   yardl::binary::WriteFloatingPoint(stream, value.phase_ppm);
   yardl::binary::WriteFloatingPoint(stream, value.freq);
@@ -2883,7 +2883,7 @@ template<typename T, yardl::binary::Reader<T> ReadT>
   yardl::binary::ReadInteger(stream, value.id);
   yardl::binary::ReadInteger(stream, value.num);
   yardl::binary::ReadFloatingPoint(stream, value.dwell);
-  yardl::binary::ReadInteger(stream, value.delay);
+  yardl::binary::ReadInteger(stream, value.delay_ns);
   yardl::binary::ReadFloatingPoint(stream, value.freq_ppm);
   yardl::binary::ReadFloatingPoint(stream, value.phase_ppm);
   yardl::binary::ReadFloatingPoint(stream, value.freq);

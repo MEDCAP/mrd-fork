@@ -1241,33 +1241,38 @@ using ArrayComplexFloat = mrd::Array<std::complex<float>>;
 // Pulseq definitions
 struct PulseqDefinitions {
   // Default raster time (dwell time) of the shaped gradient events, specified in seconds
-  double gradient_raster_time{};
+  // gradientRasterTime: float64
+  uint64_t gradient_raster_time_ns{};
   // Default raster time (dwell time) of the radio-frequency pulse shapes, specified in seconds
-  double radiofrequency_raster_time{};
+  // radiofrequencyRasterTime: float64
+  uint64_t radiofrequency_raster_time_ns{};
   // The value defining the alignment of the ADC dwell times.
   // ADC dwell time must be integer multiple of the specified adcRasterTime.
   // adcRasterTime is specified in seconds
-  double adc_raster_time{};
+  // adcRasterTime: float64
+  uint64_t adc_raster_time_ns{};
   // The value defining the alignment of the block durations, specified in seconds;
   // the physical block duration must be integer multiple of the specified blockDurationRaster.
   // Block duration in the blocks section are specified in the units of blockDurationRaster
-  double block_duration_raster{};
+  // blockDurationRaster: float64
+  uint64_t block_duration_raster_ns{};
   // Human-readable name of the sequence
   std::optional<std::string> name{};
   // Field of view specified in meters.
   std::optional<mrd::ThreeDimensionalFloat> fov{};
   // Total duration of the sequence is seconds
-  std::optional<double> total_duration{};
+  // totalDuration: float64?
+  std::optional<uint64_t> total_duration_ns{};
   std::unordered_map<std::string, std::string> custom{};
 
   bool operator==(const PulseqDefinitions& other) const {
-    return gradient_raster_time == other.gradient_raster_time &&
-      radiofrequency_raster_time == other.radiofrequency_raster_time &&
-      adc_raster_time == other.adc_raster_time &&
-      block_duration_raster == other.block_duration_raster &&
+    return gradient_raster_time_ns == other.gradient_raster_time_ns &&
+      radiofrequency_raster_time_ns == other.radiofrequency_raster_time_ns &&
+      adc_raster_time_ns == other.adc_raster_time_ns &&
+      block_duration_raster_ns == other.block_duration_raster_ns &&
       name == other.name &&
       fov == other.fov &&
-      total_duration == other.total_duration &&
+      total_duration_ns == other.total_duration_ns &&
       custom == other.custom;
   }
 
@@ -1333,13 +1338,15 @@ struct RFEvent {
   int32_t phase_id{};
   // Shape ID for the time sampling points, specified in the units of
   // RadiofrequencyRasterTime.
-  // 0 means default time raster
+  // 0 means default time raster = RadiofrequencyRasterTime
   int32_t time_id{};
   // Time point in microseconds relative to the beginning of
   // the RF shape at which the effective rotation takes place
-  double center{};
+  // center: float64
+  uint64_t center_ns{};
   // Delay before starting the RF pulse, specified in microseconds
-  uint64_t delay{};
+  // delay: uint64
+  uint64_t delay_ns{};
   // Frequency offset relative to the main system's frequency,
   // specified in parts per million (ppm)
   double freq_ppm{};
@@ -1358,8 +1365,8 @@ struct RFEvent {
       mag_id == other.mag_id &&
       phase_id == other.phase_id &&
       time_id == other.time_id &&
-      center == other.center &&
-      delay == other.delay &&
+      center_ns == other.center_ns &&
+      delay_ns == other.delay_ns &&
       freq_ppm == other.freq_ppm &&
       phase_ppm == other.phase_ppm &&
       freq_offset == other.freq_offset &&
@@ -1387,8 +1394,9 @@ struct ArbitraryGradient {
   // Shape ID for the time sampling points, specified in the units of GradientRasterTime.
   // 0 means default time raster, -1 means 1/2 of the default time raster (gradient oversampling case).
   int32_t time_id{};
-  // Delay before starting the gradient, specified in microseconds
-  uint64_t delay{};
+  // Delay before starting the gradient, specified in microseconds 
+  // delay: uint64
+  uint64_t delay_ns{};
 
   bool operator==(const ArbitraryGradient& other) const {
     return id == other.id &&
@@ -1397,7 +1405,7 @@ struct ArbitraryGradient {
       last == other.last &&
       shape_id == other.shape_id &&
       time_id == other.time_id &&
-      delay == other.delay;
+      delay_ns == other.delay_ns;
   }
 
   bool operator!=(const ArbitraryGradient& other) const {
@@ -1412,21 +1420,25 @@ struct TrapezoidalGradient {
   // Peak amplitude in Hz/m
   double amp{};
   // Rise time of the trapezoid in microseconds
-  uint64_t rise{};
+  // rise: uint64
+  uint64_t rise_ns{};
   // Flat-top time of the trapezoid in microseconds
-  uint64_t flat{};
+  // flat: uint64
+  uint64_t flat_ns{};
   // Fall time of the trapezoid in microseconds
-  uint64_t fall{};
+  // fall: uint64
+  uint64_t fall_ns{};
   // Delay before starting the gradient, specified in microseconds
-  uint64_t delay{};
+  // delay: uint64
+  uint64_t delay_ns{};
 
   bool operator==(const TrapezoidalGradient& other) const {
     return id == other.id &&
       amp == other.amp &&
-      rise == other.rise &&
-      flat == other.flat &&
-      fall == other.fall &&
-      delay == other.delay;
+      rise_ns == other.rise_ns &&
+      flat_ns == other.flat_ns &&
+      fall_ns == other.fall_ns &&
+      delay_ns == other.delay_ns;
   }
 
   bool operator!=(const TrapezoidalGradient& other) const {
@@ -1443,7 +1455,8 @@ struct ADCEvent {
   // The ADC dwell time, specified in nanoseconds
   float dwell{};
   // Delay between start of block and first sample, specified in microseconds
-  uint64_t delay{};
+  // delay: uint64
+  uint64_t delay_ns{};
   // Frequency offset of the ADC receiver relative to the system frequency,
   // specified in parts per million (ppm)
   double freq_ppm{};
@@ -1461,7 +1474,7 @@ struct ADCEvent {
     return id == other.id &&
       num == other.num &&
       dwell == other.dwell &&
-      delay == other.delay &&
+      delay_ns == other.delay_ns &&
       freq_ppm == other.freq_ppm &&
       phase_ppm == other.phase_ppm &&
       freq == other.freq &&

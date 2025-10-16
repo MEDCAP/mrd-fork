@@ -3185,22 +3185,22 @@ class ImageArrayConverter(_ndjson.JsonConverter[ImageArray, np.void]):
 
 class PulseqDefinitionsConverter(_ndjson.JsonConverter[PulseqDefinitions, np.void]):
     def __init__(self) -> None:
-        self._gradient_raster_time_converter = _ndjson.float64_converter
-        self._radiofrequency_raster_time_converter = _ndjson.float64_converter
-        self._adc_raster_time_converter = _ndjson.float64_converter
-        self._block_duration_raster_converter = _ndjson.float64_converter
+        self._gradient_raster_time_ns_converter = _ndjson.uint64_converter
+        self._radiofrequency_raster_time_ns_converter = _ndjson.uint64_converter
+        self._adc_raster_time_ns_converter = _ndjson.uint64_converter
+        self._block_duration_raster_ns_converter = _ndjson.uint64_converter
         self._name_converter = _ndjson.OptionalConverter(_ndjson.string_converter)
         self._fov_converter = _ndjson.OptionalConverter(ThreeDimensionalFloatConverter())
-        self._total_duration_converter = _ndjson.OptionalConverter(_ndjson.float64_converter)
+        self._total_duration_ns_converter = _ndjson.OptionalConverter(_ndjson.uint64_converter)
         self._custom_converter = _ndjson.MapConverter(_ndjson.string_converter, _ndjson.string_converter)
         super().__init__(np.dtype([
-            ("gradient_raster_time", self._gradient_raster_time_converter.overall_dtype()),
-            ("radiofrequency_raster_time", self._radiofrequency_raster_time_converter.overall_dtype()),
-            ("adc_raster_time", self._adc_raster_time_converter.overall_dtype()),
-            ("block_duration_raster", self._block_duration_raster_converter.overall_dtype()),
+            ("gradient_raster_time_ns", self._gradient_raster_time_ns_converter.overall_dtype()),
+            ("radiofrequency_raster_time_ns", self._radiofrequency_raster_time_ns_converter.overall_dtype()),
+            ("adc_raster_time_ns", self._adc_raster_time_ns_converter.overall_dtype()),
+            ("block_duration_raster_ns", self._block_duration_raster_ns_converter.overall_dtype()),
             ("name", self._name_converter.overall_dtype()),
             ("fov", self._fov_converter.overall_dtype()),
-            ("total_duration", self._total_duration_converter.overall_dtype()),
+            ("total_duration_ns", self._total_duration_ns_converter.overall_dtype()),
             ("custom", self._custom_converter.overall_dtype()),
         ]))
 
@@ -3209,16 +3209,16 @@ class PulseqDefinitionsConverter(_ndjson.JsonConverter[PulseqDefinitions, np.voi
             raise TypeError("Expected 'PulseqDefinitions' instance")
         json_object = {}
 
-        json_object["gradientRasterTime"] = self._gradient_raster_time_converter.to_json(value.gradient_raster_time)
-        json_object["radiofrequencyRasterTime"] = self._radiofrequency_raster_time_converter.to_json(value.radiofrequency_raster_time)
-        json_object["adcRasterTime"] = self._adc_raster_time_converter.to_json(value.adc_raster_time)
-        json_object["blockDurationRaster"] = self._block_duration_raster_converter.to_json(value.block_duration_raster)
+        json_object["gradientRasterTimeNs"] = self._gradient_raster_time_ns_converter.to_json(value.gradient_raster_time_ns)
+        json_object["radiofrequencyRasterTimeNs"] = self._radiofrequency_raster_time_ns_converter.to_json(value.radiofrequency_raster_time_ns)
+        json_object["adcRasterTimeNs"] = self._adc_raster_time_ns_converter.to_json(value.adc_raster_time_ns)
+        json_object["blockDurationRasterNs"] = self._block_duration_raster_ns_converter.to_json(value.block_duration_raster_ns)
         if value.name is not None:
             json_object["name"] = self._name_converter.to_json(value.name)
         if value.fov is not None:
             json_object["fov"] = self._fov_converter.to_json(value.fov)
-        if value.total_duration is not None:
-            json_object["totalDuration"] = self._total_duration_converter.to_json(value.total_duration)
+        if value.total_duration_ns is not None:
+            json_object["totalDurationNs"] = self._total_duration_ns_converter.to_json(value.total_duration_ns)
         json_object["custom"] = self._custom_converter.to_json(value.custom)
         return json_object
 
@@ -3227,16 +3227,16 @@ class PulseqDefinitionsConverter(_ndjson.JsonConverter[PulseqDefinitions, np.voi
             raise TypeError("Expected 'np.void' instance")
         json_object = {}
 
-        json_object["gradientRasterTime"] = self._gradient_raster_time_converter.numpy_to_json(value["gradient_raster_time"])
-        json_object["radiofrequencyRasterTime"] = self._radiofrequency_raster_time_converter.numpy_to_json(value["radiofrequency_raster_time"])
-        json_object["adcRasterTime"] = self._adc_raster_time_converter.numpy_to_json(value["adc_raster_time"])
-        json_object["blockDurationRaster"] = self._block_duration_raster_converter.numpy_to_json(value["block_duration_raster"])
+        json_object["gradientRasterTimeNs"] = self._gradient_raster_time_ns_converter.numpy_to_json(value["gradient_raster_time_ns"])
+        json_object["radiofrequencyRasterTimeNs"] = self._radiofrequency_raster_time_ns_converter.numpy_to_json(value["radiofrequency_raster_time_ns"])
+        json_object["adcRasterTimeNs"] = self._adc_raster_time_ns_converter.numpy_to_json(value["adc_raster_time_ns"])
+        json_object["blockDurationRasterNs"] = self._block_duration_raster_ns_converter.numpy_to_json(value["block_duration_raster_ns"])
         if (field_val := value["name"]) is not None:
             json_object["name"] = self._name_converter.numpy_to_json(field_val)
         if (field_val := value["fov"]) is not None:
             json_object["fov"] = self._fov_converter.numpy_to_json(field_val)
-        if (field_val := value["total_duration"]) is not None:
-            json_object["totalDuration"] = self._total_duration_converter.numpy_to_json(field_val)
+        if (field_val := value["total_duration_ns"]) is not None:
+            json_object["totalDurationNs"] = self._total_duration_ns_converter.numpy_to_json(field_val)
         json_object["custom"] = self._custom_converter.numpy_to_json(value["custom"])
         return json_object
 
@@ -3244,13 +3244,13 @@ class PulseqDefinitionsConverter(_ndjson.JsonConverter[PulseqDefinitions, np.voi
         if not isinstance(json_object, dict):
             raise TypeError("Expected 'dict' instance")
         return PulseqDefinitions(
-            gradient_raster_time=self._gradient_raster_time_converter.from_json(json_object["gradientRasterTime"],),
-            radiofrequency_raster_time=self._radiofrequency_raster_time_converter.from_json(json_object["radiofrequencyRasterTime"],),
-            adc_raster_time=self._adc_raster_time_converter.from_json(json_object["adcRasterTime"],),
-            block_duration_raster=self._block_duration_raster_converter.from_json(json_object["blockDurationRaster"],),
+            gradient_raster_time_ns=self._gradient_raster_time_ns_converter.from_json(json_object["gradientRasterTimeNs"],),
+            radiofrequency_raster_time_ns=self._radiofrequency_raster_time_ns_converter.from_json(json_object["radiofrequencyRasterTimeNs"],),
+            adc_raster_time_ns=self._adc_raster_time_ns_converter.from_json(json_object["adcRasterTimeNs"],),
+            block_duration_raster_ns=self._block_duration_raster_ns_converter.from_json(json_object["blockDurationRasterNs"],),
             name=self._name_converter.from_json(json_object.get("name")),
             fov=self._fov_converter.from_json(json_object.get("fov")),
-            total_duration=self._total_duration_converter.from_json(json_object.get("totalDuration")),
+            total_duration_ns=self._total_duration_ns_converter.from_json(json_object.get("totalDurationNs")),
             custom=self._custom_converter.from_json(json_object["custom"],),
         )
 
@@ -3258,13 +3258,13 @@ class PulseqDefinitionsConverter(_ndjson.JsonConverter[PulseqDefinitions, np.voi
         if not isinstance(json_object, dict):
             raise TypeError("Expected 'dict' instance")
         return (
-            self._gradient_raster_time_converter.from_json_to_numpy(json_object["gradientRasterTime"]),
-            self._radiofrequency_raster_time_converter.from_json_to_numpy(json_object["radiofrequencyRasterTime"]),
-            self._adc_raster_time_converter.from_json_to_numpy(json_object["adcRasterTime"]),
-            self._block_duration_raster_converter.from_json_to_numpy(json_object["blockDurationRaster"]),
+            self._gradient_raster_time_ns_converter.from_json_to_numpy(json_object["gradientRasterTimeNs"]),
+            self._radiofrequency_raster_time_ns_converter.from_json_to_numpy(json_object["radiofrequencyRasterTimeNs"]),
+            self._adc_raster_time_ns_converter.from_json_to_numpy(json_object["adcRasterTimeNs"]),
+            self._block_duration_raster_ns_converter.from_json_to_numpy(json_object["blockDurationRasterNs"]),
             self._name_converter.from_json_to_numpy(json_object.get("name")),
             self._fov_converter.from_json_to_numpy(json_object.get("fov")),
-            self._total_duration_converter.from_json_to_numpy(json_object.get("totalDuration")),
+            self._total_duration_ns_converter.from_json_to_numpy(json_object.get("totalDurationNs")),
             self._custom_converter.from_json_to_numpy(json_object["custom"]),
         ) # type:ignore 
 
@@ -3367,8 +3367,8 @@ class RFEventConverter(_ndjson.JsonConverter[RFEvent, np.void]):
         self._mag_id_converter = _ndjson.int32_converter
         self._phase_id_converter = _ndjson.int32_converter
         self._time_id_converter = _ndjson.int32_converter
-        self._center_converter = _ndjson.float64_converter
-        self._delay_converter = _ndjson.uint64_converter
+        self._center_ns_converter = _ndjson.uint64_converter
+        self._delay_ns_converter = _ndjson.uint64_converter
         self._freq_ppm_converter = _ndjson.float64_converter
         self._phase_ppm_converter = _ndjson.float64_converter
         self._freq_offset_converter = _ndjson.float64_converter
@@ -3380,8 +3380,8 @@ class RFEventConverter(_ndjson.JsonConverter[RFEvent, np.void]):
             ("mag_id", self._mag_id_converter.overall_dtype()),
             ("phase_id", self._phase_id_converter.overall_dtype()),
             ("time_id", self._time_id_converter.overall_dtype()),
-            ("center", self._center_converter.overall_dtype()),
-            ("delay", self._delay_converter.overall_dtype()),
+            ("center_ns", self._center_ns_converter.overall_dtype()),
+            ("delay_ns", self._delay_ns_converter.overall_dtype()),
             ("freq_ppm", self._freq_ppm_converter.overall_dtype()),
             ("phase_ppm", self._phase_ppm_converter.overall_dtype()),
             ("freq_offset", self._freq_offset_converter.overall_dtype()),
@@ -3399,8 +3399,8 @@ class RFEventConverter(_ndjson.JsonConverter[RFEvent, np.void]):
         json_object["magId"] = self._mag_id_converter.to_json(value.mag_id)
         json_object["phaseId"] = self._phase_id_converter.to_json(value.phase_id)
         json_object["timeId"] = self._time_id_converter.to_json(value.time_id)
-        json_object["center"] = self._center_converter.to_json(value.center)
-        json_object["delay"] = self._delay_converter.to_json(value.delay)
+        json_object["centerNs"] = self._center_ns_converter.to_json(value.center_ns)
+        json_object["delayNs"] = self._delay_ns_converter.to_json(value.delay_ns)
         json_object["freqPPM"] = self._freq_ppm_converter.to_json(value.freq_ppm)
         json_object["phasePPM"] = self._phase_ppm_converter.to_json(value.phase_ppm)
         json_object["freqOffset"] = self._freq_offset_converter.to_json(value.freq_offset)
@@ -3418,8 +3418,8 @@ class RFEventConverter(_ndjson.JsonConverter[RFEvent, np.void]):
         json_object["magId"] = self._mag_id_converter.numpy_to_json(value["mag_id"])
         json_object["phaseId"] = self._phase_id_converter.numpy_to_json(value["phase_id"])
         json_object["timeId"] = self._time_id_converter.numpy_to_json(value["time_id"])
-        json_object["center"] = self._center_converter.numpy_to_json(value["center"])
-        json_object["delay"] = self._delay_converter.numpy_to_json(value["delay"])
+        json_object["centerNs"] = self._center_ns_converter.numpy_to_json(value["center_ns"])
+        json_object["delayNs"] = self._delay_ns_converter.numpy_to_json(value["delay_ns"])
         json_object["freqPPM"] = self._freq_ppm_converter.numpy_to_json(value["freq_ppm"])
         json_object["phasePPM"] = self._phase_ppm_converter.numpy_to_json(value["phase_ppm"])
         json_object["freqOffset"] = self._freq_offset_converter.numpy_to_json(value["freq_offset"])
@@ -3436,8 +3436,8 @@ class RFEventConverter(_ndjson.JsonConverter[RFEvent, np.void]):
             mag_id=self._mag_id_converter.from_json(json_object["magId"],),
             phase_id=self._phase_id_converter.from_json(json_object["phaseId"],),
             time_id=self._time_id_converter.from_json(json_object["timeId"],),
-            center=self._center_converter.from_json(json_object["center"],),
-            delay=self._delay_converter.from_json(json_object["delay"],),
+            center_ns=self._center_ns_converter.from_json(json_object["centerNs"],),
+            delay_ns=self._delay_ns_converter.from_json(json_object["delayNs"],),
             freq_ppm=self._freq_ppm_converter.from_json(json_object["freqPPM"],),
             phase_ppm=self._phase_ppm_converter.from_json(json_object["phasePPM"],),
             freq_offset=self._freq_offset_converter.from_json(json_object["freqOffset"],),
@@ -3454,8 +3454,8 @@ class RFEventConverter(_ndjson.JsonConverter[RFEvent, np.void]):
             self._mag_id_converter.from_json_to_numpy(json_object["magId"]),
             self._phase_id_converter.from_json_to_numpy(json_object["phaseId"]),
             self._time_id_converter.from_json_to_numpy(json_object["timeId"]),
-            self._center_converter.from_json_to_numpy(json_object["center"]),
-            self._delay_converter.from_json_to_numpy(json_object["delay"]),
+            self._center_ns_converter.from_json_to_numpy(json_object["centerNs"]),
+            self._delay_ns_converter.from_json_to_numpy(json_object["delayNs"]),
             self._freq_ppm_converter.from_json_to_numpy(json_object["freqPPM"]),
             self._phase_ppm_converter.from_json_to_numpy(json_object["phasePPM"]),
             self._freq_offset_converter.from_json_to_numpy(json_object["freqOffset"]),
@@ -3472,7 +3472,7 @@ class ArbitraryGradientConverter(_ndjson.JsonConverter[ArbitraryGradient, np.voi
         self._last_converter = _ndjson.float64_converter
         self._shape_id_converter = _ndjson.int32_converter
         self._time_id_converter = _ndjson.int32_converter
-        self._delay_converter = _ndjson.uint64_converter
+        self._delay_ns_converter = _ndjson.uint64_converter
         super().__init__(np.dtype([
             ("id", self._id_converter.overall_dtype()),
             ("amp", self._amp_converter.overall_dtype()),
@@ -3480,7 +3480,7 @@ class ArbitraryGradientConverter(_ndjson.JsonConverter[ArbitraryGradient, np.voi
             ("last", self._last_converter.overall_dtype()),
             ("shape_id", self._shape_id_converter.overall_dtype()),
             ("time_id", self._time_id_converter.overall_dtype()),
-            ("delay", self._delay_converter.overall_dtype()),
+            ("delay_ns", self._delay_ns_converter.overall_dtype()),
         ]))
 
     def to_json(self, value: ArbitraryGradient) -> object:
@@ -3494,7 +3494,7 @@ class ArbitraryGradientConverter(_ndjson.JsonConverter[ArbitraryGradient, np.voi
         json_object["last"] = self._last_converter.to_json(value.last)
         json_object["shapeId"] = self._shape_id_converter.to_json(value.shape_id)
         json_object["timeId"] = self._time_id_converter.to_json(value.time_id)
-        json_object["delay"] = self._delay_converter.to_json(value.delay)
+        json_object["delayNs"] = self._delay_ns_converter.to_json(value.delay_ns)
         return json_object
 
     def numpy_to_json(self, value: np.void) -> object:
@@ -3508,7 +3508,7 @@ class ArbitraryGradientConverter(_ndjson.JsonConverter[ArbitraryGradient, np.voi
         json_object["last"] = self._last_converter.numpy_to_json(value["last"])
         json_object["shapeId"] = self._shape_id_converter.numpy_to_json(value["shape_id"])
         json_object["timeId"] = self._time_id_converter.numpy_to_json(value["time_id"])
-        json_object["delay"] = self._delay_converter.numpy_to_json(value["delay"])
+        json_object["delayNs"] = self._delay_ns_converter.numpy_to_json(value["delay_ns"])
         return json_object
 
     def from_json(self, json_object: object) -> ArbitraryGradient:
@@ -3521,7 +3521,7 @@ class ArbitraryGradientConverter(_ndjson.JsonConverter[ArbitraryGradient, np.voi
             last=self._last_converter.from_json(json_object["last"],),
             shape_id=self._shape_id_converter.from_json(json_object["shapeId"],),
             time_id=self._time_id_converter.from_json(json_object["timeId"],),
-            delay=self._delay_converter.from_json(json_object["delay"],),
+            delay_ns=self._delay_ns_converter.from_json(json_object["delayNs"],),
         )
 
     def from_json_to_numpy(self, json_object: object) -> np.void:
@@ -3534,7 +3534,7 @@ class ArbitraryGradientConverter(_ndjson.JsonConverter[ArbitraryGradient, np.voi
             self._last_converter.from_json_to_numpy(json_object["last"]),
             self._shape_id_converter.from_json_to_numpy(json_object["shapeId"]),
             self._time_id_converter.from_json_to_numpy(json_object["timeId"]),
-            self._delay_converter.from_json_to_numpy(json_object["delay"]),
+            self._delay_ns_converter.from_json_to_numpy(json_object["delayNs"]),
         ) # type:ignore 
 
 
@@ -3542,17 +3542,17 @@ class TrapezoidalGradientConverter(_ndjson.JsonConverter[TrapezoidalGradient, np
     def __init__(self) -> None:
         self._id_converter = _ndjson.int32_converter
         self._amp_converter = _ndjson.float64_converter
-        self._rise_converter = _ndjson.uint64_converter
-        self._flat_converter = _ndjson.uint64_converter
-        self._fall_converter = _ndjson.uint64_converter
-        self._delay_converter = _ndjson.uint64_converter
+        self._rise_ns_converter = _ndjson.uint64_converter
+        self._flat_ns_converter = _ndjson.uint64_converter
+        self._fall_ns_converter = _ndjson.uint64_converter
+        self._delay_ns_converter = _ndjson.uint64_converter
         super().__init__(np.dtype([
             ("id", self._id_converter.overall_dtype()),
             ("amp", self._amp_converter.overall_dtype()),
-            ("rise", self._rise_converter.overall_dtype()),
-            ("flat", self._flat_converter.overall_dtype()),
-            ("fall", self._fall_converter.overall_dtype()),
-            ("delay", self._delay_converter.overall_dtype()),
+            ("rise_ns", self._rise_ns_converter.overall_dtype()),
+            ("flat_ns", self._flat_ns_converter.overall_dtype()),
+            ("fall_ns", self._fall_ns_converter.overall_dtype()),
+            ("delay_ns", self._delay_ns_converter.overall_dtype()),
         ]))
 
     def to_json(self, value: TrapezoidalGradient) -> object:
@@ -3562,10 +3562,10 @@ class TrapezoidalGradientConverter(_ndjson.JsonConverter[TrapezoidalGradient, np
 
         json_object["id"] = self._id_converter.to_json(value.id)
         json_object["amp"] = self._amp_converter.to_json(value.amp)
-        json_object["rise"] = self._rise_converter.to_json(value.rise)
-        json_object["flat"] = self._flat_converter.to_json(value.flat)
-        json_object["fall"] = self._fall_converter.to_json(value.fall)
-        json_object["delay"] = self._delay_converter.to_json(value.delay)
+        json_object["riseNs"] = self._rise_ns_converter.to_json(value.rise_ns)
+        json_object["flatNs"] = self._flat_ns_converter.to_json(value.flat_ns)
+        json_object["fallNs"] = self._fall_ns_converter.to_json(value.fall_ns)
+        json_object["delayNs"] = self._delay_ns_converter.to_json(value.delay_ns)
         return json_object
 
     def numpy_to_json(self, value: np.void) -> object:
@@ -3575,10 +3575,10 @@ class TrapezoidalGradientConverter(_ndjson.JsonConverter[TrapezoidalGradient, np
 
         json_object["id"] = self._id_converter.numpy_to_json(value["id"])
         json_object["amp"] = self._amp_converter.numpy_to_json(value["amp"])
-        json_object["rise"] = self._rise_converter.numpy_to_json(value["rise"])
-        json_object["flat"] = self._flat_converter.numpy_to_json(value["flat"])
-        json_object["fall"] = self._fall_converter.numpy_to_json(value["fall"])
-        json_object["delay"] = self._delay_converter.numpy_to_json(value["delay"])
+        json_object["riseNs"] = self._rise_ns_converter.numpy_to_json(value["rise_ns"])
+        json_object["flatNs"] = self._flat_ns_converter.numpy_to_json(value["flat_ns"])
+        json_object["fallNs"] = self._fall_ns_converter.numpy_to_json(value["fall_ns"])
+        json_object["delayNs"] = self._delay_ns_converter.numpy_to_json(value["delay_ns"])
         return json_object
 
     def from_json(self, json_object: object) -> TrapezoidalGradient:
@@ -3587,10 +3587,10 @@ class TrapezoidalGradientConverter(_ndjson.JsonConverter[TrapezoidalGradient, np
         return TrapezoidalGradient(
             id=self._id_converter.from_json(json_object["id"],),
             amp=self._amp_converter.from_json(json_object["amp"],),
-            rise=self._rise_converter.from_json(json_object["rise"],),
-            flat=self._flat_converter.from_json(json_object["flat"],),
-            fall=self._fall_converter.from_json(json_object["fall"],),
-            delay=self._delay_converter.from_json(json_object["delay"],),
+            rise_ns=self._rise_ns_converter.from_json(json_object["riseNs"],),
+            flat_ns=self._flat_ns_converter.from_json(json_object["flatNs"],),
+            fall_ns=self._fall_ns_converter.from_json(json_object["fallNs"],),
+            delay_ns=self._delay_ns_converter.from_json(json_object["delayNs"],),
         )
 
     def from_json_to_numpy(self, json_object: object) -> np.void:
@@ -3599,10 +3599,10 @@ class TrapezoidalGradientConverter(_ndjson.JsonConverter[TrapezoidalGradient, np
         return (
             self._id_converter.from_json_to_numpy(json_object["id"]),
             self._amp_converter.from_json_to_numpy(json_object["amp"]),
-            self._rise_converter.from_json_to_numpy(json_object["rise"]),
-            self._flat_converter.from_json_to_numpy(json_object["flat"]),
-            self._fall_converter.from_json_to_numpy(json_object["fall"]),
-            self._delay_converter.from_json_to_numpy(json_object["delay"]),
+            self._rise_ns_converter.from_json_to_numpy(json_object["riseNs"]),
+            self._flat_ns_converter.from_json_to_numpy(json_object["flatNs"]),
+            self._fall_ns_converter.from_json_to_numpy(json_object["fallNs"]),
+            self._delay_ns_converter.from_json_to_numpy(json_object["delayNs"]),
         ) # type:ignore 
 
 
@@ -3611,7 +3611,7 @@ class ADCEventConverter(_ndjson.JsonConverter[ADCEvent, np.void]):
         self._id_converter = _ndjson.int32_converter
         self._num_converter = _ndjson.uint64_converter
         self._dwell_converter = _ndjson.float32_converter
-        self._delay_converter = _ndjson.uint64_converter
+        self._delay_ns_converter = _ndjson.uint64_converter
         self._freq_ppm_converter = _ndjson.float64_converter
         self._phase_ppm_converter = _ndjson.float64_converter
         self._freq_converter = _ndjson.float64_converter
@@ -3621,7 +3621,7 @@ class ADCEventConverter(_ndjson.JsonConverter[ADCEvent, np.void]):
             ("id", self._id_converter.overall_dtype()),
             ("num", self._num_converter.overall_dtype()),
             ("dwell", self._dwell_converter.overall_dtype()),
-            ("delay", self._delay_converter.overall_dtype()),
+            ("delay_ns", self._delay_ns_converter.overall_dtype()),
             ("freq_ppm", self._freq_ppm_converter.overall_dtype()),
             ("phase_ppm", self._phase_ppm_converter.overall_dtype()),
             ("freq", self._freq_converter.overall_dtype()),
@@ -3637,7 +3637,7 @@ class ADCEventConverter(_ndjson.JsonConverter[ADCEvent, np.void]):
         json_object["id"] = self._id_converter.to_json(value.id)
         json_object["num"] = self._num_converter.to_json(value.num)
         json_object["dwell"] = self._dwell_converter.to_json(value.dwell)
-        json_object["delay"] = self._delay_converter.to_json(value.delay)
+        json_object["delayNs"] = self._delay_ns_converter.to_json(value.delay_ns)
         json_object["freqPPM"] = self._freq_ppm_converter.to_json(value.freq_ppm)
         json_object["phasePPM"] = self._phase_ppm_converter.to_json(value.phase_ppm)
         json_object["freq"] = self._freq_converter.to_json(value.freq)
@@ -3653,7 +3653,7 @@ class ADCEventConverter(_ndjson.JsonConverter[ADCEvent, np.void]):
         json_object["id"] = self._id_converter.numpy_to_json(value["id"])
         json_object["num"] = self._num_converter.numpy_to_json(value["num"])
         json_object["dwell"] = self._dwell_converter.numpy_to_json(value["dwell"])
-        json_object["delay"] = self._delay_converter.numpy_to_json(value["delay"])
+        json_object["delayNs"] = self._delay_ns_converter.numpy_to_json(value["delay_ns"])
         json_object["freqPPM"] = self._freq_ppm_converter.numpy_to_json(value["freq_ppm"])
         json_object["phasePPM"] = self._phase_ppm_converter.numpy_to_json(value["phase_ppm"])
         json_object["freq"] = self._freq_converter.numpy_to_json(value["freq"])
@@ -3668,7 +3668,7 @@ class ADCEventConverter(_ndjson.JsonConverter[ADCEvent, np.void]):
             id=self._id_converter.from_json(json_object["id"],),
             num=self._num_converter.from_json(json_object["num"],),
             dwell=self._dwell_converter.from_json(json_object["dwell"],),
-            delay=self._delay_converter.from_json(json_object["delay"],),
+            delay_ns=self._delay_ns_converter.from_json(json_object["delayNs"],),
             freq_ppm=self._freq_ppm_converter.from_json(json_object["freqPPM"],),
             phase_ppm=self._phase_ppm_converter.from_json(json_object["phasePPM"],),
             freq=self._freq_converter.from_json(json_object["freq"],),
@@ -3683,7 +3683,7 @@ class ADCEventConverter(_ndjson.JsonConverter[ADCEvent, np.void]):
             self._id_converter.from_json_to_numpy(json_object["id"]),
             self._num_converter.from_json_to_numpy(json_object["num"]),
             self._dwell_converter.from_json_to_numpy(json_object["dwell"]),
-            self._delay_converter.from_json_to_numpy(json_object["delay"]),
+            self._delay_ns_converter.from_json_to_numpy(json_object["delayNs"]),
             self._freq_ppm_converter.from_json_to_numpy(json_object["freqPPM"]),
             self._phase_ppm_converter.from_json_to_numpy(json_object["phasePPM"]),
             self._freq_converter.from_json_to_numpy(json_object["freq"]),

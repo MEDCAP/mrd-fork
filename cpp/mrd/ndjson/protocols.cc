@@ -3168,17 +3168,17 @@ void from_json(ordered_json const& j, mrd::ImageArray& value) {
 
 void to_json(ordered_json& j, mrd::PulseqDefinitions const& value) {
   j = ordered_json::object();
-  if (yardl::ndjson::ShouldSerializeFieldValue(value.gradient_raster_time)) {
-    j.push_back({"gradientRasterTime", value.gradient_raster_time});
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.gradient_raster_time_ns)) {
+    j.push_back({"gradientRasterTimeNs", value.gradient_raster_time_ns});
   }
-  if (yardl::ndjson::ShouldSerializeFieldValue(value.radiofrequency_raster_time)) {
-    j.push_back({"radiofrequencyRasterTime", value.radiofrequency_raster_time});
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.radiofrequency_raster_time_ns)) {
+    j.push_back({"radiofrequencyRasterTimeNs", value.radiofrequency_raster_time_ns});
   }
-  if (yardl::ndjson::ShouldSerializeFieldValue(value.adc_raster_time)) {
-    j.push_back({"adcRasterTime", value.adc_raster_time});
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.adc_raster_time_ns)) {
+    j.push_back({"adcRasterTimeNs", value.adc_raster_time_ns});
   }
-  if (yardl::ndjson::ShouldSerializeFieldValue(value.block_duration_raster)) {
-    j.push_back({"blockDurationRaster", value.block_duration_raster});
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.block_duration_raster_ns)) {
+    j.push_back({"blockDurationRasterNs", value.block_duration_raster_ns});
   }
   if (yardl::ndjson::ShouldSerializeFieldValue(value.name)) {
     j.push_back({"name", value.name});
@@ -3186,8 +3186,8 @@ void to_json(ordered_json& j, mrd::PulseqDefinitions const& value) {
   if (yardl::ndjson::ShouldSerializeFieldValue(value.fov)) {
     j.push_back({"fov", value.fov});
   }
-  if (yardl::ndjson::ShouldSerializeFieldValue(value.total_duration)) {
-    j.push_back({"totalDuration", value.total_duration});
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.total_duration_ns)) {
+    j.push_back({"totalDurationNs", value.total_duration_ns});
   }
   if (yardl::ndjson::ShouldSerializeFieldValue(value.custom)) {
     j.push_back({"custom", value.custom});
@@ -3195,17 +3195,17 @@ void to_json(ordered_json& j, mrd::PulseqDefinitions const& value) {
 }
 
 void from_json(ordered_json const& j, mrd::PulseqDefinitions& value) {
-  if (auto it = j.find("gradientRasterTime"); it != j.end()) {
-    it->get_to(value.gradient_raster_time);
+  if (auto it = j.find("gradientRasterTimeNs"); it != j.end()) {
+    it->get_to(value.gradient_raster_time_ns);
   }
-  if (auto it = j.find("radiofrequencyRasterTime"); it != j.end()) {
-    it->get_to(value.radiofrequency_raster_time);
+  if (auto it = j.find("radiofrequencyRasterTimeNs"); it != j.end()) {
+    it->get_to(value.radiofrequency_raster_time_ns);
   }
-  if (auto it = j.find("adcRasterTime"); it != j.end()) {
-    it->get_to(value.adc_raster_time);
+  if (auto it = j.find("adcRasterTimeNs"); it != j.end()) {
+    it->get_to(value.adc_raster_time_ns);
   }
-  if (auto it = j.find("blockDurationRaster"); it != j.end()) {
-    it->get_to(value.block_duration_raster);
+  if (auto it = j.find("blockDurationRasterNs"); it != j.end()) {
+    it->get_to(value.block_duration_raster_ns);
   }
   if (auto it = j.find("name"); it != j.end()) {
     it->get_to(value.name);
@@ -3213,8 +3213,8 @@ void from_json(ordered_json const& j, mrd::PulseqDefinitions& value) {
   if (auto it = j.find("fov"); it != j.end()) {
     it->get_to(value.fov);
   }
-  if (auto it = j.find("totalDuration"); it != j.end()) {
-    it->get_to(value.total_duration);
+  if (auto it = j.find("totalDurationNs"); it != j.end()) {
+    it->get_to(value.total_duration_ns);
   }
   if (auto it = j.find("custom"); it != j.end()) {
     it->get_to(value.custom);
@@ -3348,11 +3348,11 @@ void to_json(ordered_json& j, mrd::RFEvent const& value) {
   if (yardl::ndjson::ShouldSerializeFieldValue(value.time_id)) {
     j.push_back({"timeId", value.time_id});
   }
-  if (yardl::ndjson::ShouldSerializeFieldValue(value.center)) {
-    j.push_back({"center", value.center});
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.center_ns)) {
+    j.push_back({"centerNs", value.center_ns});
   }
-  if (yardl::ndjson::ShouldSerializeFieldValue(value.delay)) {
-    j.push_back({"delay", value.delay});
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.delay_ns)) {
+    j.push_back({"delayNs", value.delay_ns});
   }
   if (yardl::ndjson::ShouldSerializeFieldValue(value.freq_ppm)) {
     j.push_back({"freqPPM", value.freq_ppm});
@@ -3387,11 +3387,11 @@ void from_json(ordered_json const& j, mrd::RFEvent& value) {
   if (auto it = j.find("timeId"); it != j.end()) {
     it->get_to(value.time_id);
   }
-  if (auto it = j.find("center"); it != j.end()) {
-    it->get_to(value.center);
+  if (auto it = j.find("centerNs"); it != j.end()) {
+    it->get_to(value.center_ns);
   }
-  if (auto it = j.find("delay"); it != j.end()) {
-    it->get_to(value.delay);
+  if (auto it = j.find("delayNs"); it != j.end()) {
+    it->get_to(value.delay_ns);
   }
   if (auto it = j.find("freqPPM"); it != j.end()) {
     it->get_to(value.freq_ppm);
@@ -3430,8 +3430,8 @@ void to_json(ordered_json& j, mrd::ArbitraryGradient const& value) {
   if (yardl::ndjson::ShouldSerializeFieldValue(value.time_id)) {
     j.push_back({"timeId", value.time_id});
   }
-  if (yardl::ndjson::ShouldSerializeFieldValue(value.delay)) {
-    j.push_back({"delay", value.delay});
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.delay_ns)) {
+    j.push_back({"delayNs", value.delay_ns});
   }
 }
 
@@ -3454,8 +3454,8 @@ void from_json(ordered_json const& j, mrd::ArbitraryGradient& value) {
   if (auto it = j.find("timeId"); it != j.end()) {
     it->get_to(value.time_id);
   }
-  if (auto it = j.find("delay"); it != j.end()) {
-    it->get_to(value.delay);
+  if (auto it = j.find("delayNs"); it != j.end()) {
+    it->get_to(value.delay_ns);
   }
 }
 
@@ -3467,17 +3467,17 @@ void to_json(ordered_json& j, mrd::TrapezoidalGradient const& value) {
   if (yardl::ndjson::ShouldSerializeFieldValue(value.amp)) {
     j.push_back({"amp", value.amp});
   }
-  if (yardl::ndjson::ShouldSerializeFieldValue(value.rise)) {
-    j.push_back({"rise", value.rise});
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.rise_ns)) {
+    j.push_back({"riseNs", value.rise_ns});
   }
-  if (yardl::ndjson::ShouldSerializeFieldValue(value.flat)) {
-    j.push_back({"flat", value.flat});
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.flat_ns)) {
+    j.push_back({"flatNs", value.flat_ns});
   }
-  if (yardl::ndjson::ShouldSerializeFieldValue(value.fall)) {
-    j.push_back({"fall", value.fall});
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.fall_ns)) {
+    j.push_back({"fallNs", value.fall_ns});
   }
-  if (yardl::ndjson::ShouldSerializeFieldValue(value.delay)) {
-    j.push_back({"delay", value.delay});
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.delay_ns)) {
+    j.push_back({"delayNs", value.delay_ns});
   }
 }
 
@@ -3488,17 +3488,17 @@ void from_json(ordered_json const& j, mrd::TrapezoidalGradient& value) {
   if (auto it = j.find("amp"); it != j.end()) {
     it->get_to(value.amp);
   }
-  if (auto it = j.find("rise"); it != j.end()) {
-    it->get_to(value.rise);
+  if (auto it = j.find("riseNs"); it != j.end()) {
+    it->get_to(value.rise_ns);
   }
-  if (auto it = j.find("flat"); it != j.end()) {
-    it->get_to(value.flat);
+  if (auto it = j.find("flatNs"); it != j.end()) {
+    it->get_to(value.flat_ns);
   }
-  if (auto it = j.find("fall"); it != j.end()) {
-    it->get_to(value.fall);
+  if (auto it = j.find("fallNs"); it != j.end()) {
+    it->get_to(value.fall_ns);
   }
-  if (auto it = j.find("delay"); it != j.end()) {
-    it->get_to(value.delay);
+  if (auto it = j.find("delayNs"); it != j.end()) {
+    it->get_to(value.delay_ns);
   }
 }
 
@@ -3513,8 +3513,8 @@ void to_json(ordered_json& j, mrd::ADCEvent const& value) {
   if (yardl::ndjson::ShouldSerializeFieldValue(value.dwell)) {
     j.push_back({"dwell", value.dwell});
   }
-  if (yardl::ndjson::ShouldSerializeFieldValue(value.delay)) {
-    j.push_back({"delay", value.delay});
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.delay_ns)) {
+    j.push_back({"delayNs", value.delay_ns});
   }
   if (yardl::ndjson::ShouldSerializeFieldValue(value.freq_ppm)) {
     j.push_back({"freqPPM", value.freq_ppm});
@@ -3543,8 +3543,8 @@ void from_json(ordered_json const& j, mrd::ADCEvent& value) {
   if (auto it = j.find("dwell"); it != j.end()) {
     it->get_to(value.dwell);
   }
-  if (auto it = j.find("delay"); it != j.end()) {
-    it->get_to(value.delay);
+  if (auto it = j.find("delayNs"); it != j.end()) {
+    it->get_to(value.delay_ns);
   }
   if (auto it = j.find("freqPPM"); it != j.end()) {
     it->get_to(value.freq_ppm);

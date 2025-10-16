@@ -4,58 +4,63 @@ classdef PulseqDefinitions < handle
   % Pulseq definitions
   properties
     % Default raster time (dwell time) of the shaped gradient events, specified in seconds
-    gradient_raster_time
+    % gradientRasterTime: float64
+    gradient_raster_time_ns
     % Default raster time (dwell time) of the radio-frequency pulse shapes, specified in seconds
-    radiofrequency_raster_time
+    % radiofrequencyRasterTime: float64
+    radiofrequency_raster_time_ns
     % The value defining the alignment of the ADC dwell times.
     % ADC dwell time must be integer multiple of the specified adcRasterTime.
     % adcRasterTime is specified in seconds
-    adc_raster_time
+    % adcRasterTime: float64
+    adc_raster_time_ns
     % The value defining the alignment of the block durations, specified in seconds;
     % the physical block duration must be integer multiple of the specified blockDurationRaster.
     % Block duration in the blocks section are specified in the units of blockDurationRaster
-    block_duration_raster
+    % blockDurationRaster: float64
+    block_duration_raster_ns
     % Human-readable name of the sequence
     name
     % Field of view specified in meters.
     fov
     % Total duration of the sequence is seconds
-    total_duration
+    % totalDuration: float64?
+    total_duration_ns
     custom
   end
 
   methods
     function self = PulseqDefinitions(kwargs)
       arguments
-        kwargs.gradient_raster_time = double(0);
-        kwargs.radiofrequency_raster_time = double(0);
-        kwargs.adc_raster_time = double(0);
-        kwargs.block_duration_raster = double(0);
+        kwargs.gradient_raster_time_ns = uint64(0);
+        kwargs.radiofrequency_raster_time_ns = uint64(0);
+        kwargs.adc_raster_time_ns = uint64(0);
+        kwargs.block_duration_raster_ns = uint64(0);
         kwargs.name = yardl.None;
         kwargs.fov = yardl.None;
-        kwargs.total_duration = yardl.None;
+        kwargs.total_duration_ns = yardl.None;
         kwargs.custom = yardl.Map;
       end
-      self.gradient_raster_time = kwargs.gradient_raster_time;
-      self.radiofrequency_raster_time = kwargs.radiofrequency_raster_time;
-      self.adc_raster_time = kwargs.adc_raster_time;
-      self.block_duration_raster = kwargs.block_duration_raster;
+      self.gradient_raster_time_ns = kwargs.gradient_raster_time_ns;
+      self.radiofrequency_raster_time_ns = kwargs.radiofrequency_raster_time_ns;
+      self.adc_raster_time_ns = kwargs.adc_raster_time_ns;
+      self.block_duration_raster_ns = kwargs.block_duration_raster_ns;
       self.name = kwargs.name;
       self.fov = kwargs.fov;
-      self.total_duration = kwargs.total_duration;
+      self.total_duration_ns = kwargs.total_duration_ns;
       self.custom = kwargs.custom;
     end
 
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.PulseqDefinitions") && ...
-        isequal({self.gradient_raster_time}, {other.gradient_raster_time}) && ...
-        isequal({self.radiofrequency_raster_time}, {other.radiofrequency_raster_time}) && ...
-        isequal({self.adc_raster_time}, {other.adc_raster_time}) && ...
-        isequal({self.block_duration_raster}, {other.block_duration_raster}) && ...
+        isequal({self.gradient_raster_time_ns}, {other.gradient_raster_time_ns}) && ...
+        isequal({self.radiofrequency_raster_time_ns}, {other.radiofrequency_raster_time_ns}) && ...
+        isequal({self.adc_raster_time_ns}, {other.adc_raster_time_ns}) && ...
+        isequal({self.block_duration_raster_ns}, {other.block_duration_raster_ns}) && ...
         isequal({self.name}, {other.name}) && ...
         isequal({self.fov}, {other.fov}) && ...
-        isequal({self.total_duration}, {other.total_duration}) && ...
+        isequal({self.total_duration_ns}, {other.total_duration_ns}) && ...
         isequal({self.custom}, {other.custom});
     end
 
