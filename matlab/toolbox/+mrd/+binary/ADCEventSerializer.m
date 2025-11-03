@@ -21,12 +21,12 @@ classdef ADCEventSerializer < yardl.binary.RecordSerializer
         outstream (1,1) yardl.binary.CodedOutputStream
         value (1,1) mrd.ADCEvent
       end
-      self.write_(outstream, value.id, value.num, value.dwell, value.delay, value.freq_ppm, value.phase_ppm, value.freq, value.phase, value.phase_shape_id);
+      self.write_(outstream, value.id, value.num, value.dwell, value.delay_ns, value.freq_ppm, value.phase_ppm, value.freq, value.phase, value.phase_shape_id);
     end
 
     function value = read(self, instream)
       fields = self.read_(instream);
-      value = mrd.ADCEvent(id=fields{1}, num=fields{2}, dwell=fields{3}, delay=fields{4}, freq_ppm=fields{5}, phase_ppm=fields{6}, freq=fields{7}, phase=fields{8}, phase_shape_id=fields{9});
+      value = mrd.ADCEvent(id=fields{1}, num=fields{2}, dwell=fields{3}, delay_ns=fields{4}, freq_ppm=fields{5}, phase_ppm=fields{6}, freq=fields{7}, phase=fields{8}, phase_shape_id=fields{9});
     end
   end
 end

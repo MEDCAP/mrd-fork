@@ -19,12 +19,12 @@ classdef ArbitraryGradientSerializer < yardl.binary.RecordSerializer
         outstream (1,1) yardl.binary.CodedOutputStream
         value (1,1) mrd.ArbitraryGradient
       end
-      self.write_(outstream, value.id, value.amp, value.first, value.last, value.shape_id, value.time_id, value.delay);
+      self.write_(outstream, value.id, value.amp, value.first, value.last, value.shape_id, value.time_id, value.delay_ns);
     end
 
     function value = read(self, instream)
       fields = self.read_(instream);
-      value = mrd.ArbitraryGradient(id=fields{1}, amp=fields{2}, first=fields{3}, last=fields{4}, shape_id=fields{5}, time_id=fields{6}, delay=fields{7});
+      value = mrd.ArbitraryGradient(id=fields{1}, amp=fields{2}, first=fields{3}, last=fields{4}, shape_id=fields{5}, time_id=fields{6}, delay_ns=fields{7});
     end
   end
 end

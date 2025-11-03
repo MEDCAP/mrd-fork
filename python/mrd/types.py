@@ -135,10 +135,10 @@ class EncodingCounters:
         )
 
     def __str__(self) -> str:
-        return f"EncodingCounters(kspace_encode_step_1={self.kspace_encode_step_1}, kspace_encode_step_2={self.kspace_encode_step_2}, average={self.average}, slice={self.slice}, contrast={self.contrast}, phase={self.phase}, repetition={self.repetition}, set={self.set}, segment={self.segment}, user={self.user})"
+        return f"EncodingCounters(kspaceEncodeStep1={self.kspace_encode_step_1}, kspaceEncodeStep2={self.kspace_encode_step_2}, average={self.average}, slice={self.slice}, contrast={self.contrast}, phase={self.phase}, repetition={self.repetition}, set={self.set}, segment={self.segment}, user={self.user})"
 
     def __repr__(self) -> str:
-        return f"EncodingCounters(kspace_encode_step_1={repr(self.kspace_encode_step_1)}, kspace_encode_step_2={repr(self.kspace_encode_step_2)}, average={repr(self.average)}, slice={repr(self.slice)}, contrast={repr(self.contrast)}, phase={repr(self.phase)}, repetition={repr(self.repetition)}, set={repr(self.set)}, segment={repr(self.segment)}, user={repr(self.user)})"
+        return f"EncodingCounters(kspaceEncodeStep1={repr(self.kspace_encode_step_1)}, kspaceEncodeStep2={repr(self.kspace_encode_step_2)}, average={repr(self.average)}, slice={repr(self.slice)}, contrast={repr(self.contrast)}, phase={repr(self.phase)}, repetition={repr(self.repetition)}, set={repr(self.set)}, segment={repr(self.segment)}, user={repr(self.user)})"
 
 
 AcquisitionData = npt.NDArray[np.complex64]
@@ -274,10 +274,10 @@ class AcquisitionHeader:
         )
 
     def __str__(self) -> str:
-        return f"AcquisitionHeader(flags={self.flags}, idx={self.idx}, measurement_uid={self.measurement_uid}, scan_counter={self.scan_counter}, acquisition_time_stamp_ns={self.acquisition_time_stamp_ns}, physiology_time_stamp_ns={self.physiology_time_stamp_ns}, channel_order={self.channel_order}, discard_pre={self.discard_pre}, discard_post={self.discard_post}, center_sample={self.center_sample}, encoding_space_ref={self.encoding_space_ref}, sample_time_ns={self.sample_time_ns}, position={self.position}, read_dir={self.read_dir}, phase_dir={self.phase_dir}, slice_dir={self.slice_dir}, patient_table_position={self.patient_table_position}, user_int={self.user_int}, user_float={self.user_float})"
+        return f"AcquisitionHeader(flags={self.flags}, idx={self.idx}, measurementUid={self.measurement_uid}, scanCounter={self.scan_counter}, acquisitionTimeStampNs={self.acquisition_time_stamp_ns}, physiologyTimeStampNs={self.physiology_time_stamp_ns}, channelOrder={self.channel_order}, discardPre={self.discard_pre}, discardPost={self.discard_post}, centerSample={self.center_sample}, encodingSpaceRef={self.encoding_space_ref}, sampleTimeNs={self.sample_time_ns}, position={self.position}, readDir={self.read_dir}, phaseDir={self.phase_dir}, sliceDir={self.slice_dir}, patientTablePosition={self.patient_table_position}, userInt={self.user_int}, userFloat={self.user_float})"
 
     def __repr__(self) -> str:
-        return f"AcquisitionHeader(flags={repr(self.flags)}, idx={repr(self.idx)}, measurement_uid={repr(self.measurement_uid)}, scan_counter={repr(self.scan_counter)}, acquisition_time_stamp_ns={repr(self.acquisition_time_stamp_ns)}, physiology_time_stamp_ns={repr(self.physiology_time_stamp_ns)}, channel_order={repr(self.channel_order)}, discard_pre={repr(self.discard_pre)}, discard_post={repr(self.discard_post)}, center_sample={repr(self.center_sample)}, encoding_space_ref={repr(self.encoding_space_ref)}, sample_time_ns={repr(self.sample_time_ns)}, position={repr(self.position)}, read_dir={repr(self.read_dir)}, phase_dir={repr(self.phase_dir)}, slice_dir={repr(self.slice_dir)}, patient_table_position={repr(self.patient_table_position)}, user_int={repr(self.user_int)}, user_float={repr(self.user_float)})"
+        return f"AcquisitionHeader(flags={repr(self.flags)}, idx={repr(self.idx)}, measurementUid={repr(self.measurement_uid)}, scanCounter={repr(self.scan_counter)}, acquisitionTimeStampNs={repr(self.acquisition_time_stamp_ns)}, physiologyTimeStampNs={repr(self.physiology_time_stamp_ns)}, channelOrder={repr(self.channel_order)}, discardPre={repr(self.discard_pre)}, discardPost={repr(self.discard_post)}, centerSample={repr(self.center_sample)}, encodingSpaceRef={repr(self.encoding_space_ref)}, sampleTimeNs={repr(self.sample_time_ns)}, position={repr(self.position)}, readDir={repr(self.read_dir)}, phaseDir={repr(self.phase_dir)}, sliceDir={repr(self.slice_dir)}, patientTablePosition={repr(self.patient_table_position)}, userInt={repr(self.user_int)}, userFloat={repr(self.user_float)})"
 
 
 class Acquisition:
@@ -370,10 +370,10 @@ class SubjectInformationType:
         )
 
     def __str__(self) -> str:
-        return f"SubjectInformationType(patient_name={self.patient_name}, patient_weight_kg={self.patient_weight_kg}, patient_height_m={self.patient_height_m}, patient_id={self.patient_id}, patient_birthdate={self.patient_birthdate}, patient_gender={self.patient_gender})"
+        return f"SubjectInformationType(patientName={self.patient_name}, patientWeightKg={self.patient_weight_kg}, patientHeightM={self.patient_height_m}, patientID={self.patient_id}, patientBirthdate={self.patient_birthdate}, patientGender={self.patient_gender})"
 
     def __repr__(self) -> str:
-        return f"SubjectInformationType(patient_name={repr(self.patient_name)}, patient_weight_kg={repr(self.patient_weight_kg)}, patient_height_m={repr(self.patient_height_m)}, patient_id={repr(self.patient_id)}, patient_birthdate={repr(self.patient_birthdate)}, patient_gender={repr(self.patient_gender)})"
+        return f"SubjectInformationType(patientName={repr(self.patient_name)}, patientWeightKg={repr(self.patient_weight_kg)}, patientHeightM={repr(self.patient_height_m)}, patientID={repr(self.patient_id)}, patientBirthdate={repr(self.patient_birthdate)}, patientGender={repr(self.patient_gender)})"
 
 
 class StudyInformationType:
@@ -419,10 +419,10 @@ class StudyInformationType:
         )
 
     def __str__(self) -> str:
-        return f"StudyInformationType(study_date={self.study_date}, study_time={self.study_time}, study_id={self.study_id}, accession_number={self.accession_number}, referring_physician_name={self.referring_physician_name}, study_description={self.study_description}, study_instance_uid={self.study_instance_uid}, body_part_examined={self.body_part_examined})"
+        return f"StudyInformationType(studyDate={self.study_date}, studyTime={self.study_time}, studyID={self.study_id}, accessionNumber={self.accession_number}, referringPhysicianName={self.referring_physician_name}, studyDescription={self.study_description}, studyInstanceUID={self.study_instance_uid}, bodyPartExamined={self.body_part_examined})"
 
     def __repr__(self) -> str:
-        return f"StudyInformationType(study_date={repr(self.study_date)}, study_time={repr(self.study_time)}, study_id={repr(self.study_id)}, accession_number={repr(self.accession_number)}, referring_physician_name={repr(self.referring_physician_name)}, study_description={repr(self.study_description)}, study_instance_uid={repr(self.study_instance_uid)}, body_part_examined={repr(self.body_part_examined)})"
+        return f"StudyInformationType(studyDate={repr(self.study_date)}, studyTime={repr(self.study_time)}, studyID={repr(self.study_id)}, accessionNumber={repr(self.accession_number)}, referringPhysicianName={repr(self.referring_physician_name)}, studyDescription={repr(self.study_description)}, studyInstanceUID={repr(self.study_instance_uid)}, bodyPartExamined={repr(self.body_part_examined)})"
 
 
 class PatientPosition(yardl.OutOfRangeEnum):
@@ -483,10 +483,10 @@ class MeasurementDependencyType:
         )
 
     def __str__(self) -> str:
-        return f"MeasurementDependencyType(dependency_type={self.dependency_type}, measurement_id={self.measurement_id})"
+        return f"MeasurementDependencyType(dependencyType={self.dependency_type}, measurementID={self.measurement_id})"
 
     def __repr__(self) -> str:
-        return f"MeasurementDependencyType(dependency_type={repr(self.dependency_type)}, measurement_id={repr(self.measurement_id)})"
+        return f"MeasurementDependencyType(dependencyType={repr(self.dependency_type)}, measurementID={repr(self.measurement_id)})"
 
 
 class ReferencedImageSequenceType:
@@ -504,10 +504,10 @@ class ReferencedImageSequenceType:
         )
 
     def __str__(self) -> str:
-        return f"ReferencedImageSequenceType(referenced_sop_instance_uid={self.referenced_sop_instance_uid})"
+        return f"ReferencedImageSequenceType(referencedSOPInstanceUID={self.referenced_sop_instance_uid})"
 
     def __repr__(self) -> str:
-        return f"ReferencedImageSequenceType(referenced_sop_instance_uid={repr(self.referenced_sop_instance_uid)})"
+        return f"ReferencedImageSequenceType(referencedSOPInstanceUID={repr(self.referenced_sop_instance_uid)})"
 
 
 class MeasurementInformationType:
@@ -573,10 +573,10 @@ class MeasurementInformationType:
         )
 
     def __str__(self) -> str:
-        return f"MeasurementInformationType(measurement_id={self.measurement_id}, series_date={self.series_date}, series_time={self.series_time}, patient_position={self.patient_position}, relative_table_position={self.relative_table_position}, initial_series_number={self.initial_series_number}, protocol_name={self.protocol_name}, sequence_name={self.sequence_name}, series_description={self.series_description}, measurement_dependency={self.measurement_dependency}, series_instance_uid_root={self.series_instance_uid_root}, frame_of_reference_uid={self.frame_of_reference_uid}, referenced_image_sequence={self.referenced_image_sequence})"
+        return f"MeasurementInformationType(measurementID={self.measurement_id}, seriesDate={self.series_date}, seriesTime={self.series_time}, patientPosition={self.patient_position}, relativeTablePosition={self.relative_table_position}, initialSeriesNumber={self.initial_series_number}, protocolName={self.protocol_name}, sequenceName={self.sequence_name}, seriesDescription={self.series_description}, measurementDependency={self.measurement_dependency}, seriesInstanceUIDRoot={self.series_instance_uid_root}, frameOfReferenceUID={self.frame_of_reference_uid}, referencedImageSequence={self.referenced_image_sequence})"
 
     def __repr__(self) -> str:
-        return f"MeasurementInformationType(measurement_id={repr(self.measurement_id)}, series_date={repr(self.series_date)}, series_time={repr(self.series_time)}, patient_position={repr(self.patient_position)}, relative_table_position={repr(self.relative_table_position)}, initial_series_number={repr(self.initial_series_number)}, protocol_name={repr(self.protocol_name)}, sequence_name={repr(self.sequence_name)}, series_description={repr(self.series_description)}, measurement_dependency={repr(self.measurement_dependency)}, series_instance_uid_root={repr(self.series_instance_uid_root)}, frame_of_reference_uid={repr(self.frame_of_reference_uid)}, referenced_image_sequence={repr(self.referenced_image_sequence)})"
+        return f"MeasurementInformationType(measurementID={repr(self.measurement_id)}, seriesDate={repr(self.series_date)}, seriesTime={repr(self.series_time)}, patientPosition={repr(self.patient_position)}, relativeTablePosition={repr(self.relative_table_position)}, initialSeriesNumber={repr(self.initial_series_number)}, protocolName={repr(self.protocol_name)}, sequenceName={repr(self.sequence_name)}, seriesDescription={repr(self.series_description)}, measurementDependency={repr(self.measurement_dependency)}, seriesInstanceUIDRoot={repr(self.series_instance_uid_root)}, frameOfReferenceUID={repr(self.frame_of_reference_uid)}, referencedImageSequence={repr(self.referenced_image_sequence)})"
 
 
 class CoilLabelType:
@@ -598,10 +598,10 @@ class CoilLabelType:
         )
 
     def __str__(self) -> str:
-        return f"CoilLabelType(coil_number={self.coil_number}, coil_name={self.coil_name})"
+        return f"CoilLabelType(coilNumber={self.coil_number}, coilName={self.coil_name})"
 
     def __repr__(self) -> str:
-        return f"CoilLabelType(coil_number={repr(self.coil_number)}, coil_name={repr(self.coil_name)})"
+        return f"CoilLabelType(coilNumber={repr(self.coil_number)}, coilName={repr(self.coil_name)})"
 
 
 class AcquisitionSystemInformationType:
@@ -655,10 +655,10 @@ class AcquisitionSystemInformationType:
         )
 
     def __str__(self) -> str:
-        return f"AcquisitionSystemInformationType(system_vendor={self.system_vendor}, system_model={self.system_model}, system_field_strength_t={self.system_field_strength_t}, relative_receiver_noise_bandwidth={self.relative_receiver_noise_bandwidth}, receiver_channels={self.receiver_channels}, coil_label={self.coil_label}, institution_name={self.institution_name}, station_name={self.station_name}, device_id={self.device_id}, device_serial_number={self.device_serial_number})"
+        return f"AcquisitionSystemInformationType(systemVendor={self.system_vendor}, systemModel={self.system_model}, systemFieldStrengthT={self.system_field_strength_t}, relativeReceiverNoiseBandwidth={self.relative_receiver_noise_bandwidth}, receiverChannels={self.receiver_channels}, coilLabel={self.coil_label}, institutionName={self.institution_name}, stationName={self.station_name}, deviceID={self.device_id}, deviceSerialNumber={self.device_serial_number})"
 
     def __repr__(self) -> str:
-        return f"AcquisitionSystemInformationType(system_vendor={repr(self.system_vendor)}, system_model={repr(self.system_model)}, system_field_strength_t={repr(self.system_field_strength_t)}, relative_receiver_noise_bandwidth={repr(self.relative_receiver_noise_bandwidth)}, receiver_channels={repr(self.receiver_channels)}, coil_label={repr(self.coil_label)}, institution_name={repr(self.institution_name)}, station_name={repr(self.station_name)}, device_id={repr(self.device_id)}, device_serial_number={repr(self.device_serial_number)})"
+        return f"AcquisitionSystemInformationType(systemVendor={repr(self.system_vendor)}, systemModel={repr(self.system_model)}, systemFieldStrengthT={repr(self.system_field_strength_t)}, relativeReceiverNoiseBandwidth={repr(self.relative_receiver_noise_bandwidth)}, receiverChannels={repr(self.receiver_channels)}, coilLabel={repr(self.coil_label)}, institutionName={repr(self.institution_name)}, stationName={repr(self.station_name)}, deviceID={repr(self.device_id)}, deviceSerialNumber={repr(self.device_serial_number)})"
 
 
 class ExperimentalConditionsType:
@@ -676,10 +676,10 @@ class ExperimentalConditionsType:
         )
 
     def __str__(self) -> str:
-        return f"ExperimentalConditionsType(h1resonance_frequency_hz={self.h1resonance_frequency_hz})"
+        return f"ExperimentalConditionsType(h1resonanceFrequencyHz={self.h1resonance_frequency_hz})"
 
     def __repr__(self) -> str:
-        return f"ExperimentalConditionsType(h1resonance_frequency_hz={repr(self.h1resonance_frequency_hz)})"
+        return f"ExperimentalConditionsType(h1resonanceFrequencyHz={repr(self.h1resonance_frequency_hz)})"
 
 
 class MatrixSizeType:
@@ -759,10 +759,10 @@ class EncodingSpaceType:
         )
 
     def __str__(self) -> str:
-        return f"EncodingSpaceType(matrix_size={self.matrix_size}, field_of_view_mm={self.field_of_view_mm})"
+        return f"EncodingSpaceType(matrixSize={self.matrix_size}, fieldOfViewMm={self.field_of_view_mm})"
 
     def __repr__(self) -> str:
-        return f"EncodingSpaceType(matrix_size={repr(self.matrix_size)}, field_of_view_mm={repr(self.field_of_view_mm)})"
+        return f"EncodingSpaceType(matrixSize={repr(self.matrix_size)}, fieldOfViewMm={repr(self.field_of_view_mm)})"
 
 
 class LimitType:
@@ -877,10 +877,10 @@ class EncodingLimitsType:
         )
 
     def __str__(self) -> str:
-        return f"EncodingLimitsType(kspace_encoding_step_0={self.kspace_encoding_step_0}, kspace_encoding_step_1={self.kspace_encoding_step_1}, kspace_encoding_step_2={self.kspace_encoding_step_2}, average={self.average}, slice={self.slice}, contrast={self.contrast}, phase={self.phase}, repetition={self.repetition}, set={self.set}, segment={self.segment}, user_0={self.user_0}, user_1={self.user_1}, user_2={self.user_2}, user_3={self.user_3}, user_4={self.user_4}, user_5={self.user_5}, user_6={self.user_6}, user_7={self.user_7})"
+        return f"EncodingLimitsType(kspaceEncodingStep0={self.kspace_encoding_step_0}, kspaceEncodingStep1={self.kspace_encoding_step_1}, kspaceEncodingStep2={self.kspace_encoding_step_2}, average={self.average}, slice={self.slice}, contrast={self.contrast}, phase={self.phase}, repetition={self.repetition}, set={self.set}, segment={self.segment}, user0={self.user_0}, user1={self.user_1}, user2={self.user_2}, user3={self.user_3}, user4={self.user_4}, user5={self.user_5}, user6={self.user_6}, user7={self.user_7})"
 
     def __repr__(self) -> str:
-        return f"EncodingLimitsType(kspace_encoding_step_0={repr(self.kspace_encoding_step_0)}, kspace_encoding_step_1={repr(self.kspace_encoding_step_1)}, kspace_encoding_step_2={repr(self.kspace_encoding_step_2)}, average={repr(self.average)}, slice={repr(self.slice)}, contrast={repr(self.contrast)}, phase={repr(self.phase)}, repetition={repr(self.repetition)}, set={repr(self.set)}, segment={repr(self.segment)}, user_0={repr(self.user_0)}, user_1={repr(self.user_1)}, user_2={repr(self.user_2)}, user_3={repr(self.user_3)}, user_4={repr(self.user_4)}, user_5={repr(self.user_5)}, user_6={repr(self.user_6)}, user_7={repr(self.user_7)})"
+        return f"EncodingLimitsType(kspaceEncodingStep0={repr(self.kspace_encoding_step_0)}, kspaceEncodingStep1={repr(self.kspace_encoding_step_1)}, kspaceEncodingStep2={repr(self.kspace_encoding_step_2)}, average={repr(self.average)}, slice={repr(self.slice)}, contrast={repr(self.contrast)}, phase={repr(self.phase)}, repetition={repr(self.repetition)}, set={repr(self.set)}, segment={repr(self.segment)}, user0={repr(self.user_0)}, user1={repr(self.user_1)}, user2={repr(self.user_2)}, user3={repr(self.user_3)}, user4={repr(self.user_4)}, user5={repr(self.user_5)}, user6={repr(self.user_6)}, user7={repr(self.user_7)})"
 
 
 class Trajectory(yardl.OutOfRangeEnum):
@@ -997,10 +997,10 @@ class TrajectoryDescriptionType:
         )
 
     def __str__(self) -> str:
-        return f"TrajectoryDescriptionType(identifier={self.identifier}, user_parameter_long={self.user_parameter_long}, user_parameter_double={self.user_parameter_double}, user_parameter_string={self.user_parameter_string}, comment={self.comment})"
+        return f"TrajectoryDescriptionType(identifier={self.identifier}, userParameterLong={self.user_parameter_long}, userParameterDouble={self.user_parameter_double}, userParameterString={self.user_parameter_string}, comment={self.comment})"
 
     def __repr__(self) -> str:
-        return f"TrajectoryDescriptionType(identifier={repr(self.identifier)}, user_parameter_long={repr(self.user_parameter_long)}, user_parameter_double={repr(self.user_parameter_double)}, user_parameter_string={repr(self.user_parameter_string)}, comment={repr(self.comment)})"
+        return f"TrajectoryDescriptionType(identifier={repr(self.identifier)}, userParameterLong={repr(self.user_parameter_long)}, userParameterDouble={repr(self.user_parameter_double)}, userParameterString={repr(self.user_parameter_string)}, comment={repr(self.comment)})"
 
 
 class AccelerationFactorType:
@@ -1022,10 +1022,10 @@ class AccelerationFactorType:
         )
 
     def __str__(self) -> str:
-        return f"AccelerationFactorType(kspace_encoding_step_1={self.kspace_encoding_step_1}, kspace_encoding_step_2={self.kspace_encoding_step_2})"
+        return f"AccelerationFactorType(kspaceEncodingStep1={self.kspace_encoding_step_1}, kspaceEncodingStep2={self.kspace_encoding_step_2})"
 
     def __repr__(self) -> str:
-        return f"AccelerationFactorType(kspace_encoding_step_1={repr(self.kspace_encoding_step_1)}, kspace_encoding_step_2={repr(self.kspace_encoding_step_2)})"
+        return f"AccelerationFactorType(kspaceEncodingStep1={repr(self.kspace_encoding_step_1)}, kspaceEncodingStep2={repr(self.kspace_encoding_step_2)})"
 
 
 class CalibrationMode(yardl.OutOfRangeEnum):
@@ -1058,10 +1058,10 @@ class MultibandSpacingType:
         )
 
     def __str__(self) -> str:
-        return f"MultibandSpacingType(d_z={self.d_z})"
+        return f"MultibandSpacingType(dZ={self.d_z})"
 
     def __repr__(self) -> str:
-        return f"MultibandSpacingType(d_z={repr(self.d_z)})"
+        return f"MultibandSpacingType(dZ={repr(self.d_z)})"
 
 
 class Calibration(yardl.OutOfRangeEnum):
@@ -1100,10 +1100,10 @@ class MultibandType:
         )
 
     def __str__(self) -> str:
-        return f"MultibandType(spacing={self.spacing}, delta_kz={self.delta_kz}, multiband_factor={self.multiband_factor}, calibration={self.calibration}, calibration_encoding={self.calibration_encoding})"
+        return f"MultibandType(spacing={self.spacing}, deltaKz={self.delta_kz}, multibandFactor={self.multiband_factor}, calibration={self.calibration}, calibrationEncoding={self.calibration_encoding})"
 
     def __repr__(self) -> str:
-        return f"MultibandType(spacing={repr(self.spacing)}, delta_kz={repr(self.delta_kz)}, multiband_factor={repr(self.multiband_factor)}, calibration={repr(self.calibration)}, calibration_encoding={repr(self.calibration_encoding)})"
+        return f"MultibandType(spacing={repr(self.spacing)}, deltaKz={repr(self.delta_kz)}, multibandFactor={repr(self.multiband_factor)}, calibration={repr(self.calibration)}, calibrationEncoding={repr(self.calibration_encoding)})"
 
 
 class ParallelImagingType:
@@ -1133,10 +1133,10 @@ class ParallelImagingType:
         )
 
     def __str__(self) -> str:
-        return f"ParallelImagingType(acceleration_factor={self.acceleration_factor}, calibration_mode={self.calibration_mode}, interleaving_dimension={self.interleaving_dimension}, multiband={self.multiband})"
+        return f"ParallelImagingType(accelerationFactor={self.acceleration_factor}, calibrationMode={self.calibration_mode}, interleavingDimension={self.interleaving_dimension}, multiband={self.multiband})"
 
     def __repr__(self) -> str:
-        return f"ParallelImagingType(acceleration_factor={repr(self.acceleration_factor)}, calibration_mode={repr(self.calibration_mode)}, interleaving_dimension={repr(self.interleaving_dimension)}, multiband={repr(self.multiband)})"
+        return f"ParallelImagingType(accelerationFactor={repr(self.acceleration_factor)}, calibrationMode={repr(self.calibration_mode)}, interleavingDimension={repr(self.interleaving_dimension)}, multiband={repr(self.multiband)})"
 
 
 class EncodingType:
@@ -1178,10 +1178,10 @@ class EncodingType:
         )
 
     def __str__(self) -> str:
-        return f"EncodingType(encoded_space={self.encoded_space}, recon_space={self.recon_space}, encoding_limits={self.encoding_limits}, trajectory={self.trajectory}, trajectory_description={self.trajectory_description}, parallel_imaging={self.parallel_imaging}, echo_train_length={self.echo_train_length})"
+        return f"EncodingType(encodedSpace={self.encoded_space}, reconSpace={self.recon_space}, encodingLimits={self.encoding_limits}, trajectory={self.trajectory}, trajectoryDescription={self.trajectory_description}, parallelImaging={self.parallel_imaging}, echoTrainLength={self.echo_train_length})"
 
     def __repr__(self) -> str:
-        return f"EncodingType(encoded_space={repr(self.encoded_space)}, recon_space={repr(self.recon_space)}, encoding_limits={repr(self.encoding_limits)}, trajectory={repr(self.trajectory)}, trajectory_description={repr(self.trajectory_description)}, parallel_imaging={repr(self.parallel_imaging)}, echo_train_length={repr(self.echo_train_length)})"
+        return f"EncodingType(encodedSpace={repr(self.encoded_space)}, reconSpace={repr(self.recon_space)}, encodingLimits={repr(self.encoding_limits)}, trajectory={repr(self.trajectory)}, trajectoryDescription={repr(self.trajectory_description)}, parallelImaging={repr(self.parallel_imaging)}, echoTrainLength={repr(self.echo_train_length)})"
 
 
 class DiffusionDimension(yardl.OutOfRangeEnum):
@@ -1248,10 +1248,10 @@ class DiffusionType:
         )
 
     def __str__(self) -> str:
-        return f"DiffusionType(gradient_direction={self.gradient_direction}, bvalue={self.bvalue})"
+        return f"DiffusionType(gradientDirection={self.gradient_direction}, bvalue={self.bvalue})"
 
     def __repr__(self) -> str:
-        return f"DiffusionType(gradient_direction={repr(self.gradient_direction)}, bvalue={repr(self.bvalue)})"
+        return f"DiffusionType(gradientDirection={repr(self.gradient_direction)}, bvalue={repr(self.bvalue)})"
 
 
 class SequenceParametersType:
@@ -1301,10 +1301,10 @@ class SequenceParametersType:
         )
 
     def __str__(self) -> str:
-        return f"SequenceParametersType(t_r={self.t_r}, t_e={self.t_e}, t_i={self.t_i}, flip_angle_deg={self.flip_angle_deg}, sequence_type={self.sequence_type}, echo_spacing={self.echo_spacing}, diffusion_dimension={self.diffusion_dimension}, diffusion={self.diffusion}, diffusion_scheme={self.diffusion_scheme})"
+        return f"SequenceParametersType(tR={self.t_r}, tE={self.t_e}, tI={self.t_i}, flipAngleDeg={self.flip_angle_deg}, sequenceType={self.sequence_type}, echoSpacing={self.echo_spacing}, diffusionDimension={self.diffusion_dimension}, diffusion={self.diffusion}, diffusionScheme={self.diffusion_scheme})"
 
     def __repr__(self) -> str:
-        return f"SequenceParametersType(t_r={repr(self.t_r)}, t_e={repr(self.t_e)}, t_i={repr(self.t_i)}, flip_angle_deg={repr(self.flip_angle_deg)}, sequence_type={repr(self.sequence_type)}, echo_spacing={repr(self.echo_spacing)}, diffusion_dimension={repr(self.diffusion_dimension)}, diffusion={repr(self.diffusion)}, diffusion_scheme={repr(self.diffusion_scheme)})"
+        return f"SequenceParametersType(tR={repr(self.t_r)}, tE={repr(self.t_e)}, tI={repr(self.t_i)}, flipAngleDeg={repr(self.flip_angle_deg)}, sequenceType={repr(self.sequence_type)}, echoSpacing={repr(self.echo_spacing)}, diffusionDimension={repr(self.diffusion_dimension)}, diffusion={repr(self.diffusion)}, diffusionScheme={repr(self.diffusion_scheme)})"
 
 
 class UserParameterBase64Type:
@@ -1359,10 +1359,10 @@ class UserParametersType:
         )
 
     def __str__(self) -> str:
-        return f"UserParametersType(user_parameter_long={self.user_parameter_long}, user_parameter_double={self.user_parameter_double}, user_parameter_string={self.user_parameter_string}, user_parameter_base64={self.user_parameter_base64})"
+        return f"UserParametersType(userParameterLong={self.user_parameter_long}, userParameterDouble={self.user_parameter_double}, userParameterString={self.user_parameter_string}, userParameterBase64={self.user_parameter_base64})"
 
     def __repr__(self) -> str:
-        return f"UserParametersType(user_parameter_long={repr(self.user_parameter_long)}, user_parameter_double={repr(self.user_parameter_double)}, user_parameter_string={repr(self.user_parameter_string)}, user_parameter_base64={repr(self.user_parameter_base64)})"
+        return f"UserParametersType(userParameterLong={repr(self.user_parameter_long)}, userParameterDouble={repr(self.user_parameter_double)}, userParameterString={repr(self.user_parameter_string)}, userParameterBase64={repr(self.user_parameter_base64)})"
 
 
 class WaveformType(yardl.OutOfRangeEnum):
@@ -1396,10 +1396,10 @@ class WaveformInformationType:
         )
 
     def __str__(self) -> str:
-        return f"WaveformInformationType(waveform_name={self.waveform_name}, waveform_type={self.waveform_type}, user_parameters={self.user_parameters})"
+        return f"WaveformInformationType(waveformName={self.waveform_name}, waveformType={self.waveform_type}, userParameters={self.user_parameters})"
 
     def __repr__(self) -> str:
-        return f"WaveformInformationType(waveform_name={repr(self.waveform_name)}, waveform_type={repr(self.waveform_type)}, user_parameters={repr(self.user_parameters)})"
+        return f"WaveformInformationType(waveformName={repr(self.waveform_name)}, waveformType={repr(self.waveform_type)}, userParameters={repr(self.user_parameters)})"
 
 
 class Header:
@@ -1453,10 +1453,10 @@ class Header:
         )
 
     def __str__(self) -> str:
-        return f"Header(version={self.version}, subject_information={self.subject_information}, study_information={self.study_information}, measurement_information={self.measurement_information}, acquisition_system_information={self.acquisition_system_information}, experimental_conditions={self.experimental_conditions}, encoding={self.encoding}, sequence_parameters={self.sequence_parameters}, user_parameters={self.user_parameters}, waveform_information={self.waveform_information})"
+        return f"Header(version={self.version}, subjectInformation={self.subject_information}, studyInformation={self.study_information}, measurementInformation={self.measurement_information}, acquisitionSystemInformation={self.acquisition_system_information}, experimentalConditions={self.experimental_conditions}, encoding={self.encoding}, sequenceParameters={self.sequence_parameters}, userParameters={self.user_parameters}, waveformInformation={self.waveform_information})"
 
     def __repr__(self) -> str:
-        return f"Header(version={repr(self.version)}, subject_information={repr(self.subject_information)}, study_information={repr(self.study_information)}, measurement_information={repr(self.measurement_information)}, acquisition_system_information={repr(self.acquisition_system_information)}, experimental_conditions={repr(self.experimental_conditions)}, encoding={repr(self.encoding)}, sequence_parameters={repr(self.sequence_parameters)}, user_parameters={repr(self.user_parameters)}, waveform_information={repr(self.waveform_information)})"
+        return f"Header(version={repr(self.version)}, subjectInformation={repr(self.subject_information)}, studyInformation={repr(self.study_information)}, measurementInformation={repr(self.measurement_information)}, acquisitionSystemInformation={repr(self.acquisition_system_information)}, experimentalConditions={repr(self.experimental_conditions)}, encoding={repr(self.encoding)}, sequenceParameters={repr(self.sequence_parameters)}, userParameters={repr(self.user_parameters)}, waveformInformation={repr(self.waveform_information)})"
 
 
 class ImageFlags(enum.IntFlag):
@@ -1628,10 +1628,10 @@ class ImageHeader:
         )
 
     def __str__(self) -> str:
-        return f"ImageHeader(flags={self.flags}, measurement_uid={self.measurement_uid}, field_of_view={self.field_of_view}, position={self.position}, col_dir={self.col_dir}, line_dir={self.line_dir}, slice_dir={self.slice_dir}, patient_table_position={self.patient_table_position}, average={self.average}, slice={self.slice}, contrast={self.contrast}, phase={self.phase}, repetition={self.repetition}, set={self.set}, acquisition_time_stamp_ns={self.acquisition_time_stamp_ns}, physiology_time_stamp_ns={self.physiology_time_stamp_ns}, image_type={self.image_type}, image_index={self.image_index}, image_series_index={self.image_series_index}, user_int={self.user_int}, user_float={self.user_float})"
+        return f"ImageHeader(flags={self.flags}, measurementUid={self.measurement_uid}, fieldOfView={self.field_of_view}, position={self.position}, colDir={self.col_dir}, lineDir={self.line_dir}, sliceDir={self.slice_dir}, patientTablePosition={self.patient_table_position}, average={self.average}, slice={self.slice}, contrast={self.contrast}, phase={self.phase}, repetition={self.repetition}, set={self.set}, acquisitionTimeStampNs={self.acquisition_time_stamp_ns}, physiologyTimeStampNs={self.physiology_time_stamp_ns}, imageType={self.image_type}, imageIndex={self.image_index}, imageSeriesIndex={self.image_series_index}, userInt={self.user_int}, userFloat={self.user_float})"
 
     def __repr__(self) -> str:
-        return f"ImageHeader(flags={repr(self.flags)}, measurement_uid={repr(self.measurement_uid)}, field_of_view={repr(self.field_of_view)}, position={repr(self.position)}, col_dir={repr(self.col_dir)}, line_dir={repr(self.line_dir)}, slice_dir={repr(self.slice_dir)}, patient_table_position={repr(self.patient_table_position)}, average={repr(self.average)}, slice={repr(self.slice)}, contrast={repr(self.contrast)}, phase={repr(self.phase)}, repetition={repr(self.repetition)}, set={repr(self.set)}, acquisition_time_stamp_ns={repr(self.acquisition_time_stamp_ns)}, physiology_time_stamp_ns={repr(self.physiology_time_stamp_ns)}, image_type={repr(self.image_type)}, image_index={repr(self.image_index)}, image_series_index={repr(self.image_series_index)}, user_int={repr(self.user_int)}, user_float={repr(self.user_float)})"
+        return f"ImageHeader(flags={repr(self.flags)}, measurementUid={repr(self.measurement_uid)}, fieldOfView={repr(self.field_of_view)}, position={repr(self.position)}, colDir={repr(self.col_dir)}, lineDir={repr(self.line_dir)}, sliceDir={repr(self.slice_dir)}, patientTablePosition={repr(self.patient_table_position)}, average={repr(self.average)}, slice={repr(self.slice)}, contrast={repr(self.contrast)}, phase={repr(self.phase)}, repetition={repr(self.repetition)}, set={repr(self.set)}, acquisitionTimeStampNs={repr(self.acquisition_time_stamp_ns)}, physiologyTimeStampNs={repr(self.physiology_time_stamp_ns)}, imageType={repr(self.image_type)}, imageIndex={repr(self.image_index)}, imageSeriesIndex={repr(self.image_series_index)}, userInt={repr(self.user_int)}, userFloat={repr(self.user_float)})"
 
 
 _T = typing.TypeVar('_T')
@@ -1778,10 +1778,10 @@ class NoiseCovariance:
         )
 
     def __str__(self) -> str:
-        return f"NoiseCovariance(coil_labels={self.coil_labels}, receiver_noise_bandwidth={self.receiver_noise_bandwidth}, noise_dwell_time_ns={self.noise_dwell_time_ns}, sample_count={self.sample_count}, matrix={self.matrix})"
+        return f"NoiseCovariance(coilLabels={self.coil_labels}, receiverNoiseBandwidth={self.receiver_noise_bandwidth}, noiseDwellTimeNs={self.noise_dwell_time_ns}, sampleCount={self.sample_count}, matrix={self.matrix})"
 
     def __repr__(self) -> str:
-        return f"NoiseCovariance(coil_labels={repr(self.coil_labels)}, receiver_noise_bandwidth={repr(self.receiver_noise_bandwidth)}, noise_dwell_time_ns={repr(self.noise_dwell_time_ns)}, sample_count={repr(self.sample_count)}, matrix={repr(self.matrix)})"
+        return f"NoiseCovariance(coilLabels={repr(self.coil_labels)}, receiverNoiseBandwidth={repr(self.receiver_noise_bandwidth)}, noiseDwellTimeNs={repr(self.noise_dwell_time_ns)}, sampleCount={repr(self.sample_count)}, matrix={repr(self.matrix)})"
 
 
 WaveformSamples = npt.NDArray[T_NP]
@@ -1845,10 +1845,10 @@ class Waveform(typing.Generic[T_NP]):
         )
 
     def __str__(self) -> str:
-        return f"Waveform(flags={self.flags}, measurement_uid={self.measurement_uid}, scan_counter={self.scan_counter}, time_stamp_ns={self.time_stamp_ns}, sample_time_ns={self.sample_time_ns}, waveform_id={self.waveform_id}, data={self.data})"
+        return f"Waveform(flags={self.flags}, measurementUid={self.measurement_uid}, scanCounter={self.scan_counter}, timeStampNs={self.time_stamp_ns}, sampleTimeNs={self.sample_time_ns}, waveformId={self.waveform_id}, data={self.data})"
 
     def __repr__(self) -> str:
-        return f"Waveform(flags={repr(self.flags)}, measurement_uid={repr(self.measurement_uid)}, scan_counter={repr(self.scan_counter)}, time_stamp_ns={repr(self.time_stamp_ns)}, sample_time_ns={repr(self.sample_time_ns)}, waveform_id={repr(self.waveform_id)}, data={repr(self.data)})"
+        return f"Waveform(flags={repr(self.flags)}, measurementUid={repr(self.measurement_uid)}, scanCounter={repr(self.scan_counter)}, timeStampNs={repr(self.time_stamp_ns)}, sampleTimeNs={repr(self.sample_time_ns)}, waveformId={repr(self.waveform_id)}, data={repr(self.data)})"
 
 
 WaveformUint32 = Waveform[np.uint32]
@@ -1915,10 +1915,10 @@ class SamplingLimits:
         )
 
     def __str__(self) -> str:
-        return f"SamplingLimits(kspace_encoding_step_0={self.kspace_encoding_step_0}, kspace_encoding_step_1={self.kspace_encoding_step_1}, kspace_encoding_step_2={self.kspace_encoding_step_2})"
+        return f"SamplingLimits(kspaceEncodingStep0={self.kspace_encoding_step_0}, kspaceEncodingStep1={self.kspace_encoding_step_1}, kspaceEncodingStep2={self.kspace_encoding_step_2})"
 
     def __repr__(self) -> str:
-        return f"SamplingLimits(kspace_encoding_step_0={repr(self.kspace_encoding_step_0)}, kspace_encoding_step_1={repr(self.kspace_encoding_step_1)}, kspace_encoding_step_2={repr(self.kspace_encoding_step_2)})"
+        return f"SamplingLimits(kspaceEncodingStep0={repr(self.kspace_encoding_step_0)}, kspaceEncodingStep1={repr(self.kspace_encoding_step_1)}, kspaceEncodingStep2={repr(self.kspace_encoding_step_2)})"
 
 
 class SamplingDescription:
@@ -1952,10 +1952,10 @@ class SamplingDescription:
         )
 
     def __str__(self) -> str:
-        return f"SamplingDescription(encoded_fov={self.encoded_fov}, recon_fov={self.recon_fov}, encoded_matrix={self.encoded_matrix}, recon_matrix={self.recon_matrix}, sampling_limits={self.sampling_limits})"
+        return f"SamplingDescription(encodedFOV={self.encoded_fov}, reconFOV={self.recon_fov}, encodedMatrix={self.encoded_matrix}, reconMatrix={self.recon_matrix}, samplingLimits={self.sampling_limits})"
 
     def __repr__(self) -> str:
-        return f"SamplingDescription(encoded_fov={repr(self.encoded_fov)}, recon_fov={repr(self.recon_fov)}, encoded_matrix={repr(self.encoded_matrix)}, recon_matrix={repr(self.recon_matrix)}, sampling_limits={repr(self.sampling_limits)})"
+        return f"SamplingDescription(encodedFOV={repr(self.encoded_fov)}, reconFOV={repr(self.recon_fov)}, encodedMatrix={repr(self.encoded_matrix)}, reconMatrix={repr(self.recon_matrix)}, samplingLimits={repr(self.sampling_limits)})"
 
 
 class ReconBuffer:
@@ -2091,22 +2091,28 @@ ArrayComplexFloat = Array[np.complex64]
 class PulseqDefinitions:
     """Pulseq definitions"""
 
-    gradient_raster_time: yardl.Float64
-    """Default raster time (dwell time) of the shaped gradient events, specified in seconds"""
+    gradient_raster_time_ns: yardl.UInt64
+    """Default raster time (dwell time) of the shaped gradient events, specified in seconds
+    gradientRasterTime: float64
+    """
 
-    radiofrequency_raster_time: yardl.Float64
-    """Default raster time (dwell time) of the radio-frequency pulse shapes, specified in seconds"""
+    radiofrequency_raster_time_ns: yardl.UInt64
+    """Default raster time (dwell time) of the radio-frequency pulse shapes, specified in seconds
+    radiofrequencyRasterTime: float64
+    """
 
-    adc_raster_time: yardl.Float64
+    adc_raster_time_ns: yardl.UInt64
     """The value defining the alignment of the ADC dwell times.
     ADC dwell time must be integer multiple of the specified adcRasterTime.
     adcRasterTime is specified in seconds
+    adcRasterTime: float64
     """
 
-    block_duration_raster: yardl.Float64
+    block_duration_raster_ns: yardl.UInt64
     """The value defining the alignment of the block durations, specified in seconds;
     the physical block duration must be integer multiple of the specified blockDurationRaster.
     Block duration in the blocks section are specified in the units of blockDurationRaster
+    blockDurationRaster: float64
     """
 
     name: typing.Optional[str]
@@ -2115,48 +2121,50 @@ class PulseqDefinitions:
     fov: typing.Optional[ThreeDimensionalFloat]
     """Field of view specified in meters."""
 
-    total_duration: typing.Optional[yardl.Float64]
-    """Total duration of the sequence is seconds"""
+    total_duration_ns: typing.Optional[yardl.UInt64]
+    """Total duration of the sequence is seconds
+    totalDuration: float64?
+    """
 
     custom: dict[str, str]
 
     def __init__(self, *,
-        gradient_raster_time: yardl.Float64 = 0.0,
-        radiofrequency_raster_time: yardl.Float64 = 0.0,
-        adc_raster_time: yardl.Float64 = 0.0,
-        block_duration_raster: yardl.Float64 = 0.0,
+        gradient_raster_time_ns: yardl.UInt64 = 0,
+        radiofrequency_raster_time_ns: yardl.UInt64 = 0,
+        adc_raster_time_ns: yardl.UInt64 = 0,
+        block_duration_raster_ns: yardl.UInt64 = 0,
         name: typing.Optional[str] = None,
         fov: typing.Optional[ThreeDimensionalFloat] = None,
-        total_duration: typing.Optional[yardl.Float64] = None,
+        total_duration_ns: typing.Optional[yardl.UInt64] = None,
         custom: typing.Optional[dict[str, str]] = None,
     ):
-        self.gradient_raster_time = gradient_raster_time
-        self.radiofrequency_raster_time = radiofrequency_raster_time
-        self.adc_raster_time = adc_raster_time
-        self.block_duration_raster = block_duration_raster
+        self.gradient_raster_time_ns = gradient_raster_time_ns
+        self.radiofrequency_raster_time_ns = radiofrequency_raster_time_ns
+        self.adc_raster_time_ns = adc_raster_time_ns
+        self.block_duration_raster_ns = block_duration_raster_ns
         self.name = name
         self.fov = fov
-        self.total_duration = total_duration
+        self.total_duration_ns = total_duration_ns
         self.custom = custom if custom is not None else {}
 
     def __eq__(self, other: object) -> bool:
         return (
             isinstance(other, PulseqDefinitions)
-            and self.gradient_raster_time == other.gradient_raster_time
-            and self.radiofrequency_raster_time == other.radiofrequency_raster_time
-            and self.adc_raster_time == other.adc_raster_time
-            and self.block_duration_raster == other.block_duration_raster
+            and self.gradient_raster_time_ns == other.gradient_raster_time_ns
+            and self.radiofrequency_raster_time_ns == other.radiofrequency_raster_time_ns
+            and self.adc_raster_time_ns == other.adc_raster_time_ns
+            and self.block_duration_raster_ns == other.block_duration_raster_ns
             and self.name == other.name
             and self.fov == other.fov
-            and self.total_duration == other.total_duration
+            and self.total_duration_ns == other.total_duration_ns
             and self.custom == other.custom
         )
 
     def __str__(self) -> str:
-        return f"PulseqDefinitions(gradient_raster_time={self.gradient_raster_time}, radiofrequency_raster_time={self.radiofrequency_raster_time}, adc_raster_time={self.adc_raster_time}, block_duration_raster={self.block_duration_raster}, name={self.name}, fov={self.fov}, total_duration={self.total_duration}, custom={self.custom})"
+        return f"PulseqDefinitions(gradientRasterTimeNs={self.gradient_raster_time_ns}, radiofrequencyRasterTimeNs={self.radiofrequency_raster_time_ns}, adcRasterTimeNs={self.adc_raster_time_ns}, blockDurationRasterNs={self.block_duration_raster_ns}, name={self.name}, fov={self.fov}, totalDurationNs={self.total_duration_ns}, custom={self.custom})"
 
     def __repr__(self) -> str:
-        return f"PulseqDefinitions(gradient_raster_time={repr(self.gradient_raster_time)}, radiofrequency_raster_time={repr(self.radiofrequency_raster_time)}, adc_raster_time={repr(self.adc_raster_time)}, block_duration_raster={repr(self.block_duration_raster)}, name={repr(self.name)}, fov={repr(self.fov)}, total_duration={repr(self.total_duration)}, custom={repr(self.custom)})"
+        return f"PulseqDefinitions(gradientRasterTimeNs={repr(self.gradient_raster_time_ns)}, radiofrequencyRasterTimeNs={repr(self.radiofrequency_raster_time_ns)}, adcRasterTimeNs={repr(self.adc_raster_time_ns)}, blockDurationRasterNs={repr(self.block_duration_raster_ns)}, name={repr(self.name)}, fov={repr(self.fov)}, totalDurationNs={repr(self.total_duration_ns)}, custom={repr(self.custom)})"
 
 
 class Block:
@@ -2253,16 +2261,19 @@ class RFEvent:
     time_id: yardl.Int32
     """Shape ID for the time sampling points, specified in the units of
     RadiofrequencyRasterTime.
-    0 means default time raster
+    0 means default time raster = RadiofrequencyRasterTime
     """
 
-    center: yardl.Float64
+    center_ns: yardl.UInt64
     """Time point in microseconds relative to the beginning of
     the RF shape at which the effective rotation takes place
+    center: float64
     """
 
-    delay: yardl.UInt64
-    """Delay before starting the RF pulse, specified in microseconds"""
+    delay_ns: yardl.UInt64
+    """Delay before starting the RF pulse, specified in microseconds
+    delay: uint64
+    """
 
     freq_ppm: yardl.Float64
     """Frequency offset relative to the main system's frequency,
@@ -2288,8 +2299,8 @@ class RFEvent:
         mag_id: yardl.Int32 = 0,
         phase_id: yardl.Int32 = 0,
         time_id: yardl.Int32 = 0,
-        center: yardl.Float64 = 0.0,
-        delay: yardl.UInt64 = 0,
+        center_ns: yardl.UInt64 = 0,
+        delay_ns: yardl.UInt64 = 0,
         freq_ppm: yardl.Float64 = 0.0,
         phase_ppm: yardl.Float64 = 0.0,
         freq_offset: yardl.Float64 = 0.0,
@@ -2301,8 +2312,8 @@ class RFEvent:
         self.mag_id = mag_id
         self.phase_id = phase_id
         self.time_id = time_id
-        self.center = center
-        self.delay = delay
+        self.center_ns = center_ns
+        self.delay_ns = delay_ns
         self.freq_ppm = freq_ppm
         self.phase_ppm = phase_ppm
         self.freq_offset = freq_offset
@@ -2317,8 +2328,8 @@ class RFEvent:
             and self.mag_id == other.mag_id
             and self.phase_id == other.phase_id
             and self.time_id == other.time_id
-            and self.center == other.center
-            and self.delay == other.delay
+            and self.center_ns == other.center_ns
+            and self.delay_ns == other.delay_ns
             and self.freq_ppm == other.freq_ppm
             and self.phase_ppm == other.phase_ppm
             and self.freq_offset == other.freq_offset
@@ -2327,10 +2338,10 @@ class RFEvent:
         )
 
     def __str__(self) -> str:
-        return f"RFEvent(id={self.id}, amp={self.amp}, mag_id={self.mag_id}, phase_id={self.phase_id}, time_id={self.time_id}, center={self.center}, delay={self.delay}, freq_ppm={self.freq_ppm}, phase_ppm={self.phase_ppm}, freq_offset={self.freq_offset}, phase_offset={self.phase_offset}, use={self.use})"
+        return f"RFEvent(id={self.id}, amp={self.amp}, magId={self.mag_id}, phaseId={self.phase_id}, timeId={self.time_id}, centerNs={self.center_ns}, delayNs={self.delay_ns}, freqPPM={self.freq_ppm}, phasePPM={self.phase_ppm}, freqOffset={self.freq_offset}, phaseOffset={self.phase_offset}, use={self.use})"
 
     def __repr__(self) -> str:
-        return f"RFEvent(id={repr(self.id)}, amp={repr(self.amp)}, mag_id={repr(self.mag_id)}, phase_id={repr(self.phase_id)}, time_id={repr(self.time_id)}, center={repr(self.center)}, delay={repr(self.delay)}, freq_ppm={repr(self.freq_ppm)}, phase_ppm={repr(self.phase_ppm)}, freq_offset={repr(self.freq_offset)}, phase_offset={repr(self.phase_offset)}, use={repr(self.use)})"
+        return f"RFEvent(id={repr(self.id)}, amp={repr(self.amp)}, magId={repr(self.mag_id)}, phaseId={repr(self.phase_id)}, timeId={repr(self.time_id)}, centerNs={repr(self.center_ns)}, delayNs={repr(self.delay_ns)}, freqPPM={repr(self.freq_ppm)}, phasePPM={repr(self.phase_ppm)}, freqOffset={repr(self.freq_offset)}, phaseOffset={repr(self.phase_offset)}, use={repr(self.use)})"
 
 
 class ArbitraryGradient:
@@ -2356,8 +2367,10 @@ class ArbitraryGradient:
     0 means default time raster, -1 means 1/2 of the default time raster (gradient oversampling case).
     """
 
-    delay: yardl.UInt64
-    """Delay before starting the gradient, specified in microseconds"""
+    delay_ns: yardl.UInt64
+    """Delay before starting the gradient, specified in microseconds 
+    delay: uint64
+    """
 
 
     def __init__(self, *,
@@ -2367,7 +2380,7 @@ class ArbitraryGradient:
         last: yardl.Float64 = 0.0,
         shape_id: yardl.Int32 = 0,
         time_id: yardl.Int32 = 0,
-        delay: yardl.UInt64 = 0,
+        delay_ns: yardl.UInt64 = 0,
     ):
         self.id = id
         self.amp = amp
@@ -2375,7 +2388,7 @@ class ArbitraryGradient:
         self.last = last
         self.shape_id = shape_id
         self.time_id = time_id
-        self.delay = delay
+        self.delay_ns = delay_ns
 
     def __eq__(self, other: object) -> bool:
         return (
@@ -2386,14 +2399,14 @@ class ArbitraryGradient:
             and self.last == other.last
             and self.shape_id == other.shape_id
             and self.time_id == other.time_id
-            and self.delay == other.delay
+            and self.delay_ns == other.delay_ns
         )
 
     def __str__(self) -> str:
-        return f"ArbitraryGradient(id={self.id}, amp={self.amp}, first={self.first}, last={self.last}, shape_id={self.shape_id}, time_id={self.time_id}, delay={self.delay})"
+        return f"ArbitraryGradient(id={self.id}, amp={self.amp}, first={self.first}, last={self.last}, shapeId={self.shape_id}, timeId={self.time_id}, delayNs={self.delay_ns})"
 
     def __repr__(self) -> str:
-        return f"ArbitraryGradient(id={repr(self.id)}, amp={repr(self.amp)}, first={repr(self.first)}, last={repr(self.last)}, shape_id={repr(self.shape_id)}, time_id={repr(self.time_id)}, delay={repr(self.delay)})"
+        return f"ArbitraryGradient(id={repr(self.id)}, amp={repr(self.amp)}, first={repr(self.first)}, last={repr(self.last)}, shapeId={repr(self.shape_id)}, timeId={repr(self.time_id)}, delayNs={repr(self.delay_ns)})"
 
 
 class TrapezoidalGradient:
@@ -2405,50 +2418,58 @@ class TrapezoidalGradient:
     amp: yardl.Float64
     """Peak amplitude in Hz/m"""
 
-    rise: yardl.UInt64
-    """Rise time of the trapezoid in microseconds"""
+    rise_ns: yardl.UInt64
+    """Rise time of the trapezoid in microseconds
+    rise: uint64
+    """
 
-    flat: yardl.UInt64
-    """Flat-top time of the trapezoid in microseconds"""
+    flat_ns: yardl.UInt64
+    """Flat-top time of the trapezoid in microseconds
+    flat: uint64
+    """
 
-    fall: yardl.UInt64
-    """Fall time of the trapezoid in microseconds"""
+    fall_ns: yardl.UInt64
+    """Fall time of the trapezoid in microseconds
+    fall: uint64
+    """
 
-    delay: yardl.UInt64
-    """Delay before starting the gradient, specified in microseconds"""
+    delay_ns: yardl.UInt64
+    """Delay before starting the gradient, specified in microseconds
+    delay: uint64
+    """
 
 
     def __init__(self, *,
         id: yardl.Int32 = 0,
         amp: yardl.Float64 = 0.0,
-        rise: yardl.UInt64 = 0,
-        flat: yardl.UInt64 = 0,
-        fall: yardl.UInt64 = 0,
-        delay: yardl.UInt64 = 0,
+        rise_ns: yardl.UInt64 = 0,
+        flat_ns: yardl.UInt64 = 0,
+        fall_ns: yardl.UInt64 = 0,
+        delay_ns: yardl.UInt64 = 0,
     ):
         self.id = id
         self.amp = amp
-        self.rise = rise
-        self.flat = flat
-        self.fall = fall
-        self.delay = delay
+        self.rise_ns = rise_ns
+        self.flat_ns = flat_ns
+        self.fall_ns = fall_ns
+        self.delay_ns = delay_ns
 
     def __eq__(self, other: object) -> bool:
         return (
             isinstance(other, TrapezoidalGradient)
             and self.id == other.id
             and self.amp == other.amp
-            and self.rise == other.rise
-            and self.flat == other.flat
-            and self.fall == other.fall
-            and self.delay == other.delay
+            and self.rise_ns == other.rise_ns
+            and self.flat_ns == other.flat_ns
+            and self.fall_ns == other.fall_ns
+            and self.delay_ns == other.delay_ns
         )
 
     def __str__(self) -> str:
-        return f"TrapezoidalGradient(id={self.id}, amp={self.amp}, rise={self.rise}, flat={self.flat}, fall={self.fall}, delay={self.delay})"
+        return f"TrapezoidalGradient(id={self.id}, amp={self.amp}, riseNs={self.rise_ns}, flatNs={self.flat_ns}, fallNs={self.fall_ns}, delayNs={self.delay_ns})"
 
     def __repr__(self) -> str:
-        return f"TrapezoidalGradient(id={repr(self.id)}, amp={repr(self.amp)}, rise={repr(self.rise)}, flat={repr(self.flat)}, fall={repr(self.fall)}, delay={repr(self.delay)})"
+        return f"TrapezoidalGradient(id={repr(self.id)}, amp={repr(self.amp)}, riseNs={repr(self.rise_ns)}, flatNs={repr(self.flat_ns)}, fallNs={repr(self.fall_ns)}, delayNs={repr(self.delay_ns)})"
 
 
 class ADCEvent:
@@ -2463,8 +2484,10 @@ class ADCEvent:
     dwell: yardl.Float32
     """The ADC dwell time, specified in nanoseconds"""
 
-    delay: yardl.UInt64
-    """Delay between start of block and first sample, specified in microseconds"""
+    delay_ns: yardl.UInt64
+    """Delay between start of block and first sample, specified in microseconds
+    delay: uint64
+    """
 
     freq_ppm: yardl.Float64
     """Frequency offset of the ADC receiver relative to the system frequency,
@@ -2490,7 +2513,7 @@ class ADCEvent:
         id: yardl.Int32 = 0,
         num: yardl.UInt64 = 0,
         dwell: yardl.Float32 = 0.0,
-        delay: yardl.UInt64 = 0,
+        delay_ns: yardl.UInt64 = 0,
         freq_ppm: yardl.Float64 = 0.0,
         phase_ppm: yardl.Float64 = 0.0,
         freq: yardl.Float64 = 0.0,
@@ -2500,7 +2523,7 @@ class ADCEvent:
         self.id = id
         self.num = num
         self.dwell = dwell
-        self.delay = delay
+        self.delay_ns = delay_ns
         self.freq_ppm = freq_ppm
         self.phase_ppm = phase_ppm
         self.freq = freq
@@ -2513,7 +2536,7 @@ class ADCEvent:
             and self.id == other.id
             and self.num == other.num
             and self.dwell == other.dwell
-            and self.delay == other.delay
+            and self.delay_ns == other.delay_ns
             and self.freq_ppm == other.freq_ppm
             and self.phase_ppm == other.phase_ppm
             and self.freq == other.freq
@@ -2522,10 +2545,10 @@ class ADCEvent:
         )
 
     def __str__(self) -> str:
-        return f"ADCEvent(id={self.id}, num={self.num}, dwell={self.dwell}, delay={self.delay}, freq_ppm={self.freq_ppm}, phase_ppm={self.phase_ppm}, freq={self.freq}, phase={self.phase}, phase_shape_id={self.phase_shape_id})"
+        return f"ADCEvent(id={self.id}, num={self.num}, dwell={self.dwell}, delayNs={self.delay_ns}, freqPPM={self.freq_ppm}, phasePPM={self.phase_ppm}, freq={self.freq}, phase={self.phase}, phaseShapeId={self.phase_shape_id})"
 
     def __repr__(self) -> str:
-        return f"ADCEvent(id={repr(self.id)}, num={repr(self.num)}, dwell={repr(self.dwell)}, delay={repr(self.delay)}, freq_ppm={repr(self.freq_ppm)}, phase_ppm={repr(self.phase_ppm)}, freq={repr(self.freq)}, phase={repr(self.phase)}, phase_shape_id={repr(self.phase_shape_id)})"
+        return f"ADCEvent(id={repr(self.id)}, num={repr(self.num)}, dwell={repr(self.dwell)}, delayNs={repr(self.delay_ns)}, freqPPM={repr(self.freq_ppm)}, phasePPM={repr(self.phase_ppm)}, freq={repr(self.freq)}, phase={repr(self.phase)}, phaseShapeId={repr(self.phase_shape_id)})"
 
 
 class Shape:
@@ -2563,10 +2586,10 @@ class Shape:
         )
 
     def __str__(self) -> str:
-        return f"Shape(id={self.id}, num_samples={self.num_samples}, data={self.data})"
+        return f"Shape(id={self.id}, numSamples={self.num_samples}, data={self.data})"
 
     def __repr__(self) -> str:
-        return f"Shape(id={repr(self.id)}, num_samples={repr(self.num_samples)}, data={repr(self.data)})"
+        return f"Shape(id={repr(self.id)}, numSamples={repr(self.num_samples)}, data={repr(self.data)})"
 
 
 class StreamItem:
@@ -2619,7 +2642,7 @@ StreamItem.Shape = type("StreamItem.Shape", (StreamItemUnionCase,), {"index": 20
 del StreamItemUnionCase
 
 def _mk_get_dtype():
-    dtype_map: dict[typing.Union[type, types.GenericAlias, typing.Annotated[typing.Any, typing.Any]], typing.Union[np.dtype[typing.Any], typing.Callable[[tuple[type, ...]], np.dtype[typing.Any]]]] = {}
+    dtype_map: dict[typing.Union[type, types.GenericAlias], typing.Union[np.dtype[typing.Any], typing.Callable[[tuple[type, ...]], np.dtype[typing.Any]]]] = {}
     get_dtype = _dtypes.make_get_dtype_func(dtype_map)
 
     dtype_map.setdefault(AcquisitionFlags, np.dtype(np.uint64))
@@ -2688,13 +2711,13 @@ def _mk_get_dtype():
     dtype_map.setdefault(ReconAssembly, np.dtype([('data', get_dtype(ReconBuffer)), ('ref', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(ReconBuffer))], align=True))], align=True))
     dtype_map.setdefault(ReconData, np.dtype([('buffers', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(ImageArray, np.dtype([('data', np.dtype(np.object_)), ('headers', np.dtype(np.object_)), ('meta', np.dtype(np.object_)), ('waveforms', np.dtype(np.object_))], align=True))
-    dtype_map.setdefault(PulseqDefinitions, np.dtype([('gradient_raster_time', np.dtype(np.float64)), ('radiofrequency_raster_time', np.dtype(np.float64)), ('adc_raster_time', np.dtype(np.float64)), ('block_duration_raster', np.dtype(np.float64)), ('name', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('fov', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(ThreeDimensionalFloat))], align=True)), ('total_duration', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.float64))], align=True)), ('custom', np.dtype(np.object_))], align=True))
+    dtype_map.setdefault(PulseqDefinitions, np.dtype([('gradient_raster_time_ns', np.dtype(np.uint64)), ('radiofrequency_raster_time_ns', np.dtype(np.uint64)), ('adc_raster_time_ns', np.dtype(np.uint64)), ('block_duration_raster_ns', np.dtype(np.uint64)), ('name', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('fov', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(ThreeDimensionalFloat))], align=True)), ('total_duration_ns', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.uint64))], align=True)), ('custom', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(Block, np.dtype([('id', np.dtype(np.int32)), ('duration', np.dtype(np.uint64)), ('rf', np.dtype(np.int32)), ('gx', np.dtype(np.int32)), ('gy', np.dtype(np.int32)), ('gz', np.dtype(np.int32)), ('adc', np.dtype(np.int32)), ('ext', np.dtype(np.int32))], align=True))
     dtype_map.setdefault(RFPulseUse, np.dtype(np.int32))
-    dtype_map.setdefault(RFEvent, np.dtype([('id', np.dtype(np.int32)), ('amp', np.dtype(np.float64)), ('mag_id', np.dtype(np.int32)), ('phase_id', np.dtype(np.int32)), ('time_id', np.dtype(np.int32)), ('center', np.dtype(np.float64)), ('delay', np.dtype(np.uint64)), ('freq_ppm', np.dtype(np.float64)), ('phase_ppm', np.dtype(np.float64)), ('freq_offset', np.dtype(np.float64)), ('phase_offset', np.dtype(np.float64)), ('use', get_dtype(RFPulseUse))], align=True))
-    dtype_map.setdefault(ArbitraryGradient, np.dtype([('id', np.dtype(np.int32)), ('amp', np.dtype(np.float64)), ('first', np.dtype(np.float64)), ('last', np.dtype(np.float64)), ('shape_id', np.dtype(np.int32)), ('time_id', np.dtype(np.int32)), ('delay', np.dtype(np.uint64))], align=True))
-    dtype_map.setdefault(TrapezoidalGradient, np.dtype([('id', np.dtype(np.int32)), ('amp', np.dtype(np.float64)), ('rise', np.dtype(np.uint64)), ('flat', np.dtype(np.uint64)), ('fall', np.dtype(np.uint64)), ('delay', np.dtype(np.uint64))], align=True))
-    dtype_map.setdefault(ADCEvent, np.dtype([('id', np.dtype(np.int32)), ('num', np.dtype(np.uint64)), ('dwell', np.dtype(np.float32)), ('delay', np.dtype(np.uint64)), ('freq_ppm', np.dtype(np.float64)), ('phase_ppm', np.dtype(np.float64)), ('freq', np.dtype(np.float64)), ('phase', np.dtype(np.float64)), ('phase_shape_id', np.dtype(np.int32))], align=True))
+    dtype_map.setdefault(RFEvent, np.dtype([('id', np.dtype(np.int32)), ('amp', np.dtype(np.float64)), ('mag_id', np.dtype(np.int32)), ('phase_id', np.dtype(np.int32)), ('time_id', np.dtype(np.int32)), ('center_ns', np.dtype(np.uint64)), ('delay_ns', np.dtype(np.uint64)), ('freq_ppm', np.dtype(np.float64)), ('phase_ppm', np.dtype(np.float64)), ('freq_offset', np.dtype(np.float64)), ('phase_offset', np.dtype(np.float64)), ('use', get_dtype(RFPulseUse))], align=True))
+    dtype_map.setdefault(ArbitraryGradient, np.dtype([('id', np.dtype(np.int32)), ('amp', np.dtype(np.float64)), ('first', np.dtype(np.float64)), ('last', np.dtype(np.float64)), ('shape_id', np.dtype(np.int32)), ('time_id', np.dtype(np.int32)), ('delay_ns', np.dtype(np.uint64))], align=True))
+    dtype_map.setdefault(TrapezoidalGradient, np.dtype([('id', np.dtype(np.int32)), ('amp', np.dtype(np.float64)), ('rise_ns', np.dtype(np.uint64)), ('flat_ns', np.dtype(np.uint64)), ('fall_ns', np.dtype(np.uint64)), ('delay_ns', np.dtype(np.uint64))], align=True))
+    dtype_map.setdefault(ADCEvent, np.dtype([('id', np.dtype(np.int32)), ('num', np.dtype(np.uint64)), ('dwell', np.dtype(np.float32)), ('delay_ns', np.dtype(np.uint64)), ('freq_ppm', np.dtype(np.float64)), ('phase_ppm', np.dtype(np.float64)), ('freq', np.dtype(np.float64)), ('phase', np.dtype(np.float64)), ('phase_shape_id', np.dtype(np.int32))], align=True))
     dtype_map.setdefault(Shape, np.dtype([('id', np.dtype(np.int32)), ('num_samples', np.dtype(np.uint64)), ('data', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(StreamItem, np.dtype(np.object_))
 

@@ -18,12 +18,12 @@ classdef TrapezoidalGradientSerializer < yardl.binary.RecordSerializer
         outstream (1,1) yardl.binary.CodedOutputStream
         value (1,1) mrd.TrapezoidalGradient
       end
-      self.write_(outstream, value.id, value.amp, value.rise, value.flat, value.fall, value.delay);
+      self.write_(outstream, value.id, value.amp, value.rise_ns, value.flat_ns, value.fall_ns, value.delay_ns);
     end
 
     function value = read(self, instream)
       fields = self.read_(instream);
-      value = mrd.TrapezoidalGradient(id=fields{1}, amp=fields{2}, rise=fields{3}, flat=fields{4}, fall=fields{5}, delay=fields{6});
+      value = mrd.TrapezoidalGradient(id=fields{1}, amp=fields{2}, rise_ns=fields{3}, flat_ns=fields{4}, fall_ns=fields{5}, delay_ns=fields{6});
     end
   end
 end
