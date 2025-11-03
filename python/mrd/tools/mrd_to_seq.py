@@ -94,10 +94,11 @@ def write_definitions(file: TextIO, definitions: Union[mrd.PulseqDefinitions, No
         raise ValueError("No definitions were present in the stream.")
 
     file.write("[DEFINITIONS]\n")
-    file.write(f"AdcRasterTime {definitions.adc_raster_time:g}\n")
-    file.write(f"BlockDurationRaster {definitions.block_duration_raster:g}\n")
-    file.write(f"GradientRasterTime {definitions.gradient_raster_time:g}\n")
-    file.write(f"RadiofrequencyRasterTime {definitions.radiofrequency_raster_time:g}\n")
+    # convert rastetime in ns uint64 to seconds float
+    file.write(f"AdcRasterTime {definitions.adc_raster_time_ns / 1e9:g}\n")                        
+    file.write(f"BlockDurationRaster {definitions.block_duration_raster_ns / 1e9:g}\n")            
+    file.write(f"GradientRasterTime {definitions.gradient_raster_time_ns / 1e9:g}\n")              
+    file.write(f"RadiofrequencyRasterTime {definitions.radiofrequency_raster_time_ns / 1e9:g}\n")  
     if definitions.name:
         file.write(f"Name {definitions.name}\n")
     if definitions.fov:
@@ -105,7 +106,7 @@ def write_definitions(file: TextIO, definitions: Union[mrd.PulseqDefinitions, No
             f"FOV {definitions.fov.x:g} {definitions.fov.y:g} {definitions.fov.z:g}\n"
         )
     if definitions.total_duration:
-        file.write(f"TotalDuration {definitions.total_duration:g}\n")
+        file.write(f"TotalDuration {definitions.total_duration_ns / 1e9:g}\n")
     for key, value in definitions.custom.items():
         file.write(f"{key} {value}\n")
     file.write("\n")
@@ -144,9 +145,10 @@ def write_arbitrary_grad_events(
 
         "%d %12g %12g %12g %d %d %d"
         for grad in arb_grad_events:
+            # convert delay in ns uint64 to us uint64
             file.write(
                 f"{grad.id:.0f} {grad.amp:12g} {grad.first:12g} {grad.last:12g} "
-                f"{grad.shape_id:.0f} {grad.time_id:.0f} {grad.delay:.0f}\n"
+                f"{grad.shape_id:.0f} {grad.time_id:.0f} {grad.delay_ns/1e3:.0f}\n"
             )
     else:
         file.write("# Format of arbitrary gradients:\n")
@@ -159,9 +161,9 @@ def write_arbitrary_grad_events(
         for grad in arb_grad_events:
             if grad.first or grad.last:
                 warnings.warn(f"Data loss when writing arbitrary gradient to pulseq version {_version_to_string(version)}")
-
+            # convert delay in ns uint64 to us uint64
             file.write(
-                f"{grad.id:.0f} {grad.amp:12g} {grad.shape_id:.0f} {grad.time_id:.0f} {grad.delay:.0f}\n"
+                f"{grad.id:.0f} {grad.amp:12g} {grad.shape_id:.0f} {grad.time_id:.0f} {grad.delay_ns/1e3:.0f}\n"
             )
 
     file.write("\n")
@@ -179,9 +181,10 @@ def write_trap_grad_events(
     file.write("[TRAP]\n")
 
     for grad in trap_grad_events:
+        # convert rise, flat, fall, delay in ns uint64 to us uint64
         file.write(
-            f"{grad.id:2d} {grad.amp:12g} {grad.rise:3.0f} "
-            f"{grad.flat:4.0f} {grad.fall:3.0f} {grad.delay:3.0f}\n"
+            f"{grad.id:2d} {grad.amp:12g} {grad.rise_ns/1e3:3.0f} "
+            f"{grad.flat_ns/1e3:4.0f} {grad.fall_ns/1e3:3.0f} {grad.delay_ns/1e3:3.0f}\n"
         )
 
     file.write("\n")
@@ -202,9 +205,10 @@ def write_rf_events(file, rf_events: list[mrd.RFEvent], version):
         file.write("[RF]\n")
 
         for rf in rf_events:
+            # convert center, delay in ns uint64 to us uint64
             file.write(
                 f"{rf.id:.0f} {rf.amp:12g} {rf.mag_id:.0f} {rf.phase_id:.0f} {rf.time_id:.0f} "
-                f"{rf.center:.0f} {rf.delay:g} {rf.freq_ppm:g} {rf.phase_ppm:g} "
+                f"{rf.center_ns/1e3:.0f} {rf.delay_ns/1e3:.0f} {rf.freq_ppm:g} {rf.phase_ppm:g} "
                 f"{rf.freq_offset:g} {rf.phase_offset:g} {_get_abbreviation_for_rf_use(rf.use)}\n"
             )
     else:
@@ -217,9 +221,10 @@ def write_rf_events(file, rf_events: list[mrd.RFEvent], version):
             if rf.center or rf.freq_ppm or rf.phase_ppm or rf.use != mrd.RFPulseUse.UNDEFINED:
                 warnings.warn(f"Data loss when writing RF event to pulseq version {_version_to_string(version)}")
 
+            # convert delay in ns uint64 to us uint64
             file.write(
                 f"{rf.id:.0f} {rf.amp:12g} {rf.mag_id:.0f} {rf.phase_id:.0f} {rf.time_id:.0f} "
-                f"{rf.delay:g} {rf.freq_offset:g} {rf.phase_offset:g}\n"
+                f"{rf.delay_ns/1e3:.0f} {rf.freq_offset:g} {rf.phase_offset:g}\n"
             )
 
     file.write("\n")
@@ -236,8 +241,9 @@ def write_adc_events(file, adc_events: list[mrd.ADCEvent], version) -> None:
         file.write("[ADC]\n")
 
         for adc in adc_events:
+            # convert delay in ns uint64 to us uint64
             file.write(
-                f"{adc.id:.0f} {adc.num:.0f} {adc.dwell:.0f} {adc.delay:.0f} {adc.freq_ppm:g} "
+                f"{adc.id:.0f} {adc.num:.0f} {adc.dwell:.0f} {adc.delay_ns/1e3:.0f} {adc.freq_ppm:g} "
                 f"{adc.phase_ppm:g} {adc.freq:g} {adc.phase:g} {adc.phase_shape_id:.0f}\n"
             )
     else:
@@ -250,8 +256,9 @@ def write_adc_events(file, adc_events: list[mrd.ADCEvent], version) -> None:
             if adc.freq_ppm or adc.phase_ppm or adc.phase_shape_id:
                 warnings.warn(f"Data loss when writing ADC event to pulseq version {_version_to_string(version)}")
 
+            # convert delay in ns uint64 to us uint64
             file.write(
-                f"{adc.id:.0f} {adc.num:.0f} {adc.dwell:.0f} {adc.delay:.0f} "
+                f"{adc.id:.0f} {adc.num:.0f} {adc.dwell:.0f} {adc.delay_ns/1e3:.0f} "
                 f"{adc.freq:g} {adc.phase:g}\n"
             )
 
