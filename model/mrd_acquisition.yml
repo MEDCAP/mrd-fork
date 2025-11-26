@@ -84,7 +84,7 @@ AcquisitionHeader: !record
     # Zero-indexed incrementing counter for readouts
     scanCounter: uint?
     # Acquisition center frequency in Hz
-    acquisitionCenterFrequency: uint64
+    acquisitionCenterFrequency: uint64?
     # Clock time stamp (e.g. nanoseconds since midnight)
     acquisitionTimeStampNs: uint64?
     # Time stamps relative to physiological triggering in nanoseconds
@@ -125,7 +125,7 @@ Acquisition: !record
     # Raw k-space samples array
     data: AcquisitionData
     # Phase offset array
-    phase: AcquisitionPhase
+    phase: AcquisitionPhase?
     # Trajectory array
     trajectory: TrajectoryData
   computedFields:
