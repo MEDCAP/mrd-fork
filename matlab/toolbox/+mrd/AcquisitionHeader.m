@@ -53,7 +53,7 @@ classdef AcquisitionHeader < handle
         kwargs.idx = mrd.EncodingCounters();
         kwargs.measurement_uid = uint32(0);
         kwargs.scan_counter = yardl.None;
-        kwargs.acquisition_center_frequency = uint64(0);
+        kwargs.acquisition_center_frequency = yardl.None;
         kwargs.acquisition_time_stamp_ns = yardl.None;
         kwargs.physiology_time_stamp_ns = uint64.empty();
         kwargs.channel_order = uint32.empty();

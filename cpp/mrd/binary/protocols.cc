@@ -1269,7 +1269,7 @@ namespace {
   mrd::binary::WriteEncodingCounters(stream, value.idx);
   yardl::binary::WriteInteger(stream, value.measurement_uid);
   yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.scan_counter);
-  yardl::binary::WriteInteger(stream, value.acquisition_center_frequency);
+  yardl::binary::WriteOptional<uint64_t, yardl::binary::WriteInteger>(stream, value.acquisition_center_frequency);
   yardl::binary::WriteOptional<uint64_t, yardl::binary::WriteInteger>(stream, value.acquisition_time_stamp_ns);
   yardl::binary::WriteVector<uint64_t, yardl::binary::WriteInteger>(stream, value.physiology_time_stamp_ns);
   yardl::binary::WriteVector<uint32_t, yardl::binary::WriteInteger>(stream, value.channel_order);
@@ -1297,7 +1297,7 @@ namespace {
   mrd::binary::ReadEncodingCounters(stream, value.idx);
   yardl::binary::ReadInteger(stream, value.measurement_uid);
   yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.scan_counter);
-  yardl::binary::ReadInteger(stream, value.acquisition_center_frequency);
+  yardl::binary::ReadOptional<uint64_t, yardl::binary::ReadInteger>(stream, value.acquisition_center_frequency);
   yardl::binary::ReadOptional<uint64_t, yardl::binary::ReadInteger>(stream, value.acquisition_time_stamp_ns);
   yardl::binary::ReadVector<uint64_t, yardl::binary::ReadInteger>(stream, value.physiology_time_stamp_ns);
   yardl::binary::ReadVector<uint32_t, yardl::binary::ReadInteger>(stream, value.channel_order);
@@ -1323,7 +1323,7 @@ namespace {
 
   mrd::binary::WriteAcquisitionHeader(stream, value.head);
   mrd::binary::WriteAcquisitionData(stream, value.data);
-  mrd::binary::WriteAcquisitionPhase(stream, value.phase);
+  yardl::binary::WriteOptional<mrd::AcquisitionPhase, mrd::binary::WriteAcquisitionPhase>(stream, value.phase);
   mrd::binary::WriteTrajectoryData(stream, value.trajectory);
 }
 
@@ -1335,7 +1335,7 @@ namespace {
 
   mrd::binary::ReadAcquisitionHeader(stream, value.head);
   mrd::binary::ReadAcquisitionData(stream, value.data);
-  mrd::binary::ReadAcquisitionPhase(stream, value.phase);
+  yardl::binary::ReadOptional<mrd::AcquisitionPhase, mrd::binary::ReadAcquisitionPhase>(stream, value.phase);
   mrd::binary::ReadTrajectoryData(stream, value.trajectory);
 }
 
@@ -2975,7 +2975,9 @@ bool MrdReader::ReadDataImpl(std::vector<mrd::StreamItem>& values) {
 }
 
 void MrdReader::CloseImpl() {
-  stream_.VerifyFinished();
+  if (!skip_completed_check_) {
+    stream_.VerifyFinished();
+  }
 }
 
 void MrdNoiseCovarianceWriter::WriteNoiseCovarianceImpl(mrd::NoiseCovariance const& value) {
@@ -2995,7 +2997,9 @@ void MrdNoiseCovarianceReader::ReadNoiseCovarianceImpl(mrd::NoiseCovariance& val
 }
 
 void MrdNoiseCovarianceReader::CloseImpl() {
-  stream_.VerifyFinished();
+  if (!skip_completed_check_) {
+    stream_.VerifyFinished();
+  }
 }
 
 } // namespace mrd::binary

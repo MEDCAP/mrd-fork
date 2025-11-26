@@ -3,6 +3,7 @@ import argparse
 import numpy as np
 from typing import BinaryIO, Iterable, Union
 
+
 import mrd
 from mrd.tools.transform import kspace_to_image, image_to_kspace
 
@@ -134,8 +135,8 @@ def accumulate_fft(head: mrd.Header, input: Iterable[mrd.Acquisition]) -> Iterab
                 imghdr.physiology_time_stamp_ns = ref_acq.head.physiology_time_stamp_ns    # ns
                 imghdr.image_index = image_index
                 image_index += 1
-
-                mrd_image = mrd.Image[np.float32](head=imghdr, data=combined)
+                meta = mrd.ImageMeta({"b0 map": mrd.ImageMetaValue})
+                mrd_image = mrd.Image[np.float32](head=imghdr, data=np.expand_dims(combined, axis=-1), meta=meta)
                 yield mrd_image
 
     for acq in input:

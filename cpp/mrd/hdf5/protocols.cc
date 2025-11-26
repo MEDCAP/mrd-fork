@@ -843,36 +843,36 @@ namespace {
 }
 
 [[maybe_unused]] H5::EnumType GetImageTypeHdf5Ddl() {
-  H5::EnumType t(H5::PredType::NATIVE_UINT64);
-  uint64_t i = 1ULL;
+  H5::EnumType t(H5::PredType::NATIVE_INT32);
+  int32_t i = 1;
   t.insert("magnitude", &i);
-  i = 2ULL;
+  i = 2;
   t.insert("phase", &i);
-  i = 3ULL;
+  i = 3;
   t.insert("real", &i);
-  i = 4ULL;
+  i = 4;
   t.insert("imag", &i);
-  i = 5ULL;
+  i = 5;
   t.insert("complex", &i);
-  i = 32ULL;
+  i = 6;
   t.insert("bitmap", &i);
-  i = 64ULL;
+  i = 7;
   t.insert("spinDensityMap", &i);
-  i = 128ULL;
+  i = 8;
   t.insert("t1Map", &i);
-  i = 256ULL;
+  i = 9;
   t.insert("t2Map", &i);
-  i = 512ULL;
+  i = 10;
   t.insert("t2starMap", &i);
-  i = 1024ULL;
+  i = 11;
   t.insert("adcMap", &i);
-  i = 2048ULL;
+  i = 12;
   t.insert("b0Map", &i);
-  i = 4096ULL;
+  i = 13;
   t.insert("b1Map", &i);
-  i = 8192ULL;
+  i = 14;
   t.insert("sensitivityMap", &i);
-  i = 16384ULL;
+  i = 15;
   t.insert("userMap", &i);
   return t;
 }
@@ -988,7 +988,7 @@ struct _Inner_AcquisitionHeader {
   mrd::hdf5::_Inner_EncodingCounters idx;
   uint32_t measurement_uid;
   yardl::hdf5::InnerOptional<uint32_t, uint32_t> scan_counter;
-  uint64_t acquisition_center_frequency;
+  yardl::hdf5::InnerOptional<uint64_t, uint64_t> acquisition_center_frequency;
   yardl::hdf5::InnerOptional<uint64_t, uint64_t> acquisition_time_stamp_ns;
   yardl::hdf5::InnerVlen<uint64_t, uint64_t> physiology_time_stamp_ns;
   yardl::hdf5::InnerVlen<uint32_t, uint32_t> channel_order;
@@ -1024,7 +1024,7 @@ struct _Inner_Acquisition {
 
   mrd::hdf5::_Inner_AcquisitionHeader head;
   yardl::hdf5::InnerNdArray<std::complex<float>, std::complex<float>, 2> data;
-  yardl::hdf5::InnerVlen<float, float> phase;
+  yardl::hdf5::InnerOptional<yardl::hdf5::InnerVlen<float, float>, mrd::AcquisitionPhase> phase;
   yardl::hdf5::InnerNdArray<float, float, 2> trajectory;
 };
 
@@ -1919,7 +1919,7 @@ struct _Inner_Shape {
   t.insertMember("idx", HOFFSET(RecordType, idx), mrd::hdf5::GetEncodingCountersHdf5Ddl());
   t.insertMember("measurementUid", HOFFSET(RecordType, measurement_uid), H5::PredType::NATIVE_UINT32);
   t.insertMember("scanCounter", HOFFSET(RecordType, scan_counter), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
-  t.insertMember("acquisitionCenterFrequency", HOFFSET(RecordType, acquisition_center_frequency), H5::PredType::NATIVE_UINT64);
+  t.insertMember("acquisitionCenterFrequency", HOFFSET(RecordType, acquisition_center_frequency), yardl::hdf5::OptionalTypeDdl<uint64_t, uint64_t>(H5::PredType::NATIVE_UINT64));
   t.insertMember("acquisitionTimeStampNs", HOFFSET(RecordType, acquisition_time_stamp_ns), yardl::hdf5::OptionalTypeDdl<uint64_t, uint64_t>(H5::PredType::NATIVE_UINT64));
   t.insertMember("physiologyTimeStampNs", HOFFSET(RecordType, physiology_time_stamp_ns), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_UINT64));
   t.insertMember("channelOrder", HOFFSET(RecordType, channel_order), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_UINT32));
@@ -1943,7 +1943,7 @@ struct _Inner_Shape {
   H5::CompType t(sizeof(RecordType));
   t.insertMember("head", HOFFSET(RecordType, head), mrd::hdf5::GetAcquisitionHeaderHdf5Ddl());
   t.insertMember("data", HOFFSET(RecordType, data), yardl::hdf5::NDArrayDdl<std::complex<float>, std::complex<float>, 2>(yardl::hdf5::ComplexTypeDdl<float>()));
-  t.insertMember("phase", HOFFSET(RecordType, phase), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_FLOAT));
+  t.insertMember("phase", HOFFSET(RecordType, phase), yardl::hdf5::OptionalTypeDdl<yardl::hdf5::InnerVlen<float, float>, mrd::AcquisitionPhase>(yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_FLOAT)));
   t.insertMember("trajectory", HOFFSET(RecordType, trajectory), yardl::hdf5::NDArrayDdl<float, float, 2>(H5::PredType::NATIVE_FLOAT));
   return t;
 }
@@ -2573,8 +2573,8 @@ void MrdWriter::Flush() {
   }
 }
 
-MrdReader::MrdReader(std::string path)
-    : yardl::hdf5::Hdf5Reader::Hdf5Reader(path, "Mrd", schema_) {
+MrdReader::MrdReader(std::string path, bool skip_completed_check)
+    : mrd::MrdReaderBase(skip_completed_check), yardl::hdf5::Hdf5Reader::Hdf5Reader(path, "Mrd", schema_) {
 }
 
 void MrdReader::ReadHeaderImpl(std::optional<mrd::Header>& value) {
@@ -2711,8 +2711,8 @@ void MrdNoiseCovarianceWriter::WriteNoiseCovarianceImpl(mrd::NoiseCovariance con
   yardl::hdf5::WriteScalarDataset<mrd::hdf5::_Inner_NoiseCovariance, mrd::NoiseCovariance>(group_, "noiseCovariance", mrd::hdf5::GetNoiseCovarianceHdf5Ddl(), value);
 }
 
-MrdNoiseCovarianceReader::MrdNoiseCovarianceReader(std::string path)
-    : yardl::hdf5::Hdf5Reader::Hdf5Reader(path, "MrdNoiseCovariance", schema_) {
+MrdNoiseCovarianceReader::MrdNoiseCovarianceReader(std::string path, bool skip_completed_check)
+    : mrd::MrdNoiseCovarianceReaderBase(skip_completed_check), yardl::hdf5::Hdf5Reader::Hdf5Reader(path, "MrdNoiseCovariance", schema_) {
 }
 
 void MrdNoiseCovarianceReader::ReadNoiseCovarianceImpl(mrd::NoiseCovariance& value) {

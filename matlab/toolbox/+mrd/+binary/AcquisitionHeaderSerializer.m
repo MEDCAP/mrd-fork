@@ -7,7 +7,7 @@ classdef AcquisitionHeaderSerializer < yardl.binary.RecordSerializer
       field_serializers{2} = mrd.binary.EncodingCountersSerializer();
       field_serializers{3} = yardl.binary.Uint32Serializer;
       field_serializers{4} = yardl.binary.OptionalSerializer(yardl.binary.Uint32Serializer);
-      field_serializers{5} = yardl.binary.Uint64Serializer;
+      field_serializers{5} = yardl.binary.OptionalSerializer(yardl.binary.Uint64Serializer);
       field_serializers{6} = yardl.binary.OptionalSerializer(yardl.binary.Uint64Serializer);
       field_serializers{7} = yardl.binary.VectorSerializer(yardl.binary.Uint64Serializer);
       field_serializers{8} = yardl.binary.VectorSerializer(yardl.binary.Uint32Serializer);

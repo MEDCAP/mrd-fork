@@ -102,7 +102,7 @@ struct AcquisitionHeader {
   // Zero-indexed incrementing counter for readouts
   std::optional<uint32_t> scan_counter{};
   // Acquisition center frequency in Hz
-  uint64_t acquisition_center_frequency{};
+  std::optional<uint64_t> acquisition_center_frequency{};
   // Clock time stamp (e.g. nanoseconds since midnight)
   std::optional<uint64_t> acquisition_time_stamp_ns{};
   // Time stamps relative to physiological triggering in nanoseconds
@@ -170,7 +170,7 @@ struct Acquisition {
   // Raw k-space samples array
   mrd::AcquisitionData data{};
   // Phase offset array
-  mrd::AcquisitionPhase phase{};
+  std::optional<mrd::AcquisitionPhase> phase{};
   // Trajectory array
   mrd::TrajectoryData trajectory{};
 
@@ -874,22 +874,22 @@ struct ImageFlags : yardl::BaseFlags<uint64_t, ImageFlags> {
   static const ImageFlags kLastInSet;
 };
 
-enum class ImageType : uint64_t {
-  kMagnitude = 1ULL,
-  kPhase = 2ULL,
-  kReal = 3ULL,
-  kImag = 4ULL,
-  kComplex = 5ULL,
-  kBitmap = 32ULL,
-  kSpinDensityMap = 64ULL,
-  kT1Map = 128ULL,
-  kT2Map = 256ULL,
-  kT2starMap = 512ULL,
-  kAdcMap = 1024ULL,
-  kB0Map = 2048ULL,
-  kB1Map = 4096ULL,
-  kSensitivityMap = 8192ULL,
-  kUserMap = 16384ULL,
+enum class ImageType {
+  kMagnitude = 1,
+  kPhase = 2,
+  kReal = 3,
+  kImag = 4,
+  kComplex = 5,
+  kBitmap = 6,
+  kSpinDensityMap = 7,
+  kT1Map = 8,
+  kT2Map = 9,
+  kT2starMap = 10,
+  kAdcMap = 11,
+  kB0Map = 12,
+  kB1Map = 13,
+  kSensitivityMap = 14,
+  kUserMap = 15,
 };
 
 template <typename Y>
