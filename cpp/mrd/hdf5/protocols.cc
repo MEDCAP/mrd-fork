@@ -855,25 +855,7 @@ namespace {
   i = 5;
   t.insert("complex", &i);
   i = 6;
-  t.insert("bitmap", &i);
-  i = 7;
-  t.insert("spinDensityMap", &i);
-  i = 8;
-  t.insert("t1Map", &i);
-  i = 9;
-  t.insert("t2Map", &i);
-  i = 10;
-  t.insert("t2starMap", &i);
-  i = 11;
-  t.insert("adcMap", &i);
-  i = 12;
-  t.insert("b0Map", &i);
-  i = 13;
-  t.insert("b1Map", &i);
-  i = 14;
-  t.insert("sensitivityMap", &i);
-  i = 15;
-  t.insert("userMap", &i);
+  t.insert("rgba", &i);
   return t;
 }
 

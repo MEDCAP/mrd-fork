@@ -1502,16 +1502,7 @@ class ImageType(yardl.OutOfRangeEnum):
     REAL = 3
     IMAG = 4
     COMPLEX = 5
-    BITMAP = 6
-    SPIN_DENSITY_MAP = 7
-    T1_MAP = 8
-    T2_MAP = 9
-    T2STAR_MAP = 10
-    ADC_MAP = 11
-    B0_MAP = 12
-    B1_MAP = 13
-    SENSITIVITY_MAP = 14
-    USER_MAP = 15
+    RGBA = 6
 
 ImageData = npt.NDArray[Y_NP]
 
@@ -1523,10 +1514,10 @@ class ImageHeader:
     """Unique ID corresponding to the image"""
 
     measurement_frequency: typing.Optional[npt.NDArray[np.uint32]]
-    """NMR frequencies of this measurement (Hz). Same size as ImageData freq dimension"""
+    """NMR frequencies of the measurement in Hz for each entries of ImageData frequency dimension"""
 
     measurement_frequency_label: typing.Optional[npt.NDArray[np.object_]]
-    """NMR label of the measurementFreqs. Same size as measurementFrequency"""
+    """NMR label of the measurementFrequency. Same size as measurementFrequency"""
 
     field_of_view: npt.NDArray[np.float32]
     """Physical size (in mm) in each of the 3 dimensions in the image"""
@@ -2681,7 +2672,7 @@ StreamItem.Shape = type("StreamItem.Shape", (StreamItemUnionCase,), {"index": 20
 del StreamItemUnionCase
 
 def _mk_get_dtype():
-    dtype_map: dict[typing.Union[type, types.GenericAlias, typing.Annotated[typing.Any, typing.Any]], typing.Union[np.dtype[typing.Any], typing.Callable[[tuple[type, ...]], np.dtype[typing.Any]]]] = {}
+    dtype_map: dict[typing.Union[type, types.GenericAlias], typing.Union[np.dtype[typing.Any], typing.Callable[[tuple[type, ...]], np.dtype[typing.Any]]]] = {}
     get_dtype = _dtypes.make_get_dtype_func(dtype_map)
 
     dtype_map.setdefault(AcquisitionFlags, np.dtype(np.uint64))

@@ -880,16 +880,7 @@ enum class ImageType {
   kReal = 3,
   kImag = 4,
   kComplex = 5,
-  kBitmap = 6,
-  kSpinDensityMap = 7,
-  kT1Map = 8,
-  kT2Map = 9,
-  kT2starMap = 10,
-  kAdcMap = 11,
-  kB0Map = 12,
-  kB1Map = 13,
-  kSensitivityMap = 14,
-  kUserMap = 15,
+  kRgba = 6,
 };
 
 template <typename Y>
@@ -900,9 +891,9 @@ struct ImageHeader {
   mrd::ImageFlags flags{};
   // Unique ID corresponding to the image
   uint32_t measurement_uid{};
-  // NMR frequencies of this measurement (Hz). Same size as ImageData freq dimension
+  // NMR frequencies of the measurement in Hz for each entries of ImageData frequency dimension
   std::optional<yardl::DynamicNDArray<uint32_t>> measurement_frequency{};
-  // NMR label of the measurementFreqs. Same size as measurementFrequency
+  // NMR label of the measurementFrequency. Same size as measurementFrequency
   std::optional<yardl::DynamicNDArray<std::string>> measurement_frequency_label{};
   // Physical size (in mm) in each of the 3 dimensions in the image
   yardl::FixedNDArray<float, 3> field_of_view{};

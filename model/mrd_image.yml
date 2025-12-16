@@ -22,16 +22,7 @@ ImageType: !enum
     real: 3
     imag: 4
     complex: 5
-    bitmap: 6          # a uint32 image in which MSB = R, G, B, LSB = alpha
-    spinDensityMap: 7  # in mol/m^3
-    t1Map: 8           # in s
-    t2Map: 9           # in s
-    t2starMap: 10      # in s
-    adcMap: 11         # in s/m^2
-    b0Map: 12          # in Hz (offset from Image.head.measurementFreq[0])
-    b1Map: 13          # in rad/s/V, channel dimension is xmit channels
-    sensitivityMap: 14 # in Vm^3/mol, channel dimension is rcv channels
-    userMap: 15        # custom image type with description at ImageMeta
+    rgba: 6           # a uint32 image in which MSB = R, G, B, LSB = alpha
 
 ImageData<Y>: !array
   items: Y
@@ -48,9 +39,9 @@ ImageHeader: !record
     flags: ImageFlags
     # Unique ID corresponding to the image
     measurementUid: uint
-    # NMR frequencies of this measurement (Hz). Same size as ImageData freq dimension
+    # NMR frequencies of the measurement in Hz for each entries of ImageData frequency dimension
     measurementFrequency: uint[]?
-    # NMR label of the measurementFreqs. Same size as measurementFrequency
+    # NMR label of the measurementFrequency. Same size as measurementFrequency
     measurementFrequencyLabel: string[]?
     # Physical size (in mm) in each of the 3 dimensions in the image
     fieldOfView: float[3]

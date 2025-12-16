@@ -6,9 +6,9 @@ classdef ImageHeader < handle
     flags
     % Unique ID corresponding to the image
     measurement_uid
-    % NMR frequencies of this measurement (Hz). Same size as ImageData freq dimension
+    % NMR frequencies of the measurement in Hz for each entries of ImageData frequency dimension
     measurement_frequency
-    % NMR label of the measurementFreqs. Same size as measurementFrequency
+    % NMR label of the measurementFrequency. Same size as measurementFrequency
     measurement_frequency_label
     % Physical size (in mm) in each of the 3 dimensions in the image
     field_of_view
