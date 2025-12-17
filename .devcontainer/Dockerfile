@@ -1,4 +1,4 @@
-ARG DEVCONTAINER_BASE=mcr.microsoft.com/devcontainers/base:1.0.23-ubuntu-22.04
+ARG DEVCONTAINER_BASE=mcr.microsoft.com/devcontainers/base:ubuntu-24.04
 
 #########################################################
 # file-normalizer stage
@@ -13,7 +13,7 @@ FROM mcr.microsoft.com/oss/busybox/busybox:1.33.1 as file-normalizer
 
 COPY environment.yml \
      .devcontainer/devcontainer.bashrc  \
-     .devcontainer/matlab-r2023b.ubuntu-22.04.dependencies.txt \
+     .devcontainer/matlab-r2023b.ubuntu-24.04.dependencies.txt \
      /data/
 
 RUN chmod -R 555 /data/
@@ -90,7 +90,7 @@ RUN . /opt/conda/etc/profile.d/conda.sh \
 
 
 # Install the yardl tool
-ARG YARDL_VERSION=0.6.5
+ARG YARDL_VERSION=0.6.4
 RUN wget --quiet "https://github.com/microsoft/yardl/releases/download/v${YARDL_VERSION}/yardl_${YARDL_VERSION}_linux_x86_64.tar.gz" \
     && tar -xzf "yardl_${YARDL_VERSION}_linux_x86_64.tar.gz" \
     && mv yardl "/opt/conda/envs/${CONDA_ENVIRONMENT_NAME}/bin/" \
@@ -108,7 +108,7 @@ RUN wget --quiet "https://github.com/microsoft/yardl/releases/download/v${YARDL_
 
 ENV DEBIAN_FRONTEND="noninteractive" TZ="Etc/UTC"
 
-COPY --from=file-normalizer /data/matlab-r2023b.ubuntu-22.04.dependencies.txt /tmp/matlab-dependencies.txt
+COPY --from=file-normalizer /data/matlab-r2023b.ubuntu-24.04.dependencies.txt /tmp/matlab-dependencies.txt
 
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get update \
