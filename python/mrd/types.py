@@ -1655,10 +1655,10 @@ class ImageHeader:
         )
 
     def __str__(self) -> str:
-        return f"ImageHeader(flags={self.flags}, measurement_uid={self.measurement_uid}, measurement_frequency={self.measurement_frequency}, measurement_frequency_label={self.measurement_frequency_label}, field_of_view={self.field_of_view}, position={self.position}, col_dir={self.col_dir}, line_dir={self.line_dir}, slice_dir={self.slice_dir}, patient_table_position={self.patient_table_position}, average={self.average}, slice={self.slice}, contrast={self.contrast}, phase={self.phase}, repetition={self.repetition}, set={self.set}, acquisition_time_stamp_ns={self.acquisition_time_stamp_ns}, physiology_time_stamp_ns={self.physiology_time_stamp_ns}, image_type={self.image_type}, image_index={self.image_index}, image_series_index={self.image_series_index}, user_int={self.user_int}, user_float={self.user_float})"
+        return f"ImageHeader(flags={self.flags}, measurement_uid={self.measurement_uid}, field_of_view={self.field_of_view}, position={self.position}, col_dir={self.col_dir}, line_dir={self.line_dir}, slice_dir={self.slice_dir}, patient_table_position={self.patient_table_position}, average={self.average}, slice={self.slice}, contrast={self.contrast}, phase={self.phase}, repetition={self.repetition}, set={self.set}, acquisition_time_stamp_ns={self.acquisition_time_stamp_ns}, physiology_time_stamp_ns={self.physiology_time_stamp_ns}, image_type={self.image_type}, image_index={self.image_index}, image_series_index={self.image_series_index}, user_int={self.user_int}, user_float={self.user_float})"
 
     def __repr__(self) -> str:
-        return f"ImageHeader(flags={repr(self.flags)}, measurement_uid={repr(self.measurement_uid)}, measurement_frequency={repr(self.measurement_frequency)}, measurement_frequency_label={repr(self.measurement_frequency_label)}, field_of_view={repr(self.field_of_view)}, position={repr(self.position)}, col_dir={repr(self.col_dir)}, line_dir={repr(self.line_dir)}, slice_dir={repr(self.slice_dir)}, patient_table_position={repr(self.patient_table_position)}, average={repr(self.average)}, slice={repr(self.slice)}, contrast={repr(self.contrast)}, phase={repr(self.phase)}, repetition={repr(self.repetition)}, set={repr(self.set)}, acquisition_time_stamp_ns={repr(self.acquisition_time_stamp_ns)}, physiology_time_stamp_ns={repr(self.physiology_time_stamp_ns)}, image_type={repr(self.image_type)}, image_index={repr(self.image_index)}, image_series_index={repr(self.image_series_index)}, user_int={repr(self.user_int)}, user_float={repr(self.user_float)})"
+        return f"ImageHeader(flags={repr(self.flags)}, measurement_uid={repr(self.measurement_uid)}, field_of_view={repr(self.field_of_view)}, position={repr(self.position)}, col_dir={repr(self.col_dir)}, line_dir={repr(self.line_dir)}, slice_dir={repr(self.slice_dir)}, patient_table_position={repr(self.patient_table_position)}, average={repr(self.average)}, slice={repr(self.slice)}, contrast={repr(self.contrast)}, phase={repr(self.phase)}, repetition={repr(self.repetition)}, set={repr(self.set)}, acquisition_time_stamp_ns={repr(self.acquisition_time_stamp_ns)}, physiology_time_stamp_ns={repr(self.physiology_time_stamp_ns)}, image_type={repr(self.image_type)}, image_index={repr(self.image_index)}, image_series_index={repr(self.image_series_index)}, user_int={repr(self.user_int)}, user_float={repr(self.user_float)})"
 
 
 _T = typing.TypeVar('_T')
@@ -1808,10 +1808,10 @@ class NoiseCovariance:
         )
 
     def __str__(self) -> str:
-        return f"NoiseCovariance(coil_labels={self.coil_labels}, receiver_noise_bandwidth={self.receiver_noise_bandwidth}, noise_dwell_time_us={self.noise_dwell_time_us}, sample_count={self.sample_count}, matrix={self.matrix})"
+        return f"NoiseCovariance(coilLabels={self.coil_labels}, receiverNoiseBandwidth={self.receiver_noise_bandwidth}, noiseDwellTimeNs={self.noise_dwell_time_ns}, sampleCount={self.sample_count}, matrix={self.matrix})"
 
     def __repr__(self) -> str:
-        return f"NoiseCovariance(coil_labels={repr(self.coil_labels)}, receiver_noise_bandwidth={repr(self.receiver_noise_bandwidth)}, noise_dwell_time_us={repr(self.noise_dwell_time_us)}, sample_count={repr(self.sample_count)}, matrix={repr(self.matrix)})"
+        return f"NoiseCovariance(coilLabels={repr(self.coil_labels)}, receiverNoiseBandwidth={repr(self.receiver_noise_bandwidth)}, noiseDwellTimeNs={repr(self.noise_dwell_time_ns)}, sampleCount={repr(self.sample_count)}, matrix={repr(self.matrix)})"
 
 
 WaveformSamples = npt.NDArray[T_NP]
