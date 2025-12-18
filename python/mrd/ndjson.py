@@ -2668,13 +2668,13 @@ class NoiseCovarianceConverter(_ndjson.JsonConverter[NoiseCovariance, np.void]):
     def __init__(self) -> None:
         self._coil_labels_converter = _ndjson.VectorConverter(CoilLabelTypeConverter())
         self._receiver_noise_bandwidth_converter = _ndjson.float32_converter
-        self._noise_dwell_time_us_converter = _ndjson.float32_converter
+        self._noise_dwell_time_ns_converter = _ndjson.uint64_converter
         self._sample_count_converter = _ndjson.size_converter
         self._matrix_converter = _ndjson.NDArrayConverter(_ndjson.complexfloat32_converter, 2)
         super().__init__(np.dtype([
             ("coil_labels", self._coil_labels_converter.overall_dtype()),
             ("receiver_noise_bandwidth", self._receiver_noise_bandwidth_converter.overall_dtype()),
-            ("noise_dwell_time_us", self._noise_dwell_time_us_converter.overall_dtype()),
+            ("noise_dwell_time_ns", self._noise_dwell_time_ns_converter.overall_dtype()),
             ("sample_count", self._sample_count_converter.overall_dtype()),
             ("matrix", self._matrix_converter.overall_dtype()),
         ]))
@@ -2686,7 +2686,7 @@ class NoiseCovarianceConverter(_ndjson.JsonConverter[NoiseCovariance, np.void]):
 
         json_object["coilLabels"] = self._coil_labels_converter.to_json(value.coil_labels)
         json_object["receiverNoiseBandwidth"] = self._receiver_noise_bandwidth_converter.to_json(value.receiver_noise_bandwidth)
-        json_object["noiseDwellTimeUs"] = self._noise_dwell_time_us_converter.to_json(value.noise_dwell_time_us)
+        json_object["noiseDwellTimeNs"] = self._noise_dwell_time_ns_converter.to_json(value.noise_dwell_time_ns)
         json_object["sampleCount"] = self._sample_count_converter.to_json(value.sample_count)
         json_object["matrix"] = self._matrix_converter.to_json(value.matrix)
         return json_object
@@ -2698,7 +2698,7 @@ class NoiseCovarianceConverter(_ndjson.JsonConverter[NoiseCovariance, np.void]):
 
         json_object["coilLabels"] = self._coil_labels_converter.numpy_to_json(value["coil_labels"])
         json_object["receiverNoiseBandwidth"] = self._receiver_noise_bandwidth_converter.numpy_to_json(value["receiver_noise_bandwidth"])
-        json_object["noiseDwellTimeUs"] = self._noise_dwell_time_us_converter.numpy_to_json(value["noise_dwell_time_us"])
+        json_object["noiseDwellTimeNs"] = self._noise_dwell_time_ns_converter.numpy_to_json(value["noise_dwell_time_ns"])
         json_object["sampleCount"] = self._sample_count_converter.numpy_to_json(value["sample_count"])
         json_object["matrix"] = self._matrix_converter.numpy_to_json(value["matrix"])
         return json_object
@@ -2709,7 +2709,7 @@ class NoiseCovarianceConverter(_ndjson.JsonConverter[NoiseCovariance, np.void]):
         return NoiseCovariance(
             coil_labels=self._coil_labels_converter.from_json(json_object["coilLabels"],),
             receiver_noise_bandwidth=self._receiver_noise_bandwidth_converter.from_json(json_object["receiverNoiseBandwidth"],),
-            noise_dwell_time_us=self._noise_dwell_time_us_converter.from_json(json_object["noiseDwellTimeUs"],),
+            noise_dwell_time_ns=self._noise_dwell_time_ns_converter.from_json(json_object["noiseDwellTimeNs"],),
             sample_count=self._sample_count_converter.from_json(json_object["sampleCount"],),
             matrix=self._matrix_converter.from_json(json_object["matrix"],),
         )
@@ -2720,7 +2720,7 @@ class NoiseCovarianceConverter(_ndjson.JsonConverter[NoiseCovariance, np.void]):
         return (
             self._coil_labels_converter.from_json_to_numpy(json_object["coilLabels"]),
             self._receiver_noise_bandwidth_converter.from_json_to_numpy(json_object["receiverNoiseBandwidth"]),
-            self._noise_dwell_time_us_converter.from_json_to_numpy(json_object["noiseDwellTimeUs"]),
+            self._noise_dwell_time_ns_converter.from_json_to_numpy(json_object["noiseDwellTimeNs"]),
             self._sample_count_converter.from_json_to_numpy(json_object["sampleCount"]),
             self._matrix_converter.from_json_to_numpy(json_object["matrix"]),
         ) # type:ignore 
@@ -3175,6 +3175,132 @@ class ImageArrayConverter(_ndjson.JsonConverter[ImageArray, np.void]):
             self._headers_converter.from_json_to_numpy(json_object["headers"]),
             self._meta_converter.from_json_to_numpy(json_object["meta"]),
             self._waveforms_converter.from_json_to_numpy(json_object["waveforms"]),
+        ) # type:ignore 
+
+
+array_type_name_to_value_map = {
+    "spinDensityMap": ArrayType.SPIN_DENSITY_MAP,
+    "t1Map": ArrayType.T1_MAP,
+    "t2Map": ArrayType.T2_MAP,
+    "t2starMap": ArrayType.T2STAR_MAP,
+    "adcMap": ArrayType.ADC_MAP,
+    "b0Map": ArrayType.B0_MAP,
+    "b1Map": ArrayType.B1_MAP,
+    "sensitivityMap": ArrayType.SENSITIVITY_MAP,
+    "gfactorMap": ArrayType.GFACTOR_MAP,
+    "userMap": ArrayType.USER_MAP,
+}
+array_type_value_to_name_map = {v: n for n, v in array_type_name_to_value_map.items()}
+
+array_dimension_name_to_value_map = {
+    "channel": ArrayDimension.CHANNEL,
+    "z": ArrayDimension.Z,
+    "y": ArrayDimension.Y,
+    "x": ArrayDimension.X,
+    "frequency": ArrayDimension.FREQUENCY,
+    "basis": ArrayDimension.BASIS,
+    "samples": ArrayDimension.SAMPLES,
+    "loc": ArrayDimension.LOC,
+    "s": ArrayDimension.S,
+    "n": ArrayDimension.N,
+    "e2": ArrayDimension.E2,
+    "e1": ArrayDimension.E1,
+    "e0": ArrayDimension.E0,
+    "time": ArrayDimension.TIME,
+}
+array_dimension_value_to_name_map = {v: n for n, v in array_dimension_name_to_value_map.items()}
+
+class NDArrayHeaderConverter(_ndjson.JsonConverter[NDArrayHeader, np.void]):
+    def __init__(self) -> None:
+        self._dimension_labels_converter = _ndjson.VectorConverter(_ndjson.EnumConverter(ArrayDimension, np.int32, array_dimension_name_to_value_map, array_dimension_value_to_name_map))
+        self._array_type_converter = _ndjson.EnumConverter(ArrayType, np.int32, array_type_name_to_value_map, array_type_value_to_name_map)
+        self._meta_converter = _ndjson.MapConverter(_ndjson.string_converter, _ndjson.VectorConverter(_ndjson.UnionConverter(ArrayMetaValue, [(ArrayMetaValue.String, _ndjson.string_converter, [str]), (ArrayMetaValue.Int64, _ndjson.int64_converter, [int, float]), (ArrayMetaValue.Float64, _ndjson.float64_converter, [int, float])], False)))
+        super().__init__(np.dtype([
+            ("dimension_labels", self._dimension_labels_converter.overall_dtype()),
+            ("array_type", self._array_type_converter.overall_dtype()),
+            ("meta", self._meta_converter.overall_dtype()),
+        ]))
+
+    def to_json(self, value: NDArrayHeader) -> object:
+        if not isinstance(value, NDArrayHeader): # pyright: ignore [reportUnnecessaryIsInstance]
+            raise TypeError("Expected 'NDArrayHeader' instance")
+        json_object = {}
+
+        json_object["dimensionLabels"] = self._dimension_labels_converter.to_json(value.dimension_labels)
+        json_object["arrayType"] = self._array_type_converter.to_json(value.array_type)
+        json_object["meta"] = self._meta_converter.to_json(value.meta)
+        return json_object
+
+    def numpy_to_json(self, value: np.void) -> object:
+        if not isinstance(value, np.void): # pyright: ignore [reportUnnecessaryIsInstance]
+            raise TypeError("Expected 'np.void' instance")
+        json_object = {}
+
+        json_object["dimensionLabels"] = self._dimension_labels_converter.numpy_to_json(value["dimension_labels"])
+        json_object["arrayType"] = self._array_type_converter.numpy_to_json(value["array_type"])
+        json_object["meta"] = self._meta_converter.numpy_to_json(value["meta"])
+        return json_object
+
+    def from_json(self, json_object: object) -> NDArrayHeader:
+        if not isinstance(json_object, dict):
+            raise TypeError("Expected 'dict' instance")
+        return NDArrayHeader(
+            dimension_labels=self._dimension_labels_converter.from_json(json_object["dimensionLabels"],),
+            array_type=self._array_type_converter.from_json(json_object["arrayType"],),
+            meta=self._meta_converter.from_json(json_object["meta"],),
+        )
+
+    def from_json_to_numpy(self, json_object: object) -> np.void:
+        if not isinstance(json_object, dict):
+            raise TypeError("Expected 'dict' instance")
+        return (
+            self._dimension_labels_converter.from_json_to_numpy(json_object["dimensionLabels"]),
+            self._array_type_converter.from_json_to_numpy(json_object["arrayType"]),
+            self._meta_converter.from_json_to_numpy(json_object["meta"]),
+        ) # type:ignore 
+
+
+class NDArrayConverter(typing.Generic[T, T_NP], _ndjson.JsonConverter[NDArray[T_NP], np.void]):
+    def __init__(self, t_converter: _ndjson.JsonConverter[T, T_NP]) -> None:
+        self._head_converter = NDArrayHeaderConverter()
+        self._data_converter = _ndjson.DynamicNDArrayConverter(t_converter)
+        super().__init__(np.dtype([
+            ("head", self._head_converter.overall_dtype()),
+            ("data", self._data_converter.overall_dtype()),
+        ]))
+
+    def to_json(self, value: NDArray[T_NP]) -> object:
+        if not isinstance(value, NDArray): # pyright: ignore [reportUnnecessaryIsInstance]
+            raise TypeError("Expected 'NDArray[T_NP]' instance")
+        json_object = {}
+
+        json_object["head"] = self._head_converter.to_json(value.head)
+        json_object["data"] = self._data_converter.to_json(value.data)
+        return json_object
+
+    def numpy_to_json(self, value: np.void) -> object:
+        if not isinstance(value, np.void): # pyright: ignore [reportUnnecessaryIsInstance]
+            raise TypeError("Expected 'np.void' instance")
+        json_object = {}
+
+        json_object["head"] = self._head_converter.numpy_to_json(value["head"])
+        json_object["data"] = self._data_converter.numpy_to_json(value["data"])
+        return json_object
+
+    def from_json(self, json_object: object) -> NDArray[T_NP]:
+        if not isinstance(json_object, dict):
+            raise TypeError("Expected 'dict' instance")
+        return NDArray[T_NP](
+            head=self._head_converter.from_json(json_object["head"],),
+            data=self._data_converter.from_json(json_object["data"],),
+        )
+
+    def from_json_to_numpy(self, json_object: object) -> np.void:
+        if not isinstance(json_object, dict):
+            raise TypeError("Expected 'dict' instance")
+        return (
+            self._head_converter.from_json_to_numpy(json_object["head"]),
+            self._data_converter.from_json_to_numpy(json_object["data"]),
         ) # type:ignore 
 
 
@@ -3754,7 +3880,7 @@ class NDJsonMrdWriter(_ndjson.NDJsonProtocolWriter, MrdWriterBase):
         self._write_json_line({"header": json_value})
 
     def _write_data(self, value: collections.abc.Iterable[StreamItem]) -> None:
-        converter = _ndjson.UnionConverter(StreamItem, [(StreamItem.Acquisition, AcquisitionConverter(), [dict]), (StreamItem.WaveformUint32, WaveformConverter(_ndjson.uint32_converter), [dict]), (StreamItem.ImageUint16, ImageConverter(_ndjson.uint16_converter), [dict]), (StreamItem.ImageInt16, ImageConverter(_ndjson.int16_converter), [dict]), (StreamItem.ImageUint32, ImageConverter(_ndjson.uint32_converter), [dict]), (StreamItem.ImageInt32, ImageConverter(_ndjson.int32_converter), [dict]), (StreamItem.ImageFloat, ImageConverter(_ndjson.float32_converter), [dict]), (StreamItem.ImageDouble, ImageConverter(_ndjson.float64_converter), [dict]), (StreamItem.ImageComplexFloat, ImageConverter(_ndjson.complexfloat32_converter), [dict]), (StreamItem.ImageComplexDouble, ImageConverter(_ndjson.complexfloat64_converter), [dict]), (StreamItem.AcquisitionBucket, AcquisitionBucketConverter(), [dict]), (StreamItem.ReconData, ReconDataConverter(), [dict]), (StreamItem.ArrayComplexFloat, _ndjson.DynamicNDArrayConverter(_ndjson.complexfloat32_converter), [dict]), (StreamItem.ImageArray, ImageArrayConverter(), [dict]), (StreamItem.PulseqDefinitions, PulseqDefinitionsConverter(), [dict]), (StreamItem.Blocks, _ndjson.VectorConverter(BlockConverter()), [list]), (StreamItem.Rf, RFEventConverter(), [dict]), (StreamItem.ArbitraryGradient, ArbitraryGradientConverter(), [dict]), (StreamItem.TrapezoidalGradient, TrapezoidalGradientConverter(), [dict]), (StreamItem.Adc, ADCEventConverter(), [dict]), (StreamItem.Shape, ShapeConverter(), [dict])], False)
+        converter = _ndjson.UnionConverter(StreamItem, [(StreamItem.Acquisition, AcquisitionConverter(), [dict]), (StreamItem.WaveformUint32, WaveformConverter(_ndjson.uint32_converter), [dict]), (StreamItem.ImageUint16, ImageConverter(_ndjson.uint16_converter), [dict]), (StreamItem.ImageInt16, ImageConverter(_ndjson.int16_converter), [dict]), (StreamItem.ImageUint32, ImageConverter(_ndjson.uint32_converter), [dict]), (StreamItem.ImageInt32, ImageConverter(_ndjson.int32_converter), [dict]), (StreamItem.ImageFloat, ImageConverter(_ndjson.float32_converter), [dict]), (StreamItem.ImageDouble, ImageConverter(_ndjson.float64_converter), [dict]), (StreamItem.ImageComplexFloat, ImageConverter(_ndjson.complexfloat32_converter), [dict]), (StreamItem.ImageComplexDouble, ImageConverter(_ndjson.complexfloat64_converter), [dict]), (StreamItem.AcquisitionBucket, AcquisitionBucketConverter(), [dict]), (StreamItem.ReconData, ReconDataConverter(), [dict]), (StreamItem.ArrayComplexFloat, _ndjson.DynamicNDArrayConverter(_ndjson.complexfloat32_converter), [dict]), (StreamItem.ImageArray, ImageArrayConverter(), [dict]), (StreamItem.NdArrayUint16, NDArrayConverter(_ndjson.uint16_converter), [dict]), (StreamItem.NdArrayInt16, NDArrayConverter(_ndjson.int16_converter), [dict]), (StreamItem.NdArrayUint32, NDArrayConverter(_ndjson.uint32_converter), [dict]), (StreamItem.NdArrayInt32, NDArrayConverter(_ndjson.int32_converter), [dict]), (StreamItem.NdArrayFloat, NDArrayConverter(_ndjson.float32_converter), [dict]), (StreamItem.NdArrayDouble, NDArrayConverter(_ndjson.float64_converter), [dict]), (StreamItem.NdArrayComplexFloat, NDArrayConverter(_ndjson.complexfloat32_converter), [dict]), (StreamItem.NdArrayComplexDouble, NDArrayConverter(_ndjson.complexfloat64_converter), [dict]), (StreamItem.PulseqDefinitions, PulseqDefinitionsConverter(), [dict]), (StreamItem.Blocks, _ndjson.VectorConverter(BlockConverter()), [list]), (StreamItem.Rf, RFEventConverter(), [dict]), (StreamItem.ArbitraryGradient, ArbitraryGradientConverter(), [dict]), (StreamItem.TrapezoidalGradient, TrapezoidalGradientConverter(), [dict]), (StreamItem.Adc, ADCEventConverter(), [dict]), (StreamItem.Shape, ShapeConverter(), [dict])], False)
         for item in value:
             json_item = converter.to_json(item)
             self._write_json_line({"data": json_item})
@@ -3777,7 +3903,7 @@ class NDJsonMrdReader(_ndjson.NDJsonProtocolReader, MrdReaderBase):
         return converter.from_json(json_object)
 
     def _read_data(self) -> collections.abc.Iterable[StreamItem]:
-        converter = _ndjson.UnionConverter(StreamItem, [(StreamItem.Acquisition, AcquisitionConverter(), [dict]), (StreamItem.WaveformUint32, WaveformConverter(_ndjson.uint32_converter), [dict]), (StreamItem.ImageUint16, ImageConverter(_ndjson.uint16_converter), [dict]), (StreamItem.ImageInt16, ImageConverter(_ndjson.int16_converter), [dict]), (StreamItem.ImageUint32, ImageConverter(_ndjson.uint32_converter), [dict]), (StreamItem.ImageInt32, ImageConverter(_ndjson.int32_converter), [dict]), (StreamItem.ImageFloat, ImageConverter(_ndjson.float32_converter), [dict]), (StreamItem.ImageDouble, ImageConverter(_ndjson.float64_converter), [dict]), (StreamItem.ImageComplexFloat, ImageConverter(_ndjson.complexfloat32_converter), [dict]), (StreamItem.ImageComplexDouble, ImageConverter(_ndjson.complexfloat64_converter), [dict]), (StreamItem.AcquisitionBucket, AcquisitionBucketConverter(), [dict]), (StreamItem.ReconData, ReconDataConverter(), [dict]), (StreamItem.ArrayComplexFloat, _ndjson.DynamicNDArrayConverter(_ndjson.complexfloat32_converter), [dict]), (StreamItem.ImageArray, ImageArrayConverter(), [dict]), (StreamItem.PulseqDefinitions, PulseqDefinitionsConverter(), [dict]), (StreamItem.Blocks, _ndjson.VectorConverter(BlockConverter()), [list]), (StreamItem.Rf, RFEventConverter(), [dict]), (StreamItem.ArbitraryGradient, ArbitraryGradientConverter(), [dict]), (StreamItem.TrapezoidalGradient, TrapezoidalGradientConverter(), [dict]), (StreamItem.Adc, ADCEventConverter(), [dict]), (StreamItem.Shape, ShapeConverter(), [dict])], False)
+        converter = _ndjson.UnionConverter(StreamItem, [(StreamItem.Acquisition, AcquisitionConverter(), [dict]), (StreamItem.WaveformUint32, WaveformConverter(_ndjson.uint32_converter), [dict]), (StreamItem.ImageUint16, ImageConverter(_ndjson.uint16_converter), [dict]), (StreamItem.ImageInt16, ImageConverter(_ndjson.int16_converter), [dict]), (StreamItem.ImageUint32, ImageConverter(_ndjson.uint32_converter), [dict]), (StreamItem.ImageInt32, ImageConverter(_ndjson.int32_converter), [dict]), (StreamItem.ImageFloat, ImageConverter(_ndjson.float32_converter), [dict]), (StreamItem.ImageDouble, ImageConverter(_ndjson.float64_converter), [dict]), (StreamItem.ImageComplexFloat, ImageConverter(_ndjson.complexfloat32_converter), [dict]), (StreamItem.ImageComplexDouble, ImageConverter(_ndjson.complexfloat64_converter), [dict]), (StreamItem.AcquisitionBucket, AcquisitionBucketConverter(), [dict]), (StreamItem.ReconData, ReconDataConverter(), [dict]), (StreamItem.ArrayComplexFloat, _ndjson.DynamicNDArrayConverter(_ndjson.complexfloat32_converter), [dict]), (StreamItem.ImageArray, ImageArrayConverter(), [dict]), (StreamItem.NdArrayUint16, NDArrayConverter(_ndjson.uint16_converter), [dict]), (StreamItem.NdArrayInt16, NDArrayConverter(_ndjson.int16_converter), [dict]), (StreamItem.NdArrayUint32, NDArrayConverter(_ndjson.uint32_converter), [dict]), (StreamItem.NdArrayInt32, NDArrayConverter(_ndjson.int32_converter), [dict]), (StreamItem.NdArrayFloat, NDArrayConverter(_ndjson.float32_converter), [dict]), (StreamItem.NdArrayDouble, NDArrayConverter(_ndjson.float64_converter), [dict]), (StreamItem.NdArrayComplexFloat, NDArrayConverter(_ndjson.complexfloat32_converter), [dict]), (StreamItem.NdArrayComplexDouble, NDArrayConverter(_ndjson.complexfloat64_converter), [dict]), (StreamItem.PulseqDefinitions, PulseqDefinitionsConverter(), [dict]), (StreamItem.Blocks, _ndjson.VectorConverter(BlockConverter()), [list]), (StreamItem.Rf, RFEventConverter(), [dict]), (StreamItem.ArbitraryGradient, ArbitraryGradientConverter(), [dict]), (StreamItem.TrapezoidalGradient, TrapezoidalGradientConverter(), [dict]), (StreamItem.Adc, ADCEventConverter(), [dict]), (StreamItem.Shape, ShapeConverter(), [dict])], False)
         while (json_object := self._read_json_line("data", False)) is not _ndjson.MISSING_SENTINEL:
             yield converter.from_json(json_object)
 

@@ -7,7 +7,7 @@ classdef NoiseCovariance < handle
     % Comes from Header.acquisitionSystemInformation.relativeReceiverNoiseBandwidth
     receiver_noise_bandwidth
     % Comes from Acquisition.sampleTimeUs
-    noise_dwell_time_us
+    noise_dwell_time_ns
     % Number of samples used to compute matrix
     sample_count
     % Noise covariance matrix with dimensions [coil, coil]
@@ -19,13 +19,13 @@ classdef NoiseCovariance < handle
       arguments
         kwargs.coil_labels = mrd.CoilLabelType.empty();
         kwargs.receiver_noise_bandwidth = single(0);
-        kwargs.noise_dwell_time_us = single(0);
+        kwargs.noise_dwell_time_ns = uint64(0);
         kwargs.sample_count = uint64(0);
         kwargs.matrix = single.empty();
       end
       self.coil_labels = kwargs.coil_labels;
       self.receiver_noise_bandwidth = kwargs.receiver_noise_bandwidth;
-      self.noise_dwell_time_us = kwargs.noise_dwell_time_us;
+      self.noise_dwell_time_ns = kwargs.noise_dwell_time_ns;
       self.sample_count = kwargs.sample_count;
       self.matrix = kwargs.matrix;
     end

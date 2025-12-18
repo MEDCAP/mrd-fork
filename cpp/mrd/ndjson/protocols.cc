@@ -175,6 +175,20 @@ void from_json(ordered_json const& j, mrd::ReconData& value);
 void to_json(ordered_json& j, mrd::ImageArray const& value);
 void from_json(ordered_json const& j, mrd::ImageArray& value);
 
+void to_json(ordered_json& j, mrd::ArrayType const& value);
+void from_json(ordered_json const& j, mrd::ArrayType& value);
+
+void to_json(ordered_json& j, mrd::ArrayDimension const& value);
+void from_json(ordered_json const& j, mrd::ArrayDimension& value);
+
+void to_json(ordered_json& j, mrd::NDArrayHeader const& value);
+void from_json(ordered_json const& j, mrd::NDArrayHeader& value);
+
+template <typename T>
+void to_json(ordered_json& j, mrd::NDArray<T> const& value);
+template <typename T>
+void from_json(ordered_json const& j, mrd::NDArray<T>& value);
+
 void to_json(ordered_json& j, mrd::PulseqDefinitions const& value);
 void from_json(ordered_json const& j, mrd::PulseqDefinitions& value);
 
@@ -311,8 +325,79 @@ struct adl_serializer<std::variant<mrd::Image<uint16_t>, mrd::Image<int16_t>, mr
 };
 
 template <>
-struct adl_serializer<std::variant<mrd::Acquisition, mrd::Waveform<uint32_t>, mrd::Image<uint16_t>, mrd::Image<int16_t>, mrd::Image<uint32_t>, mrd::Image<int32_t>, mrd::Image<float>, mrd::Image<double>, mrd::Image<std::complex<float>>, mrd::Image<std::complex<double>>, mrd::AcquisitionBucket, mrd::ReconData, yardl::DynamicNDArray<std::complex<float>>, mrd::ImageArray, mrd::PulseqDefinitions, std::vector<mrd::Block>, mrd::RFEvent, mrd::ArbitraryGradient, mrd::TrapezoidalGradient, mrd::ADCEvent, mrd::Shape>> {
-  static void to_json(ordered_json& j, std::variant<mrd::Acquisition, mrd::Waveform<uint32_t>, mrd::Image<uint16_t>, mrd::Image<int16_t>, mrd::Image<uint32_t>, mrd::Image<int32_t>, mrd::Image<float>, mrd::Image<double>, mrd::Image<std::complex<float>>, mrd::Image<std::complex<double>>, mrd::AcquisitionBucket, mrd::ReconData, yardl::DynamicNDArray<std::complex<float>>, mrd::ImageArray, mrd::PulseqDefinitions, std::vector<mrd::Block>, mrd::RFEvent, mrd::ArbitraryGradient, mrd::TrapezoidalGradient, mrd::ADCEvent, mrd::Shape> const& value) {
+struct adl_serializer<std::variant<mrd::NDArray<uint16_t>, mrd::NDArray<int16_t>, mrd::NDArray<uint32_t>, mrd::NDArray<int32_t>, mrd::NDArray<float>, mrd::NDArray<double>, mrd::NDArray<std::complex<float>>, mrd::NDArray<std::complex<double>>>> {
+  static void to_json(ordered_json& j, std::variant<mrd::NDArray<uint16_t>, mrd::NDArray<int16_t>, mrd::NDArray<uint32_t>, mrd::NDArray<int32_t>, mrd::NDArray<float>, mrd::NDArray<double>, mrd::NDArray<std::complex<float>>, mrd::NDArray<std::complex<double>>> const& value) {
+    switch (value.index()) {
+      case 0:
+        j = ordered_json{ {"NDArrayUint16", std::get<mrd::NDArray<uint16_t>>(value)} };
+        break;
+      case 1:
+        j = ordered_json{ {"NDArrayInt16", std::get<mrd::NDArray<int16_t>>(value)} };
+        break;
+      case 2:
+        j = ordered_json{ {"NDArrayUint32", std::get<mrd::NDArray<uint32_t>>(value)} };
+        break;
+      case 3:
+        j = ordered_json{ {"NDArrayInt32", std::get<mrd::NDArray<int32_t>>(value)} };
+        break;
+      case 4:
+        j = ordered_json{ {"NDArrayFloat", std::get<mrd::NDArray<float>>(value)} };
+        break;
+      case 5:
+        j = ordered_json{ {"NDArrayDouble", std::get<mrd::NDArray<double>>(value)} };
+        break;
+      case 6:
+        j = ordered_json{ {"NDArrayComplexFloat", std::get<mrd::NDArray<std::complex<float>>>(value)} };
+        break;
+      case 7:
+        j = ordered_json{ {"NDArrayComplexDouble", std::get<mrd::NDArray<std::complex<double>>>(value)} };
+        break;
+      default:
+        throw std::runtime_error("Invalid union value");
+    }
+  }
+
+  static void from_json(ordered_json const& j, std::variant<mrd::NDArray<uint16_t>, mrd::NDArray<int16_t>, mrd::NDArray<uint32_t>, mrd::NDArray<int32_t>, mrd::NDArray<float>, mrd::NDArray<double>, mrd::NDArray<std::complex<float>>, mrd::NDArray<std::complex<double>>>& value) {
+    auto it = j.begin();
+    std::string tag = it.key();
+    if (tag == "NDArrayUint16") {
+      value = it.value().get<mrd::NDArray<uint16_t>>();
+      return;
+    }
+    if (tag == "NDArrayInt16") {
+      value = it.value().get<mrd::NDArray<int16_t>>();
+      return;
+    }
+    if (tag == "NDArrayUint32") {
+      value = it.value().get<mrd::NDArray<uint32_t>>();
+      return;
+    }
+    if (tag == "NDArrayInt32") {
+      value = it.value().get<mrd::NDArray<int32_t>>();
+      return;
+    }
+    if (tag == "NDArrayFloat") {
+      value = it.value().get<mrd::NDArray<float>>();
+      return;
+    }
+    if (tag == "NDArrayDouble") {
+      value = it.value().get<mrd::NDArray<double>>();
+      return;
+    }
+    if (tag == "NDArrayComplexFloat") {
+      value = it.value().get<mrd::NDArray<std::complex<float>>>();
+      return;
+    }
+    if (tag == "NDArrayComplexDouble") {
+      value = it.value().get<mrd::NDArray<std::complex<double>>>();
+      return;
+    }
+  }
+};
+
+template <>
+struct adl_serializer<std::variant<mrd::Acquisition, mrd::Waveform<uint32_t>, mrd::Image<uint16_t>, mrd::Image<int16_t>, mrd::Image<uint32_t>, mrd::Image<int32_t>, mrd::Image<float>, mrd::Image<double>, mrd::Image<std::complex<float>>, mrd::Image<std::complex<double>>, mrd::AcquisitionBucket, mrd::ReconData, yardl::DynamicNDArray<std::complex<float>>, mrd::ImageArray, mrd::NDArray<uint16_t>, mrd::NDArray<int16_t>, mrd::NDArray<uint32_t>, mrd::NDArray<int32_t>, mrd::NDArray<float>, mrd::NDArray<double>, mrd::NDArray<std::complex<float>>, mrd::NDArray<std::complex<double>>, mrd::PulseqDefinitions, std::vector<mrd::Block>, mrd::RFEvent, mrd::ArbitraryGradient, mrd::TrapezoidalGradient, mrd::ADCEvent, mrd::Shape>> {
+  static void to_json(ordered_json& j, std::variant<mrd::Acquisition, mrd::Waveform<uint32_t>, mrd::Image<uint16_t>, mrd::Image<int16_t>, mrd::Image<uint32_t>, mrd::Image<int32_t>, mrd::Image<float>, mrd::Image<double>, mrd::Image<std::complex<float>>, mrd::Image<std::complex<double>>, mrd::AcquisitionBucket, mrd::ReconData, yardl::DynamicNDArray<std::complex<float>>, mrd::ImageArray, mrd::NDArray<uint16_t>, mrd::NDArray<int16_t>, mrd::NDArray<uint32_t>, mrd::NDArray<int32_t>, mrd::NDArray<float>, mrd::NDArray<double>, mrd::NDArray<std::complex<float>>, mrd::NDArray<std::complex<double>>, mrd::PulseqDefinitions, std::vector<mrd::Block>, mrd::RFEvent, mrd::ArbitraryGradient, mrd::TrapezoidalGradient, mrd::ADCEvent, mrd::Shape> const& value) {
     switch (value.index()) {
       case 0:
         j = ordered_json{ {"acquisition", std::get<mrd::Acquisition>(value)} };
@@ -357,24 +442,48 @@ struct adl_serializer<std::variant<mrd::Acquisition, mrd::Waveform<uint32_t>, mr
         j = ordered_json{ {"imageArray", std::get<mrd::ImageArray>(value)} };
         break;
       case 14:
-        j = ordered_json{ {"pulseqDefinitions", std::get<mrd::PulseqDefinitions>(value)} };
+        j = ordered_json{ {"ndArrayUint16", std::get<mrd::NDArray<uint16_t>>(value)} };
         break;
       case 15:
-        j = ordered_json{ {"blocks", std::get<std::vector<mrd::Block>>(value)} };
+        j = ordered_json{ {"ndArrayInt16", std::get<mrd::NDArray<int16_t>>(value)} };
         break;
       case 16:
-        j = ordered_json{ {"rf", std::get<mrd::RFEvent>(value)} };
+        j = ordered_json{ {"ndArrayUint32", std::get<mrd::NDArray<uint32_t>>(value)} };
         break;
       case 17:
-        j = ordered_json{ {"arbitraryGradient", std::get<mrd::ArbitraryGradient>(value)} };
+        j = ordered_json{ {"ndArrayInt32", std::get<mrd::NDArray<int32_t>>(value)} };
         break;
       case 18:
-        j = ordered_json{ {"trapezoidalGradient", std::get<mrd::TrapezoidalGradient>(value)} };
+        j = ordered_json{ {"ndArrayFloat", std::get<mrd::NDArray<float>>(value)} };
         break;
       case 19:
-        j = ordered_json{ {"adc", std::get<mrd::ADCEvent>(value)} };
+        j = ordered_json{ {"ndArrayDouble", std::get<mrd::NDArray<double>>(value)} };
         break;
       case 20:
+        j = ordered_json{ {"ndArrayComplexFloat", std::get<mrd::NDArray<std::complex<float>>>(value)} };
+        break;
+      case 21:
+        j = ordered_json{ {"ndArrayComplexDouble", std::get<mrd::NDArray<std::complex<double>>>(value)} };
+        break;
+      case 22:
+        j = ordered_json{ {"pulseqDefinitions", std::get<mrd::PulseqDefinitions>(value)} };
+        break;
+      case 23:
+        j = ordered_json{ {"blocks", std::get<std::vector<mrd::Block>>(value)} };
+        break;
+      case 24:
+        j = ordered_json{ {"rf", std::get<mrd::RFEvent>(value)} };
+        break;
+      case 25:
+        j = ordered_json{ {"arbitraryGradient", std::get<mrd::ArbitraryGradient>(value)} };
+        break;
+      case 26:
+        j = ordered_json{ {"trapezoidalGradient", std::get<mrd::TrapezoidalGradient>(value)} };
+        break;
+      case 27:
+        j = ordered_json{ {"adc", std::get<mrd::ADCEvent>(value)} };
+        break;
+      case 28:
         j = ordered_json{ {"shape", std::get<mrd::Shape>(value)} };
         break;
       default:
@@ -382,7 +491,7 @@ struct adl_serializer<std::variant<mrd::Acquisition, mrd::Waveform<uint32_t>, mr
     }
   }
 
-  static void from_json(ordered_json const& j, std::variant<mrd::Acquisition, mrd::Waveform<uint32_t>, mrd::Image<uint16_t>, mrd::Image<int16_t>, mrd::Image<uint32_t>, mrd::Image<int32_t>, mrd::Image<float>, mrd::Image<double>, mrd::Image<std::complex<float>>, mrd::Image<std::complex<double>>, mrd::AcquisitionBucket, mrd::ReconData, yardl::DynamicNDArray<std::complex<float>>, mrd::ImageArray, mrd::PulseqDefinitions, std::vector<mrd::Block>, mrd::RFEvent, mrd::ArbitraryGradient, mrd::TrapezoidalGradient, mrd::ADCEvent, mrd::Shape>& value) {
+  static void from_json(ordered_json const& j, std::variant<mrd::Acquisition, mrd::Waveform<uint32_t>, mrd::Image<uint16_t>, mrd::Image<int16_t>, mrd::Image<uint32_t>, mrd::Image<int32_t>, mrd::Image<float>, mrd::Image<double>, mrd::Image<std::complex<float>>, mrd::Image<std::complex<double>>, mrd::AcquisitionBucket, mrd::ReconData, yardl::DynamicNDArray<std::complex<float>>, mrd::ImageArray, mrd::NDArray<uint16_t>, mrd::NDArray<int16_t>, mrd::NDArray<uint32_t>, mrd::NDArray<int32_t>, mrd::NDArray<float>, mrd::NDArray<double>, mrd::NDArray<std::complex<float>>, mrd::NDArray<std::complex<double>>, mrd::PulseqDefinitions, std::vector<mrd::Block>, mrd::RFEvent, mrd::ArbitraryGradient, mrd::TrapezoidalGradient, mrd::ADCEvent, mrd::Shape>& value) {
     auto it = j.begin();
     std::string tag = it.key();
     if (tag == "acquisition") {
@@ -439,6 +548,38 @@ struct adl_serializer<std::variant<mrd::Acquisition, mrd::Waveform<uint32_t>, mr
     }
     if (tag == "imageArray") {
       value = it.value().get<mrd::ImageArray>();
+      return;
+    }
+    if (tag == "ndArrayUint16") {
+      value = it.value().get<mrd::NDArray<uint16_t>>();
+      return;
+    }
+    if (tag == "ndArrayInt16") {
+      value = it.value().get<mrd::NDArray<int16_t>>();
+      return;
+    }
+    if (tag == "ndArrayUint32") {
+      value = it.value().get<mrd::NDArray<uint32_t>>();
+      return;
+    }
+    if (tag == "ndArrayInt32") {
+      value = it.value().get<mrd::NDArray<int32_t>>();
+      return;
+    }
+    if (tag == "ndArrayFloat") {
+      value = it.value().get<mrd::NDArray<float>>();
+      return;
+    }
+    if (tag == "ndArrayDouble") {
+      value = it.value().get<mrd::NDArray<double>>();
+      return;
+    }
+    if (tag == "ndArrayComplexFloat") {
+      value = it.value().get<mrd::NDArray<std::complex<float>>>();
+      return;
+    }
+    if (tag == "ndArrayComplexDouble") {
+      value = it.value().get<mrd::NDArray<std::complex<double>>>();
       return;
     }
     if (tag == "pulseqDefinitions") {
@@ -2851,8 +2992,8 @@ void to_json(ordered_json& j, mrd::NoiseCovariance const& value) {
   if (yardl::ndjson::ShouldSerializeFieldValue(value.receiver_noise_bandwidth)) {
     j.push_back({"receiverNoiseBandwidth", value.receiver_noise_bandwidth});
   }
-  if (yardl::ndjson::ShouldSerializeFieldValue(value.noise_dwell_time_us)) {
-    j.push_back({"noiseDwellTimeUs", value.noise_dwell_time_us});
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.noise_dwell_time_ns)) {
+    j.push_back({"noiseDwellTimeNs", value.noise_dwell_time_ns});
   }
   if (yardl::ndjson::ShouldSerializeFieldValue(value.sample_count)) {
     j.push_back({"sampleCount", value.sample_count});
@@ -2869,8 +3010,8 @@ void from_json(ordered_json const& j, mrd::NoiseCovariance& value) {
   if (auto it = j.find("receiverNoiseBandwidth"); it != j.end()) {
     it->get_to(value.receiver_noise_bandwidth);
   }
-  if (auto it = j.find("noiseDwellTimeUs"); it != j.end()) {
-    it->get_to(value.noise_dwell_time_us);
+  if (auto it = j.find("noiseDwellTimeNs"); it != j.end()) {
+    it->get_to(value.noise_dwell_time_ns);
   }
   if (auto it = j.find("sampleCount"); it != j.end()) {
     it->get_to(value.sample_count);
@@ -3127,6 +3268,202 @@ void from_json(ordered_json const& j, mrd::ImageArray& value) {
   }
   if (auto it = j.find("waveforms"); it != j.end()) {
     it->get_to(value.waveforms);
+  }
+}
+
+namespace {
+std::unordered_map<std::string, mrd::ArrayType> const __ArrayType_values = {
+  {"spinDensityMap", mrd::ArrayType::kSpinDensityMap},
+  {"t1Map", mrd::ArrayType::kT1Map},
+  {"t2Map", mrd::ArrayType::kT2Map},
+  {"t2starMap", mrd::ArrayType::kT2starMap},
+  {"adcMap", mrd::ArrayType::kAdcMap},
+  {"b0Map", mrd::ArrayType::kB0Map},
+  {"b1Map", mrd::ArrayType::kB1Map},
+  {"sensitivityMap", mrd::ArrayType::kSensitivityMap},
+  {"gfactorMap", mrd::ArrayType::kGfactorMap},
+  {"userMap", mrd::ArrayType::kUserMap},
+};
+} //namespace
+
+void to_json(ordered_json& j, mrd::ArrayType const& value) {
+  switch (value) {
+    case mrd::ArrayType::kSpinDensityMap:
+      j = "spinDensityMap";
+      break;
+    case mrd::ArrayType::kT1Map:
+      j = "t1Map";
+      break;
+    case mrd::ArrayType::kT2Map:
+      j = "t2Map";
+      break;
+    case mrd::ArrayType::kT2starMap:
+      j = "t2starMap";
+      break;
+    case mrd::ArrayType::kAdcMap:
+      j = "adcMap";
+      break;
+    case mrd::ArrayType::kB0Map:
+      j = "b0Map";
+      break;
+    case mrd::ArrayType::kB1Map:
+      j = "b1Map";
+      break;
+    case mrd::ArrayType::kSensitivityMap:
+      j = "sensitivityMap";
+      break;
+    case mrd::ArrayType::kGfactorMap:
+      j = "gfactorMap";
+      break;
+    case mrd::ArrayType::kUserMap:
+      j = "userMap";
+      break;
+    default:
+      using underlying_type = typename std::underlying_type<mrd::ArrayType>::type;
+      j = static_cast<underlying_type>(value);
+      break;
+  }
+}
+
+void from_json(ordered_json const& j, mrd::ArrayType& value) {
+  if (j.is_string()) {
+    auto symbol = j.get<std::string>();
+    if (auto res = __ArrayType_values.find(symbol); res != __ArrayType_values.end()) {
+      value = res->second;
+      return;
+    }
+    throw std::runtime_error("Invalid enum value '" + symbol + "' for enum mrd::ArrayType");
+  }
+  using underlying_type = typename std::underlying_type<mrd::ArrayType>::type;
+  value = static_cast<mrd::ArrayType>(j.get<underlying_type>());
+}
+
+namespace {
+std::unordered_map<std::string, mrd::ArrayDimension> const __ArrayDimension_values = {
+  {"channel", mrd::ArrayDimension::kChannel},
+  {"z", mrd::ArrayDimension::kZ},
+  {"y", mrd::ArrayDimension::kY},
+  {"x", mrd::ArrayDimension::kX},
+  {"frequency", mrd::ArrayDimension::kFrequency},
+  {"basis", mrd::ArrayDimension::kBasis},
+  {"samples", mrd::ArrayDimension::kSamples},
+  {"loc", mrd::ArrayDimension::kLoc},
+  {"s", mrd::ArrayDimension::kS},
+  {"n", mrd::ArrayDimension::kN},
+  {"e2", mrd::ArrayDimension::kE2},
+  {"e1", mrd::ArrayDimension::kE1},
+  {"e0", mrd::ArrayDimension::kE0},
+  {"time", mrd::ArrayDimension::kTime},
+};
+} //namespace
+
+void to_json(ordered_json& j, mrd::ArrayDimension const& value) {
+  switch (value) {
+    case mrd::ArrayDimension::kChannel:
+      j = "channel";
+      break;
+    case mrd::ArrayDimension::kZ:
+      j = "z";
+      break;
+    case mrd::ArrayDimension::kY:
+      j = "y";
+      break;
+    case mrd::ArrayDimension::kX:
+      j = "x";
+      break;
+    case mrd::ArrayDimension::kFrequency:
+      j = "frequency";
+      break;
+    case mrd::ArrayDimension::kBasis:
+      j = "basis";
+      break;
+    case mrd::ArrayDimension::kSamples:
+      j = "samples";
+      break;
+    case mrd::ArrayDimension::kLoc:
+      j = "loc";
+      break;
+    case mrd::ArrayDimension::kS:
+      j = "s";
+      break;
+    case mrd::ArrayDimension::kN:
+      j = "n";
+      break;
+    case mrd::ArrayDimension::kE2:
+      j = "e2";
+      break;
+    case mrd::ArrayDimension::kE1:
+      j = "e1";
+      break;
+    case mrd::ArrayDimension::kE0:
+      j = "e0";
+      break;
+    case mrd::ArrayDimension::kTime:
+      j = "time";
+      break;
+    default:
+      using underlying_type = typename std::underlying_type<mrd::ArrayDimension>::type;
+      j = static_cast<underlying_type>(value);
+      break;
+  }
+}
+
+void from_json(ordered_json const& j, mrd::ArrayDimension& value) {
+  if (j.is_string()) {
+    auto symbol = j.get<std::string>();
+    if (auto res = __ArrayDimension_values.find(symbol); res != __ArrayDimension_values.end()) {
+      value = res->second;
+      return;
+    }
+    throw std::runtime_error("Invalid enum value '" + symbol + "' for enum mrd::ArrayDimension");
+  }
+  using underlying_type = typename std::underlying_type<mrd::ArrayDimension>::type;
+  value = static_cast<mrd::ArrayDimension>(j.get<underlying_type>());
+}
+
+void to_json(ordered_json& j, mrd::NDArrayHeader const& value) {
+  j = ordered_json::object();
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.dimension_labels)) {
+    j.push_back({"dimensionLabels", value.dimension_labels});
+  }
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.array_type)) {
+    j.push_back({"arrayType", value.array_type});
+  }
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.meta)) {
+    j.push_back({"meta", value.meta});
+  }
+}
+
+void from_json(ordered_json const& j, mrd::NDArrayHeader& value) {
+  if (auto it = j.find("dimensionLabels"); it != j.end()) {
+    it->get_to(value.dimension_labels);
+  }
+  if (auto it = j.find("arrayType"); it != j.end()) {
+    it->get_to(value.array_type);
+  }
+  if (auto it = j.find("meta"); it != j.end()) {
+    it->get_to(value.meta);
+  }
+}
+
+template <typename T>
+void to_json(ordered_json& j, mrd::NDArray<T> const& value) {
+  j = ordered_json::object();
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.head)) {
+    j.push_back({"head", value.head});
+  }
+  if (yardl::ndjson::ShouldSerializeFieldValue(value.data)) {
+    j.push_back({"data", value.data});
+  }
+}
+
+template <typename T>
+void from_json(ordered_json const& j, mrd::NDArray<T>& value) {
+  if (auto it = j.find("head"); it != j.end()) {
+    it->get_to(value.head);
+  }
+  if (auto it = j.find("data"); it != j.end()) {
+    it->get_to(value.data);
   }
 }
 

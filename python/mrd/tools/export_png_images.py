@@ -13,14 +13,13 @@ def export(input, output):
         for item in r.read_data():
             if not isinstance(item, mrd.StreamItem.ImageFloat):
                 raise RuntimeError("Stream must contain only floating point images")
-
             image = item.value
             image.data *= 255 / image.data.max()
             pixels = image.data.astype(np.uint8)
 
             for c in range(image.channels()):
                 for s in range(image.slices()):
-                    im = Image.fromarray(pixels[c, s, :, :], 'L')
+                    im = Image.fromarray(pixels[c, s, :, :, 0], 'L')    # 0th index for frequency dimension
                     filename = f"{output}{image_count:04d}.png"
                     im.save(filename, format='PNG')
                     image_count += 1

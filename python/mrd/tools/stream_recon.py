@@ -19,6 +19,13 @@ def acquisition_reader(input: Iterable[mrd.StreamItem]) -> Iterable[mrd.Acquisit
         yield item.value
 
 def stream_item_sink(input: Iterable[Union[mrd.Acquisition, mrd.Image[np.float32]]]) -> Iterable[mrd.StreamItem]:
+    arrhdr = mrd.NDArrayHeader(
+        dimension_labels=[mrd.ArrayDimension.CHANNEL, mrd.ArrayDimension.FREQUENCY],
+        array_type=mrd.ArrayType.USER_MAP,
+        meta=mrd.ArrayMeta({"description": [mrd.ArrayMetaValue.String("AUC curve")]}))
+    arrdata = np.random.rand(2,3).astype(np.float32)
+    yield mrd.StreamItem.NdArrayFloat(mrd.NDArray(head=arrhdr, data=arrdata))
+
     for item in input:
         if isinstance(item, mrd.Acquisition):
             yield mrd.StreamItem.Acquisition(item)
@@ -135,8 +142,7 @@ def accumulate_fft(head: mrd.Header, input: Iterable[mrd.Acquisition]) -> Iterab
                 imghdr.physiology_time_stamp_ns = ref_acq.head.physiology_time_stamp_ns    # ns
                 imghdr.image_index = image_index
                 image_index += 1
-                meta = mrd.ImageMeta({"b0 map": mrd.ImageMetaValue})
-                mrd_image = mrd.Image[np.float32](head=imghdr, data=np.expand_dims(combined, axis=-1), meta=meta)
+                mrd_image = mrd.Image[np.float32](head=imghdr, data=np.expand_dims(combined, axis=-1))
                 yield mrd_image
 
     for acq in input:

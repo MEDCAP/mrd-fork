@@ -1034,7 +1034,7 @@ struct NoiseCovariance {
   // Comes from Header.acquisitionSystemInformation.relativeReceiverNoiseBandwidth
   float receiver_noise_bandwidth{};
   // Comes from Acquisition.sampleTimeUs
-  float noise_dwell_time_us{};
+  uint64_t noise_dwell_time_ns{};
   // Number of samples used to compute matrix
   yardl::Size sample_count{};
   // Noise covariance matrix with dimensions [coil, coil]
@@ -1043,7 +1043,7 @@ struct NoiseCovariance {
   bool operator==(const NoiseCovariance& other) const {
     return coil_labels == other.coil_labels &&
       receiver_noise_bandwidth == other.receiver_noise_bandwidth &&
-      noise_dwell_time_us == other.noise_dwell_time_us &&
+      noise_dwell_time_ns == other.noise_dwell_time_ns &&
       sample_count == other.sample_count &&
       matrix == other.matrix;
   }
@@ -1228,6 +1228,89 @@ template <typename T>
 using Array = yardl::DynamicNDArray<T>;
 
 using ArrayComplexFloat = mrd::Array<std::complex<float>>;
+
+enum class ArrayType {
+  kSpinDensityMap = 1,
+  kT1Map = 2,
+  kT2Map = 3,
+  kT2starMap = 4,
+  kAdcMap = 5,
+  kB0Map = 6,
+  kB1Map = 7,
+  kSensitivityMap = 8,
+  kGfactorMap = 9,
+  kUserMap = 10,
+};
+
+using ArrayMetaValue = std::variant<std::string, int64_t, double>;
+
+using ArrayMeta = std::unordered_map<std::string, std::vector<mrd::ArrayMetaValue>>;
+
+enum class ArrayDimension {
+  kChannel = 0,
+  kZ = 1,
+  kY = 2,
+  kX = 3,
+  kFrequency = 4,
+  kBasis = 5,
+  kSamples = 6,
+  kLoc = 7,
+  kS = 8,
+  kN = 9,
+  kE2 = 10,
+  kE1 = 11,
+  kE0 = 12,
+  kTime = 13,
+};
+
+struct NDArrayHeader {
+  std::vector<mrd::ArrayDimension> dimension_labels{};
+  mrd::ArrayType array_type{};
+  mrd::ArrayMeta meta{};
+
+  bool operator==(const NDArrayHeader& other) const {
+    return dimension_labels == other.dimension_labels &&
+      array_type == other.array_type &&
+      meta == other.meta;
+  }
+
+  bool operator!=(const NDArrayHeader& other) const {
+    return !(*this == other);
+  }
+};
+
+template <typename T>
+struct NDArray {
+  mrd::NDArrayHeader head{};
+  mrd::Array<T> data{};
+
+  bool operator==(const NDArray& other) const {
+    return head == other.head &&
+      data == other.data;
+  }
+
+  bool operator!=(const NDArray& other) const {
+    return !(*this == other);
+  }
+};
+
+using NDArrayUint16 = mrd::NDArray<uint16_t>;
+
+using NDArrayInt16 = mrd::NDArray<int16_t>;
+
+using NDArrayUint32 = mrd::NDArray<uint32_t>;
+
+using NDArrayInt32 = mrd::NDArray<int32_t>;
+
+using NDArrayFloat = mrd::NDArray<float>;
+
+using NDArrayDouble = mrd::NDArray<double>;
+
+using NDArrayComplexFloat = mrd::NDArray<std::complex<float>>;
+
+using NDArrayComplexDouble = mrd::NDArray<std::complex<double>>;
+
+using AnyNDArray = std::variant<mrd::NDArrayUint16, mrd::NDArrayInt16, mrd::NDArrayUint32, mrd::NDArrayInt32, mrd::NDArrayFloat, mrd::NDArrayDouble, mrd::NDArrayComplexFloat, mrd::NDArrayComplexDouble>;
 
 // Pulseq definitions
 struct PulseqDefinitions {
@@ -1501,7 +1584,7 @@ struct Shape {
 };
 
 // Union of all primary types that can be streamed in the MRD Protocol
-using StreamItem = std::variant<mrd::Acquisition, mrd::WaveformUint32, mrd::ImageUint16, mrd::ImageInt16, mrd::ImageUint32, mrd::ImageInt32, mrd::ImageFloat, mrd::ImageDouble, mrd::ImageComplexFloat, mrd::ImageComplexDouble, mrd::AcquisitionBucket, mrd::ReconData, mrd::ArrayComplexFloat, mrd::ImageArray, mrd::PulseqDefinitions, std::vector<mrd::Block>, mrd::RFEvent, mrd::ArbitraryGradient, mrd::TrapezoidalGradient, mrd::ADCEvent, mrd::Shape>;
+using StreamItem = std::variant<mrd::Acquisition, mrd::WaveformUint32, mrd::ImageUint16, mrd::ImageInt16, mrd::ImageUint32, mrd::ImageInt32, mrd::ImageFloat, mrd::ImageDouble, mrd::ImageComplexFloat, mrd::ImageComplexDouble, mrd::AcquisitionBucket, mrd::ReconData, mrd::ArrayComplexFloat, mrd::ImageArray, mrd::NDArrayUint16, mrd::NDArrayInt16, mrd::NDArrayUint32, mrd::NDArrayInt32, mrd::NDArrayFloat, mrd::NDArrayDouble, mrd::NDArrayComplexFloat, mrd::NDArrayComplexDouble, mrd::PulseqDefinitions, std::vector<mrd::Block>, mrd::RFEvent, mrd::ArbitraryGradient, mrd::TrapezoidalGradient, mrd::ADCEvent, mrd::Shape>;
 
 } // namespace mrd
 

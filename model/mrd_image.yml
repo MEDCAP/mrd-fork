@@ -89,11 +89,11 @@ ImageMeta: string->ImageMetaValue*
 Image<T>: !record
   fields:
     # Image header
-    head: ImageHeader
+    head: ImageHeader     # mandatory but adding ? makes it optional
     # Image data array
-    data: ImageData<T>
+    data: ImageData<T>    # mandatory
     # Meta attributes
-    meta: ImageMeta
+    meta: ImageMeta       # optional
   computedFields:
     channels: size(data, "channel")
     slices: size(data, "z")
