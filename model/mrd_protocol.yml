@@ -14,6 +14,14 @@ StreamItem: !union
   reconData: ReconData
   arrayComplexFloat: ArrayComplexFloat
   imageArray: ImageArray
+  ndArrayUint16: NDArrayUint16      # stream NDArray types unlike noise
+  ndArrayInt16: NDArrayInt16
+  ndArrayUint32: NDArrayUint32
+  ndArrayInt32: NDArrayInt32
+  ndArrayFloat: NDArrayFloat
+  ndArrayDouble: NDArrayDouble
+  ndArrayComplexFloat: NDArrayComplexFloat
+  ndArrayComplexDouble: NDArrayComplexDouble
   pulseqDefinitions: PulseqDefinitions
   blocks: Block*
   rf: RFEvent
