@@ -1,0 +1,11 @@
+BasedOnStyle: LLVM
+
+IndentWidth: 2
+TabWidth: 2
+UseTab: Never
+ColumnLimit: 0
+
+AccessModifierOffset: -4
+BreakBeforeBinaryOperators: NonAssignment
+DerivePointerAlignment: false
+PointerAlignment: Left
