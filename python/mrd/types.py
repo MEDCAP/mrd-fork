@@ -391,8 +391,8 @@ class SubjectInformationType:
 
 
 class StudyInformationType:
-    study_date: datetime.date
-    study_time: yardl.Time
+    study_date: typing.Optional[datetime.date]
+    study_time: typing.Optional[yardl.Time]
     study_id: typing.Optional[str]
     accession_number: typing.Optional[yardl.Int64]
     referring_physician_name: typing.Optional[str]
@@ -401,8 +401,8 @@ class StudyInformationType:
     body_part_examined: typing.Optional[str]
 
     def __init__(self, *,
-        study_date: datetime.date = datetime.date(1970, 1, 1),
-        study_time: yardl.Time = yardl.Time(),
+        study_date: typing.Optional[datetime.date] = None,
+        study_time: typing.Optional[yardl.Time] = None,
         study_id: typing.Optional[str] = None,
         accession_number: typing.Optional[yardl.Int64] = None,
         referring_physician_name: typing.Optional[str] = None,
@@ -2824,7 +2824,7 @@ StreamItem.Shape = type("StreamItem.Shape", (StreamItemUnionCase,), {"index": 28
 del StreamItemUnionCase
 
 def _mk_get_dtype():
-    dtype_map: dict[typing.Union[type, types.GenericAlias, typing.Annotated[typing.Any, typing.Any]], typing.Union[np.dtype[typing.Any], typing.Callable[[tuple[type, ...]], np.dtype[typing.Any]]]] = {}
+    dtype_map: dict[typing.Union[type, types.GenericAlias], typing.Union[np.dtype[typing.Any], typing.Callable[[tuple[type, ...]], np.dtype[typing.Any]]]] = {}
     get_dtype = _dtypes.make_get_dtype_func(dtype_map)
 
     dtype_map.setdefault(AcquisitionFlags, np.dtype(np.uint64))
@@ -2833,7 +2833,7 @@ def _mk_get_dtype():
     dtype_map.setdefault(Acquisition, np.dtype([('head', get_dtype(AcquisitionHeader)), ('data', np.dtype(np.object_)), ('phase', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('trajectory', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(PatientGender, np.dtype(np.int32))
     dtype_map.setdefault(SubjectInformationType, np.dtype([('patient_name', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('patient_weight_kg', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.float32))], align=True)), ('patient_height_m', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.float32))], align=True)), ('patient_id', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('patient_birthdate', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.datetime64))], align=True)), ('patient_gender', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(PatientGender))], align=True))], align=True))
-    dtype_map.setdefault(StudyInformationType, np.dtype([('study_date', np.dtype(np.datetime64)), ('study_time', np.dtype(np.timedelta64)), ('study_id', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('accession_number', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.int64))], align=True)), ('referring_physician_name', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('study_description', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('study_instance_uid', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('body_part_examined', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True))], align=True))
+    dtype_map.setdefault(StudyInformationType, np.dtype([('study_date', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.datetime64))], align=True)), ('study_time', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.timedelta64))], align=True)), ('study_id', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('accession_number', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.int64))], align=True)), ('referring_physician_name', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('study_description', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('study_instance_uid', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('body_part_examined', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True))], align=True))
     dtype_map.setdefault(PatientPosition, np.dtype(np.int32))
     dtype_map.setdefault(ThreeDimensionalFloat, np.dtype([('x', np.dtype(np.float32)), ('y', np.dtype(np.float32)), ('z', np.dtype(np.float32))], align=True))
     dtype_map.setdefault(MeasurementDependencyType, np.dtype([('dependency_type', np.dtype(np.object_)), ('measurement_id', np.dtype(np.object_))], align=True))

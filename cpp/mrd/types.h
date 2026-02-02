@@ -235,8 +235,8 @@ struct SubjectInformationType {
 };
 
 struct StudyInformationType {
-  yardl::Date study_date{};
-  yardl::Time study_time{};
+  std::optional<yardl::Date> study_date{};
+  std::optional<yardl::Time> study_time{};
   std::optional<std::string> study_id{};
   std::optional<int64_t> accession_number{};
   std::optional<std::string> referring_physician_name{};

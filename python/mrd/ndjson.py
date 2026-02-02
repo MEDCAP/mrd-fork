@@ -479,8 +479,8 @@ class SubjectInformationTypeConverter(_ndjson.JsonConverter[SubjectInformationTy
 
 class StudyInformationTypeConverter(_ndjson.JsonConverter[StudyInformationType, np.void]):
     def __init__(self) -> None:
-        self._study_date_converter = _ndjson.date_converter
-        self._study_time_converter = _ndjson.time_converter
+        self._study_date_converter = _ndjson.OptionalConverter(_ndjson.date_converter)
+        self._study_time_converter = _ndjson.OptionalConverter(_ndjson.time_converter)
         self._study_id_converter = _ndjson.OptionalConverter(_ndjson.string_converter)
         self._accession_number_converter = _ndjson.OptionalConverter(_ndjson.int64_converter)
         self._referring_physician_name_converter = _ndjson.OptionalConverter(_ndjson.string_converter)
@@ -503,8 +503,10 @@ class StudyInformationTypeConverter(_ndjson.JsonConverter[StudyInformationType, 
             raise TypeError("Expected 'StudyInformationType' instance")
         json_object = {}
 
-        json_object["studyDate"] = self._study_date_converter.to_json(value.study_date)
-        json_object["studyTime"] = self._study_time_converter.to_json(value.study_time)
+        if value.study_date is not None:
+            json_object["studyDate"] = self._study_date_converter.to_json(value.study_date)
+        if value.study_time is not None:
+            json_object["studyTime"] = self._study_time_converter.to_json(value.study_time)
         if value.study_id is not None:
             json_object["studyID"] = self._study_id_converter.to_json(value.study_id)
         if value.accession_number is not None:
@@ -524,8 +526,10 @@ class StudyInformationTypeConverter(_ndjson.JsonConverter[StudyInformationType, 
             raise TypeError("Expected 'np.void' instance")
         json_object = {}
 
-        json_object["studyDate"] = self._study_date_converter.numpy_to_json(value["study_date"])
-        json_object["studyTime"] = self._study_time_converter.numpy_to_json(value["study_time"])
+        if (field_val := value["study_date"]) is not None:
+            json_object["studyDate"] = self._study_date_converter.numpy_to_json(field_val)
+        if (field_val := value["study_time"]) is not None:
+            json_object["studyTime"] = self._study_time_converter.numpy_to_json(field_val)
         if (field_val := value["study_id"]) is not None:
             json_object["studyID"] = self._study_id_converter.numpy_to_json(field_val)
         if (field_val := value["accession_number"]) is not None:
@@ -544,8 +548,8 @@ class StudyInformationTypeConverter(_ndjson.JsonConverter[StudyInformationType, 
         if not isinstance(json_object, dict):
             raise TypeError("Expected 'dict' instance")
         return StudyInformationType(
-            study_date=self._study_date_converter.from_json(json_object["studyDate"],),
-            study_time=self._study_time_converter.from_json(json_object["studyTime"],),
+            study_date=self._study_date_converter.from_json(json_object.get("studyDate")),
+            study_time=self._study_time_converter.from_json(json_object.get("studyTime")),
             study_id=self._study_id_converter.from_json(json_object.get("studyID")),
             accession_number=self._accession_number_converter.from_json(json_object.get("accessionNumber")),
             referring_physician_name=self._referring_physician_name_converter.from_json(json_object.get("referringPhysicianName")),
@@ -558,8 +562,8 @@ class StudyInformationTypeConverter(_ndjson.JsonConverter[StudyInformationType, 
         if not isinstance(json_object, dict):
             raise TypeError("Expected 'dict' instance")
         return (
-            self._study_date_converter.from_json_to_numpy(json_object["studyDate"]),
-            self._study_time_converter.from_json_to_numpy(json_object["studyTime"]),
+            self._study_date_converter.from_json_to_numpy(json_object.get("studyDate")),
+            self._study_time_converter.from_json_to_numpy(json_object.get("studyTime")),
             self._study_id_converter.from_json_to_numpy(json_object.get("studyID")),
             self._accession_number_converter.from_json_to_numpy(json_object.get("accessionNumber")),
             self._referring_physician_name_converter.from_json_to_numpy(json_object.get("referringPhysicianName")),

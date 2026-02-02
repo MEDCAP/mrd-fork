@@ -157,7 +157,7 @@ class SubjectInformationTypeSerializer(_binary.RecordSerializer[SubjectInformati
 
 class StudyInformationTypeSerializer(_binary.RecordSerializer[StudyInformationType]):
     def __init__(self) -> None:
-        super().__init__([("study_date", _binary.date_serializer), ("study_time", _binary.time_serializer), ("study_id", _binary.OptionalSerializer(_binary.string_serializer)), ("accession_number", _binary.OptionalSerializer(_binary.int64_serializer)), ("referring_physician_name", _binary.OptionalSerializer(_binary.string_serializer)), ("study_description", _binary.OptionalSerializer(_binary.string_serializer)), ("study_instance_uid", _binary.OptionalSerializer(_binary.string_serializer)), ("body_part_examined", _binary.OptionalSerializer(_binary.string_serializer))])
+        super().__init__([("study_date", _binary.OptionalSerializer(_binary.date_serializer)), ("study_time", _binary.OptionalSerializer(_binary.time_serializer)), ("study_id", _binary.OptionalSerializer(_binary.string_serializer)), ("accession_number", _binary.OptionalSerializer(_binary.int64_serializer)), ("referring_physician_name", _binary.OptionalSerializer(_binary.string_serializer)), ("study_description", _binary.OptionalSerializer(_binary.string_serializer)), ("study_instance_uid", _binary.OptionalSerializer(_binary.string_serializer)), ("body_part_examined", _binary.OptionalSerializer(_binary.string_serializer))])
 
     def write(self, stream: _binary.CodedOutputStream, value: StudyInformationType) -> None:
         if isinstance(value, np.void):

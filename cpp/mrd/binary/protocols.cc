@@ -1484,8 +1484,8 @@ namespace {
     return;
   }
 
-  yardl::binary::WriteDate(stream, value.study_date);
-  yardl::binary::WriteTime(stream, value.study_time);
+  yardl::binary::WriteOptional<yardl::Date, yardl::binary::WriteDate>(stream, value.study_date);
+  yardl::binary::WriteOptional<yardl::Time, yardl::binary::WriteTime>(stream, value.study_time);
   yardl::binary::WriteOptional<std::string, yardl::binary::WriteString>(stream, value.study_id);
   yardl::binary::WriteOptional<int64_t, yardl::binary::WriteInteger>(stream, value.accession_number);
   yardl::binary::WriteOptional<std::string, yardl::binary::WriteString>(stream, value.referring_physician_name);
@@ -1500,8 +1500,8 @@ namespace {
     return;
   }
 
-  yardl::binary::ReadDate(stream, value.study_date);
-  yardl::binary::ReadTime(stream, value.study_time);
+  yardl::binary::ReadOptional<yardl::Date, yardl::binary::ReadDate>(stream, value.study_date);
+  yardl::binary::ReadOptional<yardl::Time, yardl::binary::ReadTime>(stream, value.study_time);
   yardl::binary::ReadOptional<std::string, yardl::binary::ReadString>(stream, value.study_id);
   yardl::binary::ReadOptional<int64_t, yardl::binary::ReadInteger>(stream, value.accession_number);
   yardl::binary::ReadOptional<std::string, yardl::binary::ReadString>(stream, value.referring_physician_name);

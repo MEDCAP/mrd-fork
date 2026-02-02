@@ -1240,8 +1240,8 @@ struct _Inner_StudyInformationType {
     yardl::hdf5::ToOuter(body_part_examined, o.body_part_examined);
   }
 
-  yardl::Date study_date;
-  yardl::Time study_time;
+  yardl::hdf5::InnerOptional<yardl::Date, yardl::Date> study_date;
+  yardl::hdf5::InnerOptional<yardl::Time, yardl::Time> study_time;
   yardl::hdf5::InnerOptional<yardl::hdf5::InnerVlenString, std::string> study_id;
   yardl::hdf5::InnerOptional<int64_t, int64_t> accession_number;
   yardl::hdf5::InnerOptional<yardl::hdf5::InnerVlenString, std::string> referring_physician_name;
@@ -2159,8 +2159,8 @@ struct _Inner_Shape {
 [[maybe_unused]] H5::CompType GetStudyInformationTypeHdf5Ddl() {
   using RecordType = mrd::hdf5::_Inner_StudyInformationType;
   H5::CompType t(sizeof(RecordType));
-  t.insertMember("studyDate", HOFFSET(RecordType, study_date), yardl::hdf5::DateTypeDdl());
-  t.insertMember("studyTime", HOFFSET(RecordType, study_time), yardl::hdf5::TimeTypeDdl());
+  t.insertMember("studyDate", HOFFSET(RecordType, study_date), yardl::hdf5::OptionalTypeDdl<yardl::Date, yardl::Date>(yardl::hdf5::DateTypeDdl()));
+  t.insertMember("studyTime", HOFFSET(RecordType, study_time), yardl::hdf5::OptionalTypeDdl<yardl::Time, yardl::Time>(yardl::hdf5::TimeTypeDdl()));
   t.insertMember("studyID", HOFFSET(RecordType, study_id), yardl::hdf5::OptionalTypeDdl<yardl::hdf5::InnerVlenString, std::string>(yardl::hdf5::InnerVlenStringDdl()));
   t.insertMember("accessionNumber", HOFFSET(RecordType, accession_number), yardl::hdf5::OptionalTypeDdl<int64_t, int64_t>(H5::PredType::NATIVE_INT64));
   t.insertMember("referringPhysicianName", HOFFSET(RecordType, referring_physician_name), yardl::hdf5::OptionalTypeDdl<yardl::hdf5::InnerVlenString, std::string>(yardl::hdf5::InnerVlenStringDdl()));
