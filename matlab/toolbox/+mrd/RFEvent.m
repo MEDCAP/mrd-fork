@@ -13,15 +13,13 @@ classdef RFEvent < handle
     phase_id
     % Shape ID for the time sampling points, specified in the units of
     % RadiofrequencyRasterTime.
-    % 0 means default time raster = RadiofrequencyRasterTime
+    % 0 means default time raster
     time_id
     % Time point in microseconds relative to the beginning of
     % the RF shape at which the effective rotation takes place
-    % center: float64
-    center_ns
+    center
     % Delay before starting the RF pulse, specified in microseconds
-    % delay: uint64
-    delay_ns
+    delay
     % Frequency offset relative to the main system's frequency,
     % specified in parts per million (ppm)
     freq_ppm
@@ -43,8 +41,8 @@ classdef RFEvent < handle
         kwargs.mag_id = int32(0);
         kwargs.phase_id = int32(0);
         kwargs.time_id = int32(0);
-        kwargs.center_ns = uint64(0);
-        kwargs.delay_ns = uint64(0);
+        kwargs.center = double(0);
+        kwargs.delay = uint64(0);
         kwargs.freq_ppm = double(0);
         kwargs.phase_ppm = double(0);
         kwargs.freq_offset = double(0);
@@ -56,8 +54,8 @@ classdef RFEvent < handle
       self.mag_id = kwargs.mag_id;
       self.phase_id = kwargs.phase_id;
       self.time_id = kwargs.time_id;
-      self.center_ns = kwargs.center_ns;
-      self.delay_ns = kwargs.delay_ns;
+      self.center = kwargs.center;
+      self.delay = kwargs.delay;
       self.freq_ppm = kwargs.freq_ppm;
       self.phase_ppm = kwargs.phase_ppm;
       self.freq_offset = kwargs.freq_offset;
@@ -73,8 +71,8 @@ classdef RFEvent < handle
         isequal({self.mag_id}, {other.mag_id}) && ...
         isequal({self.phase_id}, {other.phase_id}) && ...
         isequal({self.time_id}, {other.time_id}) && ...
-        isequal({self.center_ns}, {other.center_ns}) && ...
-        isequal({self.delay_ns}, {other.delay_ns}) && ...
+        isequal({self.center}, {other.center}) && ...
+        isequal({self.delay}, {other.delay}) && ...
         isequal({self.freq_ppm}, {other.freq_ppm}) && ...
         isequal({self.phase_ppm}, {other.phase_ppm}) && ...
         isequal({self.freq_offset}, {other.freq_offset}) && ...

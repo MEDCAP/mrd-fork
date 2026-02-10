@@ -2042,34 +2042,34 @@ struct _Inner_NDArray {
 struct _Inner_PulseqDefinitions {
   _Inner_PulseqDefinitions() {} 
   _Inner_PulseqDefinitions(mrd::PulseqDefinitions const& o) 
-      : gradient_raster_time_ns(o.gradient_raster_time_ns),
-      radiofrequency_raster_time_ns(o.radiofrequency_raster_time_ns),
-      adc_raster_time_ns(o.adc_raster_time_ns),
-      block_duration_raster_ns(o.block_duration_raster_ns),
+      : gradient_raster_time(o.gradient_raster_time),
+      radiofrequency_raster_time(o.radiofrequency_raster_time),
+      adc_raster_time(o.adc_raster_time),
+      block_duration_raster(o.block_duration_raster),
       name(o.name),
       fov(o.fov),
-      total_duration_ns(o.total_duration_ns),
+      total_duration(o.total_duration),
       custom(o.custom) {
   }
 
   void ToOuter (mrd::PulseqDefinitions& o) const {
-    yardl::hdf5::ToOuter(gradient_raster_time_ns, o.gradient_raster_time_ns);
-    yardl::hdf5::ToOuter(radiofrequency_raster_time_ns, o.radiofrequency_raster_time_ns);
-    yardl::hdf5::ToOuter(adc_raster_time_ns, o.adc_raster_time_ns);
-    yardl::hdf5::ToOuter(block_duration_raster_ns, o.block_duration_raster_ns);
+    yardl::hdf5::ToOuter(gradient_raster_time, o.gradient_raster_time);
+    yardl::hdf5::ToOuter(radiofrequency_raster_time, o.radiofrequency_raster_time);
+    yardl::hdf5::ToOuter(adc_raster_time, o.adc_raster_time);
+    yardl::hdf5::ToOuter(block_duration_raster, o.block_duration_raster);
     yardl::hdf5::ToOuter(name, o.name);
     yardl::hdf5::ToOuter(fov, o.fov);
-    yardl::hdf5::ToOuter(total_duration_ns, o.total_duration_ns);
+    yardl::hdf5::ToOuter(total_duration, o.total_duration);
     yardl::hdf5::ToOuter(custom, o.custom);
   }
 
-  uint64_t gradient_raster_time_ns;
-  uint64_t radiofrequency_raster_time_ns;
-  uint64_t adc_raster_time_ns;
-  uint64_t block_duration_raster_ns;
+  double gradient_raster_time;
+  double radiofrequency_raster_time;
+  double adc_raster_time;
+  double block_duration_raster;
   yardl::hdf5::InnerOptional<yardl::hdf5::InnerVlenString, std::string> name;
   yardl::hdf5::InnerOptional<mrd::ThreeDimensionalFloat, mrd::ThreeDimensionalFloat> fov;
-  yardl::hdf5::InnerOptional<uint64_t, uint64_t> total_duration_ns;
+  yardl::hdf5::InnerOptional<double, double> total_duration;
   yardl::hdf5::InnerMap<yardl::hdf5::InnerVlenString, std::string, yardl::hdf5::InnerVlenString, std::string> custom;
 };
 
@@ -2614,13 +2614,13 @@ template <typename _T_Inner, typename T>
 [[maybe_unused]] H5::CompType GetPulseqDefinitionsHdf5Ddl() {
   using RecordType = mrd::hdf5::_Inner_PulseqDefinitions;
   H5::CompType t(sizeof(RecordType));
-  t.insertMember("gradientRasterTimeNs", HOFFSET(RecordType, gradient_raster_time_ns), H5::PredType::NATIVE_UINT64);
-  t.insertMember("radiofrequencyRasterTimeNs", HOFFSET(RecordType, radiofrequency_raster_time_ns), H5::PredType::NATIVE_UINT64);
-  t.insertMember("adcRasterTimeNs", HOFFSET(RecordType, adc_raster_time_ns), H5::PredType::NATIVE_UINT64);
-  t.insertMember("blockDurationRasterNs", HOFFSET(RecordType, block_duration_raster_ns), H5::PredType::NATIVE_UINT64);
+  t.insertMember("gradientRasterTime", HOFFSET(RecordType, gradient_raster_time), H5::PredType::NATIVE_DOUBLE);
+  t.insertMember("radiofrequencyRasterTime", HOFFSET(RecordType, radiofrequency_raster_time), H5::PredType::NATIVE_DOUBLE);
+  t.insertMember("adcRasterTime", HOFFSET(RecordType, adc_raster_time), H5::PredType::NATIVE_DOUBLE);
+  t.insertMember("blockDurationRaster", HOFFSET(RecordType, block_duration_raster), H5::PredType::NATIVE_DOUBLE);
   t.insertMember("name", HOFFSET(RecordType, name), yardl::hdf5::OptionalTypeDdl<yardl::hdf5::InnerVlenString, std::string>(yardl::hdf5::InnerVlenStringDdl()));
   t.insertMember("fov", HOFFSET(RecordType, fov), yardl::hdf5::OptionalTypeDdl<mrd::ThreeDimensionalFloat, mrd::ThreeDimensionalFloat>(mrd::hdf5::GetThreeDimensionalFloatHdf5Ddl()));
-  t.insertMember("totalDurationNs", HOFFSET(RecordType, total_duration_ns), yardl::hdf5::OptionalTypeDdl<uint64_t, uint64_t>(H5::PredType::NATIVE_UINT64));
+  t.insertMember("totalDuration", HOFFSET(RecordType, total_duration), yardl::hdf5::OptionalTypeDdl<double, double>(H5::PredType::NATIVE_DOUBLE));
   t.insertMember("custom", HOFFSET(RecordType, custom), yardl::hdf5::InnerMapDdl<yardl::hdf5::InnerVlenString, yardl::hdf5::InnerVlenString>(yardl::hdf5::InnerVlenStringDdl(), yardl::hdf5::InnerVlenStringDdl()));
   return t;
 }
@@ -2647,8 +2647,8 @@ template <typename _T_Inner, typename T>
   t.insertMember("magId", HOFFSET(RecordType, mag_id), H5::PredType::NATIVE_INT32);
   t.insertMember("phaseId", HOFFSET(RecordType, phase_id), H5::PredType::NATIVE_INT32);
   t.insertMember("timeId", HOFFSET(RecordType, time_id), H5::PredType::NATIVE_INT32);
-  t.insertMember("centerNs", HOFFSET(RecordType, center_ns), H5::PredType::NATIVE_UINT64);
-  t.insertMember("delayNs", HOFFSET(RecordType, delay_ns), H5::PredType::NATIVE_UINT64);
+  t.insertMember("center", HOFFSET(RecordType, center), H5::PredType::NATIVE_DOUBLE);
+  t.insertMember("delay", HOFFSET(RecordType, delay), H5::PredType::NATIVE_UINT64);
   t.insertMember("freqPPM", HOFFSET(RecordType, freq_ppm), H5::PredType::NATIVE_DOUBLE);
   t.insertMember("phasePPM", HOFFSET(RecordType, phase_ppm), H5::PredType::NATIVE_DOUBLE);
   t.insertMember("freqOffset", HOFFSET(RecordType, freq_offset), H5::PredType::NATIVE_DOUBLE);
@@ -2666,7 +2666,7 @@ template <typename _T_Inner, typename T>
   t.insertMember("last", HOFFSET(RecordType, last), H5::PredType::NATIVE_DOUBLE);
   t.insertMember("shapeId", HOFFSET(RecordType, shape_id), H5::PredType::NATIVE_INT32);
   t.insertMember("timeId", HOFFSET(RecordType, time_id), H5::PredType::NATIVE_INT32);
-  t.insertMember("delayNs", HOFFSET(RecordType, delay_ns), H5::PredType::NATIVE_UINT64);
+  t.insertMember("delay", HOFFSET(RecordType, delay), H5::PredType::NATIVE_UINT64);
   return t;
 }
 
@@ -2675,10 +2675,10 @@ template <typename _T_Inner, typename T>
   H5::CompType t(sizeof(RecordType));
   t.insertMember("id", HOFFSET(RecordType, id), H5::PredType::NATIVE_INT32);
   t.insertMember("amp", HOFFSET(RecordType, amp), H5::PredType::NATIVE_DOUBLE);
-  t.insertMember("riseNs", HOFFSET(RecordType, rise_ns), H5::PredType::NATIVE_UINT64);
-  t.insertMember("flatNs", HOFFSET(RecordType, flat_ns), H5::PredType::NATIVE_UINT64);
-  t.insertMember("fallNs", HOFFSET(RecordType, fall_ns), H5::PredType::NATIVE_UINT64);
-  t.insertMember("delayNs", HOFFSET(RecordType, delay_ns), H5::PredType::NATIVE_UINT64);
+  t.insertMember("rise", HOFFSET(RecordType, rise), H5::PredType::NATIVE_UINT64);
+  t.insertMember("flat", HOFFSET(RecordType, flat), H5::PredType::NATIVE_UINT64);
+  t.insertMember("fall", HOFFSET(RecordType, fall), H5::PredType::NATIVE_UINT64);
+  t.insertMember("delay", HOFFSET(RecordType, delay), H5::PredType::NATIVE_UINT64);
   return t;
 }
 
@@ -2688,7 +2688,7 @@ template <typename _T_Inner, typename T>
   t.insertMember("id", HOFFSET(RecordType, id), H5::PredType::NATIVE_INT32);
   t.insertMember("num", HOFFSET(RecordType, num), H5::PredType::NATIVE_UINT64);
   t.insertMember("dwell", HOFFSET(RecordType, dwell), H5::PredType::NATIVE_FLOAT);
-  t.insertMember("delayNs", HOFFSET(RecordType, delay_ns), H5::PredType::NATIVE_UINT64);
+  t.insertMember("delay", HOFFSET(RecordType, delay), H5::PredType::NATIVE_UINT64);
   t.insertMember("freqPPM", HOFFSET(RecordType, freq_ppm), H5::PredType::NATIVE_DOUBLE);
   t.insertMember("phasePPM", HOFFSET(RecordType, phase_ppm), H5::PredType::NATIVE_DOUBLE);
   t.insertMember("freq", HOFFSET(RecordType, freq), H5::PredType::NATIVE_DOUBLE);

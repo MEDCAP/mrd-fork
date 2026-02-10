@@ -913,20 +913,20 @@ class NDArraySerializer(typing.Generic[T, T_NP], _binary.RecordSerializer[NDArra
 
 class PulseqDefinitionsSerializer(_binary.RecordSerializer[PulseqDefinitions]):
     def __init__(self) -> None:
-        super().__init__([("gradient_raster_time_ns", _binary.uint64_serializer), ("radiofrequency_raster_time_ns", _binary.uint64_serializer), ("adc_raster_time_ns", _binary.uint64_serializer), ("block_duration_raster_ns", _binary.uint64_serializer), ("name", _binary.OptionalSerializer(_binary.string_serializer)), ("fov", _binary.OptionalSerializer(ThreeDimensionalFloatSerializer())), ("total_duration_ns", _binary.OptionalSerializer(_binary.uint64_serializer)), ("custom", _binary.MapSerializer(_binary.string_serializer, _binary.string_serializer))])
+        super().__init__([("gradient_raster_time", _binary.float64_serializer), ("radiofrequency_raster_time", _binary.float64_serializer), ("adc_raster_time", _binary.float64_serializer), ("block_duration_raster", _binary.float64_serializer), ("name", _binary.OptionalSerializer(_binary.string_serializer)), ("fov", _binary.OptionalSerializer(ThreeDimensionalFloatSerializer())), ("total_duration", _binary.OptionalSerializer(_binary.float64_serializer)), ("custom", _binary.MapSerializer(_binary.string_serializer, _binary.string_serializer))])
 
     def write(self, stream: _binary.CodedOutputStream, value: PulseqDefinitions) -> None:
         if isinstance(value, np.void):
             self.write_numpy(stream, value)
             return
-        self._write(stream, value.gradient_raster_time_ns, value.radiofrequency_raster_time_ns, value.adc_raster_time_ns, value.block_duration_raster_ns, value.name, value.fov, value.total_duration_ns, value.custom)
+        self._write(stream, value.gradient_raster_time, value.radiofrequency_raster_time, value.adc_raster_time, value.block_duration_raster, value.name, value.fov, value.total_duration, value.custom)
 
     def write_numpy(self, stream: _binary.CodedOutputStream, value: np.void) -> None:
-        self._write(stream, value['gradient_raster_time_ns'], value['radiofrequency_raster_time_ns'], value['adc_raster_time_ns'], value['block_duration_raster_ns'], value['name'], value['fov'], value['total_duration_ns'], value['custom'])
+        self._write(stream, value['gradient_raster_time'], value['radiofrequency_raster_time'], value['adc_raster_time'], value['block_duration_raster'], value['name'], value['fov'], value['total_duration'], value['custom'])
 
     def read(self, stream: _binary.CodedInputStream) -> PulseqDefinitions:
         field_values = self._read(stream)
-        return PulseqDefinitions(gradient_raster_time_ns=field_values[0], radiofrequency_raster_time_ns=field_values[1], adc_raster_time_ns=field_values[2], block_duration_raster_ns=field_values[3], name=field_values[4], fov=field_values[5], total_duration_ns=field_values[6], custom=field_values[7])
+        return PulseqDefinitions(gradient_raster_time=field_values[0], radiofrequency_raster_time=field_values[1], adc_raster_time=field_values[2], block_duration_raster=field_values[3], name=field_values[4], fov=field_values[5], total_duration=field_values[6], custom=field_values[7])
 
 
 class BlockSerializer(_binary.RecordSerializer[Block]):
@@ -949,74 +949,74 @@ class BlockSerializer(_binary.RecordSerializer[Block]):
 
 class RFEventSerializer(_binary.RecordSerializer[RFEvent]):
     def __init__(self) -> None:
-        super().__init__([("id", _binary.int32_serializer), ("amp", _binary.float64_serializer), ("mag_id", _binary.int32_serializer), ("phase_id", _binary.int32_serializer), ("time_id", _binary.int32_serializer), ("center_ns", _binary.uint64_serializer), ("delay_ns", _binary.uint64_serializer), ("freq_ppm", _binary.float64_serializer), ("phase_ppm", _binary.float64_serializer), ("freq_offset", _binary.float64_serializer), ("phase_offset", _binary.float64_serializer), ("use", _binary.EnumSerializer(_binary.int32_serializer, RFPulseUse))])
+        super().__init__([("id", _binary.int32_serializer), ("amp", _binary.float64_serializer), ("mag_id", _binary.int32_serializer), ("phase_id", _binary.int32_serializer), ("time_id", _binary.int32_serializer), ("center", _binary.float64_serializer), ("delay", _binary.uint64_serializer), ("freq_ppm", _binary.float64_serializer), ("phase_ppm", _binary.float64_serializer), ("freq_offset", _binary.float64_serializer), ("phase_offset", _binary.float64_serializer), ("use", _binary.EnumSerializer(_binary.int32_serializer, RFPulseUse))])
 
     def write(self, stream: _binary.CodedOutputStream, value: RFEvent) -> None:
         if isinstance(value, np.void):
             self.write_numpy(stream, value)
             return
-        self._write(stream, value.id, value.amp, value.mag_id, value.phase_id, value.time_id, value.center_ns, value.delay_ns, value.freq_ppm, value.phase_ppm, value.freq_offset, value.phase_offset, value.use)
+        self._write(stream, value.id, value.amp, value.mag_id, value.phase_id, value.time_id, value.center, value.delay, value.freq_ppm, value.phase_ppm, value.freq_offset, value.phase_offset, value.use)
 
     def write_numpy(self, stream: _binary.CodedOutputStream, value: np.void) -> None:
-        self._write(stream, value['id'], value['amp'], value['mag_id'], value['phase_id'], value['time_id'], value['center_ns'], value['delay_ns'], value['freq_ppm'], value['phase_ppm'], value['freq_offset'], value['phase_offset'], value['use'])
+        self._write(stream, value['id'], value['amp'], value['mag_id'], value['phase_id'], value['time_id'], value['center'], value['delay'], value['freq_ppm'], value['phase_ppm'], value['freq_offset'], value['phase_offset'], value['use'])
 
     def read(self, stream: _binary.CodedInputStream) -> RFEvent:
         field_values = self._read(stream)
-        return RFEvent(id=field_values[0], amp=field_values[1], mag_id=field_values[2], phase_id=field_values[3], time_id=field_values[4], center_ns=field_values[5], delay_ns=field_values[6], freq_ppm=field_values[7], phase_ppm=field_values[8], freq_offset=field_values[9], phase_offset=field_values[10], use=field_values[11])
+        return RFEvent(id=field_values[0], amp=field_values[1], mag_id=field_values[2], phase_id=field_values[3], time_id=field_values[4], center=field_values[5], delay=field_values[6], freq_ppm=field_values[7], phase_ppm=field_values[8], freq_offset=field_values[9], phase_offset=field_values[10], use=field_values[11])
 
 
 class ArbitraryGradientSerializer(_binary.RecordSerializer[ArbitraryGradient]):
     def __init__(self) -> None:
-        super().__init__([("id", _binary.int32_serializer), ("amp", _binary.float64_serializer), ("first", _binary.float64_serializer), ("last", _binary.float64_serializer), ("shape_id", _binary.int32_serializer), ("time_id", _binary.int32_serializer), ("delay_ns", _binary.uint64_serializer)])
+        super().__init__([("id", _binary.int32_serializer), ("amp", _binary.float64_serializer), ("first", _binary.float64_serializer), ("last", _binary.float64_serializer), ("shape_id", _binary.int32_serializer), ("time_id", _binary.int32_serializer), ("delay", _binary.uint64_serializer)])
 
     def write(self, stream: _binary.CodedOutputStream, value: ArbitraryGradient) -> None:
         if isinstance(value, np.void):
             self.write_numpy(stream, value)
             return
-        self._write(stream, value.id, value.amp, value.first, value.last, value.shape_id, value.time_id, value.delay_ns)
+        self._write(stream, value.id, value.amp, value.first, value.last, value.shape_id, value.time_id, value.delay)
 
     def write_numpy(self, stream: _binary.CodedOutputStream, value: np.void) -> None:
-        self._write(stream, value['id'], value['amp'], value['first'], value['last'], value['shape_id'], value['time_id'], value['delay_ns'])
+        self._write(stream, value['id'], value['amp'], value['first'], value['last'], value['shape_id'], value['time_id'], value['delay'])
 
     def read(self, stream: _binary.CodedInputStream) -> ArbitraryGradient:
         field_values = self._read(stream)
-        return ArbitraryGradient(id=field_values[0], amp=field_values[1], first=field_values[2], last=field_values[3], shape_id=field_values[4], time_id=field_values[5], delay_ns=field_values[6])
+        return ArbitraryGradient(id=field_values[0], amp=field_values[1], first=field_values[2], last=field_values[3], shape_id=field_values[4], time_id=field_values[5], delay=field_values[6])
 
 
 class TrapezoidalGradientSerializer(_binary.RecordSerializer[TrapezoidalGradient]):
     def __init__(self) -> None:
-        super().__init__([("id", _binary.int32_serializer), ("amp", _binary.float64_serializer), ("rise_ns", _binary.uint64_serializer), ("flat_ns", _binary.uint64_serializer), ("fall_ns", _binary.uint64_serializer), ("delay_ns", _binary.uint64_serializer)])
+        super().__init__([("id", _binary.int32_serializer), ("amp", _binary.float64_serializer), ("rise", _binary.uint64_serializer), ("flat", _binary.uint64_serializer), ("fall", _binary.uint64_serializer), ("delay", _binary.uint64_serializer)])
 
     def write(self, stream: _binary.CodedOutputStream, value: TrapezoidalGradient) -> None:
         if isinstance(value, np.void):
             self.write_numpy(stream, value)
             return
-        self._write(stream, value.id, value.amp, value.rise_ns, value.flat_ns, value.fall_ns, value.delay_ns)
+        self._write(stream, value.id, value.amp, value.rise, value.flat, value.fall, value.delay)
 
     def write_numpy(self, stream: _binary.CodedOutputStream, value: np.void) -> None:
-        self._write(stream, value['id'], value['amp'], value['rise_ns'], value['flat_ns'], value['fall_ns'], value['delay_ns'])
+        self._write(stream, value['id'], value['amp'], value['rise'], value['flat'], value['fall'], value['delay'])
 
     def read(self, stream: _binary.CodedInputStream) -> TrapezoidalGradient:
         field_values = self._read(stream)
-        return TrapezoidalGradient(id=field_values[0], amp=field_values[1], rise_ns=field_values[2], flat_ns=field_values[3], fall_ns=field_values[4], delay_ns=field_values[5])
+        return TrapezoidalGradient(id=field_values[0], amp=field_values[1], rise=field_values[2], flat=field_values[3], fall=field_values[4], delay=field_values[5])
 
 
 class ADCEventSerializer(_binary.RecordSerializer[ADCEvent]):
     def __init__(self) -> None:
-        super().__init__([("id", _binary.int32_serializer), ("num", _binary.uint64_serializer), ("dwell", _binary.float32_serializer), ("delay_ns", _binary.uint64_serializer), ("freq_ppm", _binary.float64_serializer), ("phase_ppm", _binary.float64_serializer), ("freq", _binary.float64_serializer), ("phase", _binary.float64_serializer), ("phase_shape_id", _binary.int32_serializer)])
+        super().__init__([("id", _binary.int32_serializer), ("num", _binary.uint64_serializer), ("dwell", _binary.float32_serializer), ("delay", _binary.uint64_serializer), ("freq_ppm", _binary.float64_serializer), ("phase_ppm", _binary.float64_serializer), ("freq", _binary.float64_serializer), ("phase", _binary.float64_serializer), ("phase_shape_id", _binary.int32_serializer)])
 
     def write(self, stream: _binary.CodedOutputStream, value: ADCEvent) -> None:
         if isinstance(value, np.void):
             self.write_numpy(stream, value)
             return
-        self._write(stream, value.id, value.num, value.dwell, value.delay_ns, value.freq_ppm, value.phase_ppm, value.freq, value.phase, value.phase_shape_id)
+        self._write(stream, value.id, value.num, value.dwell, value.delay, value.freq_ppm, value.phase_ppm, value.freq, value.phase, value.phase_shape_id)
 
     def write_numpy(self, stream: _binary.CodedOutputStream, value: np.void) -> None:
-        self._write(stream, value['id'], value['num'], value['dwell'], value['delay_ns'], value['freq_ppm'], value['phase_ppm'], value['freq'], value['phase'], value['phase_shape_id'])
+        self._write(stream, value['id'], value['num'], value['dwell'], value['delay'], value['freq_ppm'], value['phase_ppm'], value['freq'], value['phase'], value['phase_shape_id'])
 
     def read(self, stream: _binary.CodedInputStream) -> ADCEvent:
         field_values = self._read(stream)
-        return ADCEvent(id=field_values[0], num=field_values[1], dwell=field_values[2], delay_ns=field_values[3], freq_ppm=field_values[4], phase_ppm=field_values[5], freq=field_values[6], phase=field_values[7], phase_shape_id=field_values[8])
+        return ADCEvent(id=field_values[0], num=field_values[1], dwell=field_values[2], delay=field_values[3], freq_ppm=field_values[4], phase_ppm=field_values[5], freq=field_values[6], phase=field_values[7], phase_shape_id=field_values[8])
 
 
 class ShapeSerializer(_binary.RecordSerializer[Shape]):

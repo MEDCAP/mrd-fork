@@ -8,7 +8,7 @@ classdef RFEventSerializer < yardl.binary.RecordSerializer
       field_serializers{3} = yardl.binary.Int32Serializer;
       field_serializers{4} = yardl.binary.Int32Serializer;
       field_serializers{5} = yardl.binary.Int32Serializer;
-      field_serializers{6} = yardl.binary.Uint64Serializer;
+      field_serializers{6} = yardl.binary.Float64Serializer;
       field_serializers{7} = yardl.binary.Uint64Serializer;
       field_serializers{8} = yardl.binary.Float64Serializer;
       field_serializers{9} = yardl.binary.Float64Serializer;
@@ -24,12 +24,12 @@ classdef RFEventSerializer < yardl.binary.RecordSerializer
         outstream (1,1) yardl.binary.CodedOutputStream
         value (1,1) mrd.RFEvent
       end
-      self.write_(outstream, value.id, value.amp, value.mag_id, value.phase_id, value.time_id, value.center_ns, value.delay_ns, value.freq_ppm, value.phase_ppm, value.freq_offset, value.phase_offset, value.use);
+      self.write_(outstream, value.id, value.amp, value.mag_id, value.phase_id, value.time_id, value.center, value.delay, value.freq_ppm, value.phase_ppm, value.freq_offset, value.phase_offset, value.use);
     end
 
     function value = read(self, instream)
       fields = self.read_(instream);
-      value = mrd.RFEvent(id=fields{1}, amp=fields{2}, mag_id=fields{3}, phase_id=fields{4}, time_id=fields{5}, center_ns=fields{6}, delay_ns=fields{7}, freq_ppm=fields{8}, phase_ppm=fields{9}, freq_offset=fields{10}, phase_offset=fields{11}, use=fields{12});
+      value = mrd.RFEvent(id=fields{1}, amp=fields{2}, mag_id=fields{3}, phase_id=fields{4}, time_id=fields{5}, center=fields{6}, delay=fields{7}, freq_ppm=fields{8}, phase_ppm=fields{9}, freq_offset=fields{10}, phase_offset=fields{11}, use=fields{12});
     end
   end
 end

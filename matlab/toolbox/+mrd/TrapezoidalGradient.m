@@ -8,17 +8,13 @@ classdef TrapezoidalGradient < handle
     % Peak amplitude in Hz/m
     amp
     % Rise time of the trapezoid in microseconds
-    % rise: uint64
-    rise_ns
+    rise
     % Flat-top time of the trapezoid in microseconds
-    % flat: uint64
-    flat_ns
+    flat
     % Fall time of the trapezoid in microseconds
-    % fall: uint64
-    fall_ns
+    fall
     % Delay before starting the gradient, specified in microseconds
-    % delay: uint64
-    delay_ns
+    delay
   end
 
   methods
@@ -26,17 +22,17 @@ classdef TrapezoidalGradient < handle
       arguments
         kwargs.id = int32(0);
         kwargs.amp = double(0);
-        kwargs.rise_ns = uint64(0);
-        kwargs.flat_ns = uint64(0);
-        kwargs.fall_ns = uint64(0);
-        kwargs.delay_ns = uint64(0);
+        kwargs.rise = uint64(0);
+        kwargs.flat = uint64(0);
+        kwargs.fall = uint64(0);
+        kwargs.delay = uint64(0);
       end
       self.id = kwargs.id;
       self.amp = kwargs.amp;
-      self.rise_ns = kwargs.rise_ns;
-      self.flat_ns = kwargs.flat_ns;
-      self.fall_ns = kwargs.fall_ns;
-      self.delay_ns = kwargs.delay_ns;
+      self.rise = kwargs.rise;
+      self.flat = kwargs.flat;
+      self.fall = kwargs.fall;
+      self.delay = kwargs.delay;
     end
 
     function res = eq(self, other)
@@ -44,10 +40,10 @@ classdef TrapezoidalGradient < handle
         isa(other, "mrd.TrapezoidalGradient") && ...
         isequal({self.id}, {other.id}) && ...
         isequal({self.amp}, {other.amp}) && ...
-        isequal({self.rise_ns}, {other.rise_ns}) && ...
-        isequal({self.flat_ns}, {other.flat_ns}) && ...
-        isequal({self.fall_ns}, {other.fall_ns}) && ...
-        isequal({self.delay_ns}, {other.delay_ns});
+        isequal({self.rise}, {other.rise}) && ...
+        isequal({self.flat}, {other.flat}) && ...
+        isequal({self.fall}, {other.fall}) && ...
+        isequal({self.delay}, {other.delay});
     end
 
     function res = ne(self, other)

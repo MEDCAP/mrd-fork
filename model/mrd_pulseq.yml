@@ -2,24 +2,20 @@
 PulseqDefinitions: !record
   fields:
     # Default raster time (dwell time) of the shaped gradient events, specified in seconds
-    # gradientRasterTime: float64
-    gradientRasterTimeNs: uint64  # ns
+    gradientRasterTime: float64
 
     # Default raster time (dwell time) of the radio-frequency pulse shapes, specified in seconds
-    # radiofrequencyRasterTime: float64
-    radiofrequencyRasterTimeNs: uint64  # ns
+    radiofrequencyRasterTime: float64
 
     # The value defining the alignment of the ADC dwell times.
     # ADC dwell time must be integer multiple of the specified adcRasterTime.
     # adcRasterTime is specified in seconds
-    # adcRasterTime: float64
-    adcRasterTimeNs: uint64 # ns
+    adcRasterTime: float64
 
     # The value defining the alignment of the block durations, specified in seconds;
     # the physical block duration must be integer multiple of the specified blockDurationRaster.
     # Block duration in the blocks section are specified in the units of blockDurationRaster
-    # blockDurationRaster: float64
-    blockDurationRasterNs: uint64 # ns
+    blockDurationRaster: float64
 
     # Human-readable name of the sequence
     name: string?
@@ -28,8 +24,7 @@ PulseqDefinitions: !record
     fov: ThreeDimensionalFloat?
 
     # Total duration of the sequence is seconds
-    # totalDuration: float64?
-    totalDurationNs: uint64?  # ns
+    totalDuration: float64?
 
     custom: string->string
 
@@ -88,17 +83,15 @@ RFEvent: !record
 
     # Shape ID for the time sampling points, specified in the units of
     # RadiofrequencyRasterTime.
-    # 0 means default time raster = RadiofrequencyRasterTime
+    # 0 means default time raster
     timeId: int32
 
     # Time point in microseconds relative to the beginning of
     # the RF shape at which the effective rotation takes place
-    # center: float64
-    centerNs: uint64  # ns
+    center: float64
 
     # Delay before starting the RF pulse, specified in microseconds
-    # delay: uint64
-    delayNs: uint64   # ns
+    delay: uint64
 
     # Frequency offset relative to the main system's frequency,
     # specified in parts per million (ppm)
@@ -138,9 +131,8 @@ ArbitraryGradient: !record
     # 0 means default time raster, -1 means 1/2 of the default time raster (gradient oversampling case).
     timeId: int32
 
-    # Delay before starting the gradient, specified in microseconds 
-    # delay: uint64
-    delayNs: uint64   # ns
+    # Delay before starting the gradient, specified in microseconds
+    delay: uint64
 
 # A trapezoidal gradient event
 TrapezoidalGradient: !record
@@ -152,20 +144,16 @@ TrapezoidalGradient: !record
     amp: float64
 
     # Rise time of the trapezoid in microseconds
-    # rise: uint64
-    riseNs: uint64  # ns
+    rise: uint64
 
     # Flat-top time of the trapezoid in microseconds
-    # flat: uint64
-    flatNs: uint64  # ns
+    flat: uint64
 
     # Fall time of the trapezoid in microseconds
-    # fall: uint64
-    fallNs: uint64  # ns
+    fall: uint64
 
     # Delay before starting the gradient, specified in microseconds
-    # delay: uint64
-    delayNs: uint64 # ns
+    delay: uint64
 
 
 # An ADC event
@@ -181,8 +169,7 @@ ADCEvent: !record
     dwell: float
 
     # Delay between start of block and first sample, specified in microseconds
-    # delay: uint64
-    delayNs: uint64   # ns
+    delay: uint64
 
     # Frequency offset of the ADC receiver relative to the system frequency,
     # specified in parts per million (ppm)
