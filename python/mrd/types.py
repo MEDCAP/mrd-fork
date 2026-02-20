@@ -1502,7 +1502,6 @@ class ImageType(yardl.OutOfRangeEnum):
     REAL = 3
     IMAG = 4
     COMPLEX = 5
-    RGBA = 6
 
 ImageData = npt.NDArray[Y_NP]
 
@@ -2128,7 +2127,8 @@ class ArrayType(yardl.OutOfRangeEnum):
     B1_MAP = 7
     SENSITIVITY_MAP = 8
     GFACTOR_MAP = 9
-    USER_MAP = 10
+    RGBA_MAP = 10
+    USER_MAP = 11
 
 class ArrayMetaValue:
     String: typing.ClassVar[type["ArrayMetaValueUnionCase[str]"]]
@@ -2146,20 +2146,21 @@ del ArrayMetaValueUnionCase
 ArrayMeta = dict[str, list[ArrayMetaValue]]
 
 class ArrayDimension(yardl.OutOfRangeEnum):
-    CHANNEL = 0
-    Z = 1
-    Y = 2
-    X = 3
-    FREQUENCY = 4
-    BASIS = 5
-    SAMPLES = 6
-    LOC = 7
-    S = 8
-    N = 9
-    E2 = 10
-    E1 = 11
-    E0 = 12
-    TIME = 13
+    CHANNEL = 1
+    Z = 2
+    Y = 3
+    X = 4
+    FREQUENCY = 5
+    BASIS = 6
+    SAMPLES = 7
+    LOC = 8
+    S = 9
+    N = 10
+    E2 = 11
+    E1 = 12
+    E0 = 13
+    RGBA = 14
+    TIME_NS = 15
 
 class NDArrayHeader:
     dimension_labels: list[ArrayDimension]

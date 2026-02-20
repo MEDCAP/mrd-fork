@@ -880,7 +880,6 @@ enum class ImageType {
   kReal = 3,
   kImag = 4,
   kComplex = 5,
-  kRgba = 6,
 };
 
 template <typename Y>
@@ -1239,7 +1238,8 @@ enum class ArrayType {
   kB1Map = 7,
   kSensitivityMap = 8,
   kGfactorMap = 9,
-  kUserMap = 10,
+  kRgbaMap = 10,
+  kUserMap = 11,
 };
 
 using ArrayMetaValue = std::variant<std::string, int64_t, double>;
@@ -1247,20 +1247,21 @@ using ArrayMetaValue = std::variant<std::string, int64_t, double>;
 using ArrayMeta = std::unordered_map<std::string, std::vector<mrd::ArrayMetaValue>>;
 
 enum class ArrayDimension {
-  kChannel = 0,
-  kZ = 1,
-  kY = 2,
-  kX = 3,
-  kFrequency = 4,
-  kBasis = 5,
-  kSamples = 6,
-  kLoc = 7,
-  kS = 8,
-  kN = 9,
-  kE2 = 10,
-  kE1 = 11,
-  kE0 = 12,
-  kTime = 13,
+  kChannel = 1,
+  kZ = 2,
+  kY = 3,
+  kX = 4,
+  kFrequency = 5,
+  kBasis = 6,
+  kSamples = 7,
+  kLoc = 8,
+  kS = 9,
+  kN = 10,
+  kE2 = 11,
+  kE1 = 12,
+  kE0 = 13,
+  kRgba = 14,
+  kTimeNs = 15,
 };
 
 struct NDArrayHeader {

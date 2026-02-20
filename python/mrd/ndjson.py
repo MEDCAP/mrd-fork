@@ -2422,7 +2422,6 @@ image_type_name_to_value_map = {
     "real": ImageType.REAL,
     "imag": ImageType.IMAG,
     "complex": ImageType.COMPLEX,
-    "rgba": ImageType.RGBA,
 }
 image_type_value_to_name_map = {v: n for n, v in image_type_name_to_value_map.items()}
 
@@ -3192,6 +3191,7 @@ array_type_name_to_value_map = {
     "b1Map": ArrayType.B1_MAP,
     "sensitivityMap": ArrayType.SENSITIVITY_MAP,
     "gfactorMap": ArrayType.GFACTOR_MAP,
+    "rgbaMap": ArrayType.RGBA_MAP,
     "userMap": ArrayType.USER_MAP,
 }
 array_type_value_to_name_map = {v: n for n, v in array_type_name_to_value_map.items()}
@@ -3210,7 +3210,8 @@ array_dimension_name_to_value_map = {
     "e2": ArrayDimension.E2,
     "e1": ArrayDimension.E1,
     "e0": ArrayDimension.E0,
-    "time": ArrayDimension.TIME,
+    "rgba": ArrayDimension.RGBA,
+    "timeNs": ArrayDimension.TIME_NS,
 }
 array_dimension_value_to_name_map = {v: n for n, v in array_dimension_name_to_value_map.items()}
 

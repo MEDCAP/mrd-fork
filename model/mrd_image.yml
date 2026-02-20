@@ -22,7 +22,6 @@ ImageType: !enum
     real: 3
     imag: 4
     complex: 5
-    rgba: 6           # a uint32 image in which MSB = R, G, B, LSB = alpha
 
 ImageData<Y>: !array
   items: Y

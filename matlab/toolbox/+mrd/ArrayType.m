@@ -29,8 +29,11 @@ classdef ArrayType < uint64
     function v = GFACTOR_MAP
       v = mrd.ArrayType(9);
     end
-    function v = USER_MAP
+    function v = RGBA_MAP
       v = mrd.ArrayType(10);
+    end
+    function v = USER_MAP
+      v = mrd.ArrayType(11);
     end
 
     function z = zeros(varargin)
