@@ -1265,7 +1265,7 @@ enum class ArrayDimension {
 
 struct NDArrayHeader {
   std::vector<mrd::ArrayDimension> dimension_labels{};
-  mrd::ArrayType array_type{};
+  std::optional<mrd::ArrayType> array_type{};
   mrd::ArrayMeta meta{};
 
   bool operator==(const NDArrayHeader& other) const {
@@ -1310,6 +1310,7 @@ using NDArrayComplexFloat = mrd::NDArray<std::complex<float>>;
 
 using NDArrayComplexDouble = mrd::NDArray<std::complex<double>>;
 
+// Union of all NDArray types
 using AnyNDArray = std::variant<mrd::NDArrayUint16, mrd::NDArrayInt16, mrd::NDArrayUint32, mrd::NDArrayInt32, mrd::NDArrayFloat, mrd::NDArrayDouble, mrd::NDArrayComplexFloat, mrd::NDArrayComplexDouble>;
 
 // Pulseq definitions

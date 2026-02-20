@@ -137,6 +137,12 @@ def generate_cartesian_phantom(output_file: Optional[str] = PhantomDefaults.outp
 
     def generate_data() -> Generator[mrd.StreamItem, None, None]:
 
+        head = mrd.NDArrayHeader()
+        head.dimension_labels = [mrd.ArrayDimension.CHANNEL, mrd.ArrayDimension.Z]
+        head.array_type = mrd.ArrayType.T1_MAP
+        data = np.random.rand(ncoils, 1).astype(np.float32)
+        yield mrd.StreamItem.NdArrayFloat(mrd.NDArray(head=head, data=data))
+
         def new_acquisition():
             """Create a new, default-initialized Acquisition object"""
             head = mrd.AcquisitionHeader()

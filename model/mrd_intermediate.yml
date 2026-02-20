@@ -109,7 +109,7 @@ ArrayDimension: !enum
 NDArrayHeader: !record
   fields:
     dimensionLabels: ArrayDimension*  # optional ordered vector of enum labels
-    arrayType: ArrayType              # mandatory type of array
+    arrayType: ArrayType?             # optional type of the array
     meta: ArrayMeta
 
 NDArray<T>: !record     # no computed fields as the dimension is not labeled in build time
@@ -126,6 +126,7 @@ NDArrayDouble: NDArray<double>
 NDArrayComplexFloat: NDArray<complexfloat>
 NDArrayComplexDouble: NDArray<complexdouble>
 
+# Union of all NDArray types
 AnyNDArray:
   - NDArrayUint16
   - NDArrayInt16

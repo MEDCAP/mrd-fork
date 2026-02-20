@@ -2849,7 +2849,7 @@ template<typename T, yardl::binary::Reader<T> ReadT>
   }
 
   yardl::binary::WriteVector<mrd::ArrayDimension, yardl::binary::WriteEnum<mrd::ArrayDimension>>(stream, value.dimension_labels);
-  yardl::binary::WriteEnum<mrd::ArrayType>(stream, value.array_type);
+  yardl::binary::WriteOptional<mrd::ArrayType, yardl::binary::WriteEnum<mrd::ArrayType>>(stream, value.array_type);
   mrd::binary::WriteArrayMeta(stream, value.meta);
 }
 
@@ -2860,7 +2860,7 @@ template<typename T, yardl::binary::Reader<T> ReadT>
   }
 
   yardl::binary::ReadVector<mrd::ArrayDimension, yardl::binary::ReadEnum<mrd::ArrayDimension>>(stream, value.dimension_labels);
-  yardl::binary::ReadEnum<mrd::ArrayType>(stream, value.array_type);
+  yardl::binary::ReadOptional<mrd::ArrayType, yardl::binary::ReadEnum<mrd::ArrayType>>(stream, value.array_type);
   mrd::binary::ReadArrayMeta(stream, value.meta);
 }
 

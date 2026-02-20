@@ -4,7 +4,7 @@ classdef NDArrayHeaderSerializer < yardl.binary.RecordSerializer
   methods
     function self = NDArrayHeaderSerializer()
       field_serializers{1} = yardl.binary.VectorSerializer(yardl.binary.EnumSerializer('mrd.ArrayDimension', @mrd.ArrayDimension, yardl.binary.Int32Serializer));
-      field_serializers{2} = yardl.binary.EnumSerializer('mrd.ArrayType', @mrd.ArrayType, yardl.binary.Int32Serializer);
+      field_serializers{2} = yardl.binary.OptionalSerializer(yardl.binary.EnumSerializer('mrd.ArrayType', @mrd.ArrayType, yardl.binary.Int32Serializer));
       field_serializers{3} = yardl.binary.MapSerializer(yardl.binary.StringSerializer, yardl.binary.VectorSerializer(yardl.binary.UnionSerializer('mrd.ArrayMetaValue', {yardl.binary.StringSerializer, yardl.binary.Int64Serializer, yardl.binary.Float64Serializer}, {@mrd.ArrayMetaValue.String, @mrd.ArrayMetaValue.Int64, @mrd.ArrayMetaValue.Float64})));
       self@yardl.binary.RecordSerializer('mrd.NDArrayHeader', field_serializers);
     end

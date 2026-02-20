@@ -877,7 +877,7 @@ class ImageArraySerializer(_binary.RecordSerializer[ImageArray]):
 
 class NDArrayHeaderSerializer(_binary.RecordSerializer[NDArrayHeader]):
     def __init__(self) -> None:
-        super().__init__([("dimension_labels", _binary.VectorSerializer(_binary.EnumSerializer(_binary.int32_serializer, ArrayDimension))), ("array_type", _binary.EnumSerializer(_binary.int32_serializer, ArrayType)), ("meta", _binary.MapSerializer(_binary.string_serializer, _binary.VectorSerializer(_binary.UnionSerializer(ArrayMetaValue, [(ArrayMetaValue.String, _binary.string_serializer), (ArrayMetaValue.Int64, _binary.int64_serializer), (ArrayMetaValue.Float64, _binary.float64_serializer)]))))])
+        super().__init__([("dimension_labels", _binary.VectorSerializer(_binary.EnumSerializer(_binary.int32_serializer, ArrayDimension))), ("array_type", _binary.OptionalSerializer(_binary.EnumSerializer(_binary.int32_serializer, ArrayType))), ("meta", _binary.MapSerializer(_binary.string_serializer, _binary.VectorSerializer(_binary.UnionSerializer(ArrayMetaValue, [(ArrayMetaValue.String, _binary.string_serializer), (ArrayMetaValue.Int64, _binary.int64_serializer), (ArrayMetaValue.Float64, _binary.float64_serializer)]))))])
 
     def write(self, stream: _binary.CodedOutputStream, value: NDArrayHeader) -> None:
         if isinstance(value, np.void):

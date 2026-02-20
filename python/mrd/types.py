@@ -2163,12 +2163,12 @@ class ArrayDimension(yardl.OutOfRangeEnum):
 
 class NDArrayHeader:
     dimension_labels: list[ArrayDimension]
-    array_type: ArrayType
+    array_type: typing.Optional[ArrayType]
     meta: ArrayMeta
 
     def __init__(self, *,
         dimension_labels: typing.Optional[list[ArrayDimension]] = None,
-        array_type: ArrayType,
+        array_type: typing.Optional[ArrayType] = None,
         meta: typing.Optional[ArrayMeta] = None,
     ):
         self.dimension_labels = dimension_labels if dimension_labels is not None else []
@@ -2195,10 +2195,10 @@ class NDArray(typing.Generic[T_NP]):
     data: Array[T_NP]
 
     def __init__(self, *,
-        head: NDArrayHeader,
+        head: typing.Optional[NDArrayHeader] = None,
         data: Array[T_NP],
     ):
-        self.head = head
+        self.head = head if head is not None else NDArrayHeader()
         self.data = data
 
     def __eq__(self, other: object) -> bool:
@@ -2873,7 +2873,7 @@ def _mk_get_dtype():
     dtype_map.setdefault(ArrayType, np.dtype(np.int32))
     dtype_map.setdefault(ArrayMetaValue, np.dtype(np.object_))
     dtype_map.setdefault(ArrayDimension, np.dtype(np.int32))
-    dtype_map.setdefault(NDArrayHeader, np.dtype([('dimension_labels', np.dtype(np.object_)), ('array_type', get_dtype(ArrayType)), ('meta', np.dtype(np.object_))], align=True))
+    dtype_map.setdefault(NDArrayHeader, np.dtype([('dimension_labels', np.dtype(np.object_)), ('array_type', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(ArrayType))], align=True)), ('meta', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(NDArray, lambda type_args: np.dtype([('head', get_dtype(NDArrayHeader)), ('data', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(NDArrayUint16, get_dtype(types.GenericAlias(NDArray, (yardl.UInt16,))))
     dtype_map.setdefault(NDArrayInt16, get_dtype(types.GenericAlias(NDArray, (yardl.Int16,))))

@@ -3217,7 +3217,7 @@ array_dimension_value_to_name_map = {v: n for n, v in array_dimension_name_to_va
 class NDArrayHeaderConverter(_ndjson.JsonConverter[NDArrayHeader, np.void]):
     def __init__(self) -> None:
         self._dimension_labels_converter = _ndjson.VectorConverter(_ndjson.EnumConverter(ArrayDimension, np.int32, array_dimension_name_to_value_map, array_dimension_value_to_name_map))
-        self._array_type_converter = _ndjson.EnumConverter(ArrayType, np.int32, array_type_name_to_value_map, array_type_value_to_name_map)
+        self._array_type_converter = _ndjson.OptionalConverter(_ndjson.EnumConverter(ArrayType, np.int32, array_type_name_to_value_map, array_type_value_to_name_map))
         self._meta_converter = _ndjson.MapConverter(_ndjson.string_converter, _ndjson.VectorConverter(_ndjson.UnionConverter(ArrayMetaValue, [(ArrayMetaValue.String, _ndjson.string_converter, [str]), (ArrayMetaValue.Int64, _ndjson.int64_converter, [int, float]), (ArrayMetaValue.Float64, _ndjson.float64_converter, [int, float])], False)))
         super().__init__(np.dtype([
             ("dimension_labels", self._dimension_labels_converter.overall_dtype()),
@@ -3231,7 +3231,8 @@ class NDArrayHeaderConverter(_ndjson.JsonConverter[NDArrayHeader, np.void]):
         json_object = {}
 
         json_object["dimensionLabels"] = self._dimension_labels_converter.to_json(value.dimension_labels)
-        json_object["arrayType"] = self._array_type_converter.to_json(value.array_type)
+        if value.array_type is not None:
+            json_object["arrayType"] = self._array_type_converter.to_json(value.array_type)
         json_object["meta"] = self._meta_converter.to_json(value.meta)
         return json_object
 
@@ -3241,7 +3242,8 @@ class NDArrayHeaderConverter(_ndjson.JsonConverter[NDArrayHeader, np.void]):
         json_object = {}
 
         json_object["dimensionLabels"] = self._dimension_labels_converter.numpy_to_json(value["dimension_labels"])
-        json_object["arrayType"] = self._array_type_converter.numpy_to_json(value["array_type"])
+        if (field_val := value["array_type"]) is not None:
+            json_object["arrayType"] = self._array_type_converter.numpy_to_json(field_val)
         json_object["meta"] = self._meta_converter.numpy_to_json(value["meta"])
         return json_object
 
@@ -3250,7 +3252,7 @@ class NDArrayHeaderConverter(_ndjson.JsonConverter[NDArrayHeader, np.void]):
             raise TypeError("Expected 'dict' instance")
         return NDArrayHeader(
             dimension_labels=self._dimension_labels_converter.from_json(json_object["dimensionLabels"],),
-            array_type=self._array_type_converter.from_json(json_object["arrayType"],),
+            array_type=self._array_type_converter.from_json(json_object.get("arrayType")),
             meta=self._meta_converter.from_json(json_object["meta"],),
         )
 
@@ -3259,7 +3261,7 @@ class NDArrayHeaderConverter(_ndjson.JsonConverter[NDArrayHeader, np.void]):
             raise TypeError("Expected 'dict' instance")
         return (
             self._dimension_labels_converter.from_json_to_numpy(json_object["dimensionLabels"]),
-            self._array_type_converter.from_json_to_numpy(json_object["arrayType"]),
+            self._array_type_converter.from_json_to_numpy(json_object.get("arrayType")),
             self._meta_converter.from_json_to_numpy(json_object["meta"]),
         ) # type:ignore 
 

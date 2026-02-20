@@ -2018,7 +2018,7 @@ struct _Inner_NDArrayHeader {
   }
 
   yardl::hdf5::InnerVlen<mrd::ArrayDimension, mrd::ArrayDimension> dimension_labels;
-  mrd::ArrayType array_type;
+  yardl::hdf5::InnerOptional<mrd::ArrayType, mrd::ArrayType> array_type;
   yardl::hdf5::InnerMap<yardl::hdf5::InnerVlenString, std::string, yardl::hdf5::InnerVlen<::InnerUnion3<yardl::hdf5::InnerVlenString, std::string, int64_t, int64_t, double, double>, mrd::ArrayMetaValue>, std::vector<mrd::ArrayMetaValue>> meta;
 };
 
@@ -2597,7 +2597,7 @@ template <typename _T_Inner, typename T>
   using RecordType = mrd::hdf5::_Inner_NDArrayHeader;
   H5::CompType t(sizeof(RecordType));
   t.insertMember("dimensionLabels", HOFFSET(RecordType, dimension_labels), yardl::hdf5::InnerVlenDdl(mrd::hdf5::GetArrayDimensionHdf5Ddl()));
-  t.insertMember("arrayType", HOFFSET(RecordType, array_type), mrd::hdf5::GetArrayTypeHdf5Ddl());
+  t.insertMember("arrayType", HOFFSET(RecordType, array_type), yardl::hdf5::OptionalTypeDdl<mrd::ArrayType, mrd::ArrayType>(mrd::hdf5::GetArrayTypeHdf5Ddl()));
   t.insertMember("meta", HOFFSET(RecordType, meta), yardl::hdf5::InnerMapDdl<yardl::hdf5::InnerVlenString, yardl::hdf5::InnerVlen<::InnerUnion3<yardl::hdf5::InnerVlenString, std::string, int64_t, int64_t, double, double>, mrd::ArrayMetaValue>>(yardl::hdf5::InnerVlenStringDdl(), yardl::hdf5::InnerVlenDdl(::InnerUnion3Ddl<yardl::hdf5::InnerVlenString, std::string, int64_t, int64_t, double, double>(false, yardl::hdf5::InnerVlenStringDdl(), "string", H5::PredType::NATIVE_INT64, "int64", H5::PredType::NATIVE_DOUBLE, "float64"))));
   return t;
 }

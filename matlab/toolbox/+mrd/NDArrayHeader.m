@@ -11,13 +11,10 @@ classdef NDArrayHeader < handle
     function self = NDArrayHeader(kwargs)
       arguments
         kwargs.dimension_labels = mrd.ArrayDimension.empty();
-        kwargs.array_type;
+        kwargs.array_type = yardl.None;
         kwargs.meta = yardl.Map;
       end
       self.dimension_labels = kwargs.dimension_labels;
-      if ~isfield(kwargs, "array_type")
-        throw(yardl.TypeError("Missing required keyword argument 'array_type'"))
-      end
       self.array_type = kwargs.array_type;
       self.meta = kwargs.meta;
     end
@@ -41,7 +38,7 @@ classdef NDArrayHeader < handle
 
   methods (Static)
     function z = zeros(varargin)
-      elem = mrd.NDArrayHeader(array_type=yardl.None);
+      elem = mrd.NDArrayHeader();
       if nargin == 0
         z = elem;
         return;
