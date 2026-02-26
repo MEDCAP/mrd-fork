@@ -19,13 +19,6 @@ def acquisition_reader(input: Iterable[mrd.StreamItem]) -> Iterable[mrd.Acquisit
         yield item.value
 
 def stream_item_sink(input: Iterable[Union[mrd.Acquisition, mrd.Image[np.float32]]]) -> Iterable[mrd.StreamItem]:
-    arrhdr = mrd.NDArrayHeader(
-        dimension_labels=[mrd.ArrayDimension.CHANNEL, mrd.ArrayDimension.FREQUENCY],
-        array_type=mrd.ArrayType.USER_MAP,
-        meta=mrd.ArrayMeta({"description": [mrd.ArrayMetaValue.String("AUC curve")]}))
-    arrdata = np.random.rand(2,3).astype(np.float32)
-    yield mrd.StreamItem.NdArrayFloat(mrd.NDArray(head=arrhdr, data=arrdata))
-
     for item in input:
         if isinstance(item, mrd.Acquisition):
             yield mrd.StreamItem.Acquisition(item)

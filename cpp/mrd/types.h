@@ -874,12 +874,12 @@ struct ImageFlags : yardl::BaseFlags<uint64_t, ImageFlags> {
   static const ImageFlags kLastInSet;
 };
 
-enum class ImageType {
-  kMagnitude = 1,
-  kPhase = 2,
-  kReal = 3,
-  kImag = 4,
-  kComplex = 5,
+enum class ImageType : uint64_t {
+  kMagnitude = 1ULL,
+  kPhase = 2ULL,
+  kReal = 3ULL,
+  kImag = 4ULL,
+  kComplex = 5ULL,
 };
 
 template <typename Y>
@@ -918,7 +918,7 @@ struct ImageHeader {
   std::optional<uint32_t> repetition{};
   // Sets of different preparation, e.g. flow encoding, diffusion weighting
   std::optional<uint32_t> set{};
-  // Clock time stamp, ns since midnight
+  // Clock time stamp (e.g. nanoseconds since midnight)
   std::optional<uint64_t> acquisition_time_stamp_ns{};
   // Time stamp ns relative to physiological triggering, e.g. ECG, pulse oximetry, respiratory
   std::vector<uint64_t> physiology_time_stamp_ns{};
@@ -1226,8 +1226,7 @@ struct ImageArray {
 template <typename T>
 using Array = yardl::DynamicNDArray<T>;
 
-using ArrayComplexFloat = mrd::Array<std::complex<float>>;
-
+// array type to describe maps
 enum class ArrayType {
   kSpinDensityMap = 1,
   kT1Map = 2,
@@ -1264,55 +1263,58 @@ enum class ArrayDimension {
   kTimeNs = 15,
 };
 
-struct NDArrayHeader {
+struct NdArrayHeader {
   std::vector<mrd::ArrayDimension> dimension_labels{};
   std::optional<mrd::ArrayType> array_type{};
   mrd::ArrayMeta meta{};
 
-  bool operator==(const NDArrayHeader& other) const {
+  bool operator==(const NdArrayHeader& other) const {
     return dimension_labels == other.dimension_labels &&
       array_type == other.array_type &&
       meta == other.meta;
   }
 
-  bool operator!=(const NDArrayHeader& other) const {
+  bool operator!=(const NdArrayHeader& other) const {
     return !(*this == other);
   }
 };
 
 template <typename T>
-struct NDArray {
-  mrd::NDArrayHeader head{};
+struct NdArray {
+  mrd::NdArrayHeader head{};
   mrd::Array<T> data{};
 
-  bool operator==(const NDArray& other) const {
+  bool operator==(const NdArray& other) const {
     return head == other.head &&
       data == other.data;
   }
 
-  bool operator!=(const NDArray& other) const {
+  bool operator!=(const NdArray& other) const {
     return !(*this == other);
   }
 };
 
-using NDArrayUint16 = mrd::NDArray<uint16_t>;
+using NdArrayUint16 = mrd::NdArray<uint16_t>;
 
-using NDArrayInt16 = mrd::NDArray<int16_t>;
+using NdArrayInt16 = mrd::NdArray<int16_t>;
 
-using NDArrayUint32 = mrd::NDArray<uint32_t>;
+using NdArrayUint32 = mrd::NdArray<uint32_t>;
 
-using NDArrayInt32 = mrd::NDArray<int32_t>;
+using NdArrayInt32 = mrd::NdArray<int32_t>;
 
-using NDArrayFloat = mrd::NDArray<float>;
+using NdArrayFloat = mrd::NdArray<float>;
 
-using NDArrayDouble = mrd::NDArray<double>;
+using NdArrayDouble = mrd::NdArray<double>;
 
-using NDArrayComplexFloat = mrd::NDArray<std::complex<float>>;
+using NdArrayComplexFloat = mrd::NdArray<std::complex<float>>;
 
-using NDArrayComplexDouble = mrd::NDArray<std::complex<double>>;
+using NdArrayComplexDouble = mrd::NdArray<std::complex<double>>;
 
-// Union of all NDArray types
-using AnyNDArray = std::variant<mrd::NDArrayUint16, mrd::NDArrayInt16, mrd::NDArrayUint32, mrd::NDArrayInt32, mrd::NDArrayFloat, mrd::NDArrayDouble, mrd::NDArrayComplexFloat, mrd::NDArrayComplexDouble>;
+// Union of all MRD NDArray types
+using AnyNdArray = std::variant<mrd::NdArrayUint16, mrd::NdArrayInt16, mrd::NdArrayUint32, mrd::NdArrayInt32, mrd::NdArrayFloat, mrd::NdArrayDouble, mrd::NdArrayComplexFloat, mrd::NdArrayComplexDouble>;
+
+// Union of all primary types that can be streamed in the MRD Protocol
+using StreamItem = std::variant<mrd::Acquisition, mrd::WaveformUint32, mrd::ImageUint16, mrd::ImageInt16, mrd::ImageUint32, mrd::ImageInt32, mrd::ImageFloat, mrd::ImageDouble, mrd::ImageComplexFloat, mrd::ImageComplexDouble, mrd::AcquisitionBucket, mrd::ReconData, mrd::ImageArray, mrd::NdArrayUint16, mrd::NdArrayInt16, mrd::NdArrayUint32, mrd::NdArrayInt32, mrd::NdArrayFloat, mrd::NdArrayDouble, mrd::NdArrayComplexFloat, mrd::NdArrayComplexDouble>;
 
 // Pulseq definitions
 struct PulseqDefinitions {
@@ -1571,9 +1573,6 @@ struct Shape {
     return !(*this == other);
   }
 };
-
-// Union of all primary types that can be streamed in the MRD Protocol
-using StreamItem = std::variant<mrd::Acquisition, mrd::WaveformUint32, mrd::ImageUint16, mrd::ImageInt16, mrd::ImageUint32, mrd::ImageInt32, mrd::ImageFloat, mrd::ImageDouble, mrd::ImageComplexFloat, mrd::ImageComplexDouble, mrd::AcquisitionBucket, mrd::ReconData, mrd::ArrayComplexFloat, mrd::ImageArray, mrd::NDArrayUint16, mrd::NDArrayInt16, mrd::NDArrayUint32, mrd::NDArrayInt32, mrd::NDArrayFloat, mrd::NDArrayDouble, mrd::NDArrayComplexFloat, mrd::NDArrayComplexDouble, mrd::PulseqDefinitions, std::vector<mrd::Block>, mrd::RFEvent, mrd::ArbitraryGradient, mrd::TrapezoidalGradient, mrd::ADCEvent, mrd::Shape>;
 
 } // namespace mrd
 
