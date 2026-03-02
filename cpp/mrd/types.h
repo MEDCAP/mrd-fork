@@ -1313,9 +1313,6 @@ using NdArrayComplexDouble = mrd::NdArray<std::complex<double>>;
 // Union of all MRD NDArray types
 using AnyNdArray = std::variant<mrd::NdArrayUint16, mrd::NdArrayInt16, mrd::NdArrayUint32, mrd::NdArrayInt32, mrd::NdArrayFloat, mrd::NdArrayDouble, mrd::NdArrayComplexFloat, mrd::NdArrayComplexDouble>;
 
-// Union of all primary types that can be streamed in the MRD Protocol
-using StreamItem = std::variant<mrd::Acquisition, mrd::WaveformUint32, mrd::ImageUint16, mrd::ImageInt16, mrd::ImageUint32, mrd::ImageInt32, mrd::ImageFloat, mrd::ImageDouble, mrd::ImageComplexFloat, mrd::ImageComplexDouble, mrd::AcquisitionBucket, mrd::ReconData, mrd::ImageArray, mrd::NdArrayUint16, mrd::NdArrayInt16, mrd::NdArrayUint32, mrd::NdArrayInt32, mrd::NdArrayFloat, mrd::NdArrayDouble, mrd::NdArrayComplexFloat, mrd::NdArrayComplexDouble>;
-
 // Pulseq definitions
 struct PulseqDefinitions {
   // Default raster time (dwell time) of the shaped gradient events, specified in seconds
@@ -1573,6 +1570,9 @@ struct Shape {
     return !(*this == other);
   }
 };
+
+// Union of all primary types that can be streamed in the MRD Protocol
+using StreamItem = std::variant<mrd::Acquisition, mrd::WaveformUint32, mrd::ImageUint16, mrd::ImageInt16, mrd::ImageUint32, mrd::ImageInt32, mrd::ImageFloat, mrd::ImageDouble, mrd::ImageComplexFloat, mrd::ImageComplexDouble, mrd::AcquisitionBucket, mrd::ReconData, mrd::ImageArray, mrd::PulseqDefinitions, std::vector<mrd::Block>, mrd::RFEvent, mrd::ArbitraryGradient, mrd::TrapezoidalGradient, mrd::ADCEvent, mrd::Shape, mrd::NdArrayUint16, mrd::NdArrayInt16, mrd::NdArrayUint32, mrd::NdArrayInt32, mrd::NdArrayFloat, mrd::NdArrayDouble, mrd::NdArrayComplexFloat, mrd::NdArrayComplexDouble>;
 
 } // namespace mrd
 

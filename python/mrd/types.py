@@ -2255,55 +2255,6 @@ AnyNdArray.NdArrayComplexFloat = type("AnyNdArray.NdArrayComplexFloat", (AnyNdAr
 AnyNdArray.NdArrayComplexDouble = type("AnyNdArray.NdArrayComplexDouble", (AnyNdArrayUnionCase,), {"index": 7, "tag": "NdArrayComplexDouble"})
 del AnyNdArrayUnionCase
 
-class StreamItem:
-    Acquisition: typing.ClassVar[type["StreamItemUnionCase[Acquisition]"]]
-    WaveformUint32: typing.ClassVar[type["StreamItemUnionCase[WaveformUint32]"]]
-    ImageUint16: typing.ClassVar[type["StreamItemUnionCase[ImageUint16]"]]
-    ImageInt16: typing.ClassVar[type["StreamItemUnionCase[ImageInt16]"]]
-    ImageUint32: typing.ClassVar[type["StreamItemUnionCase[ImageUint32]"]]
-    ImageInt32: typing.ClassVar[type["StreamItemUnionCase[ImageInt32]"]]
-    ImageFloat: typing.ClassVar[type["StreamItemUnionCase[ImageFloat]"]]
-    ImageDouble: typing.ClassVar[type["StreamItemUnionCase[ImageDouble]"]]
-    ImageComplexFloat: typing.ClassVar[type["StreamItemUnionCase[ImageComplexFloat]"]]
-    ImageComplexDouble: typing.ClassVar[type["StreamItemUnionCase[ImageComplexDouble]"]]
-    AcquisitionBucket: typing.ClassVar[type["StreamItemUnionCase[AcquisitionBucket]"]]
-    ReconData: typing.ClassVar[type["StreamItemUnionCase[ReconData]"]]
-    ImageArray: typing.ClassVar[type["StreamItemUnionCase[ImageArray]"]]
-    NdArrayUint16: typing.ClassVar[type["StreamItemUnionCase[NdArrayUint16]"]]
-    NdArrayInt16: typing.ClassVar[type["StreamItemUnionCase[NdArrayInt16]"]]
-    NdArrayUint32: typing.ClassVar[type["StreamItemUnionCase[NdArrayUint32]"]]
-    NdArrayInt32: typing.ClassVar[type["StreamItemUnionCase[NdArrayInt32]"]]
-    NdArrayFloat: typing.ClassVar[type["StreamItemUnionCase[NdArrayFloat]"]]
-    NdArrayDouble: typing.ClassVar[type["StreamItemUnionCase[NdArrayDouble]"]]
-    NdArrayComplexFloat: typing.ClassVar[type["StreamItemUnionCase[NdArrayComplexFloat]"]]
-    NdArrayComplexDouble: typing.ClassVar[type["StreamItemUnionCase[NdArrayComplexDouble]"]]
-
-class StreamItemUnionCase(StreamItem, yardl.UnionCase[_T]):
-    pass
-
-StreamItem.Acquisition = type("StreamItem.Acquisition", (StreamItemUnionCase,), {"index": 0, "tag": "acquisition"})
-StreamItem.WaveformUint32 = type("StreamItem.WaveformUint32", (StreamItemUnionCase,), {"index": 1, "tag": "waveformUint32"})
-StreamItem.ImageUint16 = type("StreamItem.ImageUint16", (StreamItemUnionCase,), {"index": 2, "tag": "imageUint16"})
-StreamItem.ImageInt16 = type("StreamItem.ImageInt16", (StreamItemUnionCase,), {"index": 3, "tag": "imageInt16"})
-StreamItem.ImageUint32 = type("StreamItem.ImageUint32", (StreamItemUnionCase,), {"index": 4, "tag": "imageUint32"})
-StreamItem.ImageInt32 = type("StreamItem.ImageInt32", (StreamItemUnionCase,), {"index": 5, "tag": "imageInt32"})
-StreamItem.ImageFloat = type("StreamItem.ImageFloat", (StreamItemUnionCase,), {"index": 6, "tag": "imageFloat"})
-StreamItem.ImageDouble = type("StreamItem.ImageDouble", (StreamItemUnionCase,), {"index": 7, "tag": "imageDouble"})
-StreamItem.ImageComplexFloat = type("StreamItem.ImageComplexFloat", (StreamItemUnionCase,), {"index": 8, "tag": "imageComplexFloat"})
-StreamItem.ImageComplexDouble = type("StreamItem.ImageComplexDouble", (StreamItemUnionCase,), {"index": 9, "tag": "imageComplexDouble"})
-StreamItem.AcquisitionBucket = type("StreamItem.AcquisitionBucket", (StreamItemUnionCase,), {"index": 10, "tag": "acquisitionBucket"})
-StreamItem.ReconData = type("StreamItem.ReconData", (StreamItemUnionCase,), {"index": 11, "tag": "reconData"})
-StreamItem.ImageArray = type("StreamItem.ImageArray", (StreamItemUnionCase,), {"index": 12, "tag": "imageArray"})
-StreamItem.NdArrayUint16 = type("StreamItem.NdArrayUint16", (StreamItemUnionCase,), {"index": 13, "tag": "ndArrayUint16"})
-StreamItem.NdArrayInt16 = type("StreamItem.NdArrayInt16", (StreamItemUnionCase,), {"index": 14, "tag": "ndArrayInt16"})
-StreamItem.NdArrayUint32 = type("StreamItem.NdArrayUint32", (StreamItemUnionCase,), {"index": 15, "tag": "ndArrayUint32"})
-StreamItem.NdArrayInt32 = type("StreamItem.NdArrayInt32", (StreamItemUnionCase,), {"index": 16, "tag": "ndArrayInt32"})
-StreamItem.NdArrayFloat = type("StreamItem.NdArrayFloat", (StreamItemUnionCase,), {"index": 17, "tag": "ndArrayFloat"})
-StreamItem.NdArrayDouble = type("StreamItem.NdArrayDouble", (StreamItemUnionCase,), {"index": 18, "tag": "ndArrayDouble"})
-StreamItem.NdArrayComplexFloat = type("StreamItem.NdArrayComplexFloat", (StreamItemUnionCase,), {"index": 19, "tag": "ndArrayComplexFloat"})
-StreamItem.NdArrayComplexDouble = type("StreamItem.NdArrayComplexDouble", (StreamItemUnionCase,), {"index": 20, "tag": "ndArrayComplexDouble"})
-del StreamItemUnionCase
-
 class PulseqDefinitions:
     """Pulseq definitions"""
 
@@ -2785,6 +2736,69 @@ class Shape:
         return f"Shape(id={repr(self.id)}, num_samples={repr(self.num_samples)}, data={repr(self.data)})"
 
 
+class StreamItem:
+    Acquisition: typing.ClassVar[type["StreamItemUnionCase[Acquisition]"]]
+    WaveformUint32: typing.ClassVar[type["StreamItemUnionCase[WaveformUint32]"]]
+    ImageUint16: typing.ClassVar[type["StreamItemUnionCase[ImageUint16]"]]
+    ImageInt16: typing.ClassVar[type["StreamItemUnionCase[ImageInt16]"]]
+    ImageUint32: typing.ClassVar[type["StreamItemUnionCase[ImageUint32]"]]
+    ImageInt32: typing.ClassVar[type["StreamItemUnionCase[ImageInt32]"]]
+    ImageFloat: typing.ClassVar[type["StreamItemUnionCase[ImageFloat]"]]
+    ImageDouble: typing.ClassVar[type["StreamItemUnionCase[ImageDouble]"]]
+    ImageComplexFloat: typing.ClassVar[type["StreamItemUnionCase[ImageComplexFloat]"]]
+    ImageComplexDouble: typing.ClassVar[type["StreamItemUnionCase[ImageComplexDouble]"]]
+    AcquisitionBucket: typing.ClassVar[type["StreamItemUnionCase[AcquisitionBucket]"]]
+    ReconData: typing.ClassVar[type["StreamItemUnionCase[ReconData]"]]
+    ImageArray: typing.ClassVar[type["StreamItemUnionCase[ImageArray]"]]
+    PulseqDefinitions: typing.ClassVar[type["StreamItemUnionCase[PulseqDefinitions]"]]
+    Blocks: typing.ClassVar[type["StreamItemUnionCase[list[Block]]"]]
+    Rf: typing.ClassVar[type["StreamItemUnionCase[RFEvent]"]]
+    ArbitraryGradient: typing.ClassVar[type["StreamItemUnionCase[ArbitraryGradient]"]]
+    TrapezoidalGradient: typing.ClassVar[type["StreamItemUnionCase[TrapezoidalGradient]"]]
+    Adc: typing.ClassVar[type["StreamItemUnionCase[ADCEvent]"]]
+    Shape: typing.ClassVar[type["StreamItemUnionCase[Shape]"]]
+    NdArrayUint16: typing.ClassVar[type["StreamItemUnionCase[NdArrayUint16]"]]
+    NdArrayInt16: typing.ClassVar[type["StreamItemUnionCase[NdArrayInt16]"]]
+    NdArrayUint32: typing.ClassVar[type["StreamItemUnionCase[NdArrayUint32]"]]
+    NdArrayInt32: typing.ClassVar[type["StreamItemUnionCase[NdArrayInt32]"]]
+    NdArrayFloat: typing.ClassVar[type["StreamItemUnionCase[NdArrayFloat]"]]
+    NdArrayDouble: typing.ClassVar[type["StreamItemUnionCase[NdArrayDouble]"]]
+    NdArrayComplexFloat: typing.ClassVar[type["StreamItemUnionCase[NdArrayComplexFloat]"]]
+    NdArrayComplexDouble: typing.ClassVar[type["StreamItemUnionCase[NdArrayComplexDouble]"]]
+
+class StreamItemUnionCase(StreamItem, yardl.UnionCase[_T]):
+    pass
+
+StreamItem.Acquisition = type("StreamItem.Acquisition", (StreamItemUnionCase,), {"index": 0, "tag": "acquisition"})
+StreamItem.WaveformUint32 = type("StreamItem.WaveformUint32", (StreamItemUnionCase,), {"index": 1, "tag": "waveformUint32"})
+StreamItem.ImageUint16 = type("StreamItem.ImageUint16", (StreamItemUnionCase,), {"index": 2, "tag": "imageUint16"})
+StreamItem.ImageInt16 = type("StreamItem.ImageInt16", (StreamItemUnionCase,), {"index": 3, "tag": "imageInt16"})
+StreamItem.ImageUint32 = type("StreamItem.ImageUint32", (StreamItemUnionCase,), {"index": 4, "tag": "imageUint32"})
+StreamItem.ImageInt32 = type("StreamItem.ImageInt32", (StreamItemUnionCase,), {"index": 5, "tag": "imageInt32"})
+StreamItem.ImageFloat = type("StreamItem.ImageFloat", (StreamItemUnionCase,), {"index": 6, "tag": "imageFloat"})
+StreamItem.ImageDouble = type("StreamItem.ImageDouble", (StreamItemUnionCase,), {"index": 7, "tag": "imageDouble"})
+StreamItem.ImageComplexFloat = type("StreamItem.ImageComplexFloat", (StreamItemUnionCase,), {"index": 8, "tag": "imageComplexFloat"})
+StreamItem.ImageComplexDouble = type("StreamItem.ImageComplexDouble", (StreamItemUnionCase,), {"index": 9, "tag": "imageComplexDouble"})
+StreamItem.AcquisitionBucket = type("StreamItem.AcquisitionBucket", (StreamItemUnionCase,), {"index": 10, "tag": "acquisitionBucket"})
+StreamItem.ReconData = type("StreamItem.ReconData", (StreamItemUnionCase,), {"index": 11, "tag": "reconData"})
+StreamItem.ImageArray = type("StreamItem.ImageArray", (StreamItemUnionCase,), {"index": 12, "tag": "imageArray"})
+StreamItem.PulseqDefinitions = type("StreamItem.PulseqDefinitions", (StreamItemUnionCase,), {"index": 13, "tag": "pulseqDefinitions"})
+StreamItem.Blocks = type("StreamItem.Blocks", (StreamItemUnionCase,), {"index": 14, "tag": "blocks"})
+StreamItem.Rf = type("StreamItem.Rf", (StreamItemUnionCase,), {"index": 15, "tag": "rf"})
+StreamItem.ArbitraryGradient = type("StreamItem.ArbitraryGradient", (StreamItemUnionCase,), {"index": 16, "tag": "arbitraryGradient"})
+StreamItem.TrapezoidalGradient = type("StreamItem.TrapezoidalGradient", (StreamItemUnionCase,), {"index": 17, "tag": "trapezoidalGradient"})
+StreamItem.Adc = type("StreamItem.Adc", (StreamItemUnionCase,), {"index": 18, "tag": "adc"})
+StreamItem.Shape = type("StreamItem.Shape", (StreamItemUnionCase,), {"index": 19, "tag": "shape"})
+StreamItem.NdArrayUint16 = type("StreamItem.NdArrayUint16", (StreamItemUnionCase,), {"index": 20, "tag": "ndArrayUint16"})
+StreamItem.NdArrayInt16 = type("StreamItem.NdArrayInt16", (StreamItemUnionCase,), {"index": 21, "tag": "ndArrayInt16"})
+StreamItem.NdArrayUint32 = type("StreamItem.NdArrayUint32", (StreamItemUnionCase,), {"index": 22, "tag": "ndArrayUint32"})
+StreamItem.NdArrayInt32 = type("StreamItem.NdArrayInt32", (StreamItemUnionCase,), {"index": 23, "tag": "ndArrayInt32"})
+StreamItem.NdArrayFloat = type("StreamItem.NdArrayFloat", (StreamItemUnionCase,), {"index": 24, "tag": "ndArrayFloat"})
+StreamItem.NdArrayDouble = type("StreamItem.NdArrayDouble", (StreamItemUnionCase,), {"index": 25, "tag": "ndArrayDouble"})
+StreamItem.NdArrayComplexFloat = type("StreamItem.NdArrayComplexFloat", (StreamItemUnionCase,), {"index": 26, "tag": "ndArrayComplexFloat"})
+StreamItem.NdArrayComplexDouble = type("StreamItem.NdArrayComplexDouble", (StreamItemUnionCase,), {"index": 27, "tag": "ndArrayComplexDouble"})
+del StreamItemUnionCase
+
 def _mk_get_dtype():
     dtype_map: dict[typing.Union[type, types.GenericAlias, typing.Annotated[typing.Any, typing.Any]], typing.Union[np.dtype[typing.Any], typing.Callable[[tuple[type, ...]], np.dtype[typing.Any]]]] = {}
     get_dtype = _dtypes.make_get_dtype_func(dtype_map)
@@ -2869,7 +2883,6 @@ def _mk_get_dtype():
     dtype_map.setdefault(NdArrayComplexFloat, get_dtype(types.GenericAlias(NdArray, (yardl.ComplexFloat,))))
     dtype_map.setdefault(NdArrayComplexDouble, get_dtype(types.GenericAlias(NdArray, (yardl.ComplexDouble,))))
     dtype_map.setdefault(AnyNdArray, np.dtype(np.object_))
-    dtype_map.setdefault(StreamItem, np.dtype(np.object_))
     dtype_map.setdefault(PulseqDefinitions, np.dtype([('gradient_raster_time', np.dtype(np.float64)), ('radiofrequency_raster_time', np.dtype(np.float64)), ('adc_raster_time', np.dtype(np.float64)), ('block_duration_raster', np.dtype(np.float64)), ('name', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('fov', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(ThreeDimensionalFloat))], align=True)), ('total_duration', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.float64))], align=True)), ('custom', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(Block, np.dtype([('id', np.dtype(np.int32)), ('duration', np.dtype(np.uint64)), ('rf', np.dtype(np.int32)), ('gx', np.dtype(np.int32)), ('gy', np.dtype(np.int32)), ('gz', np.dtype(np.int32)), ('adc', np.dtype(np.int32)), ('ext', np.dtype(np.int32))], align=True))
     dtype_map.setdefault(RFPulseUse, np.dtype(np.int32))
@@ -2878,6 +2891,7 @@ def _mk_get_dtype():
     dtype_map.setdefault(TrapezoidalGradient, np.dtype([('id', np.dtype(np.int32)), ('amp', np.dtype(np.float64)), ('rise', np.dtype(np.uint64)), ('flat', np.dtype(np.uint64)), ('fall', np.dtype(np.uint64)), ('delay', np.dtype(np.uint64))], align=True))
     dtype_map.setdefault(ADCEvent, np.dtype([('id', np.dtype(np.int32)), ('num', np.dtype(np.uint64)), ('dwell', np.dtype(np.float32)), ('delay', np.dtype(np.uint64)), ('freq_ppm', np.dtype(np.float64)), ('phase_ppm', np.dtype(np.float64)), ('freq', np.dtype(np.float64)), ('phase', np.dtype(np.float64)), ('phase_shape_id', np.dtype(np.int32))], align=True))
     dtype_map.setdefault(Shape, np.dtype([('id', np.dtype(np.int32)), ('num_samples', np.dtype(np.uint64)), ('data', np.dtype(np.object_))], align=True))
+    dtype_map.setdefault(StreamItem, np.dtype(np.object_))
 
     return get_dtype
 

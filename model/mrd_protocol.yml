@@ -13,6 +13,13 @@ StreamItem: !union
   acquisitionBucket: AcquisitionBucket
   reconData: ReconData
   imageArray: ImageArray
+  pulseqDefinitions: PulseqDefinitions
+  blocks: Block*
+  rf: RFEvent
+  arbitraryGradient: ArbitraryGradient
+  trapezoidalGradient: TrapezoidalGradient
+  adc: ADCEvent
+  shape: Shape
   ndArrayUint16: NdArrayUint16
   ndArrayInt16: NdArrayInt16
   ndArrayUint32: NdArrayUint32

@@ -396,8 +396,8 @@ struct adl_serializer<std::variant<mrd::NdArray<uint16_t>, mrd::NdArray<int16_t>
 };
 
 template <>
-struct adl_serializer<std::variant<mrd::Acquisition, mrd::Waveform<uint32_t>, mrd::Image<uint16_t>, mrd::Image<int16_t>, mrd::Image<uint32_t>, mrd::Image<int32_t>, mrd::Image<float>, mrd::Image<double>, mrd::Image<std::complex<float>>, mrd::Image<std::complex<double>>, mrd::AcquisitionBucket, mrd::ReconData, mrd::ImageArray, mrd::NdArray<uint16_t>, mrd::NdArray<int16_t>, mrd::NdArray<uint32_t>, mrd::NdArray<int32_t>, mrd::NdArray<float>, mrd::NdArray<double>, mrd::NdArray<std::complex<float>>, mrd::NdArray<std::complex<double>>>> {
-  static void to_json(ordered_json& j, std::variant<mrd::Acquisition, mrd::Waveform<uint32_t>, mrd::Image<uint16_t>, mrd::Image<int16_t>, mrd::Image<uint32_t>, mrd::Image<int32_t>, mrd::Image<float>, mrd::Image<double>, mrd::Image<std::complex<float>>, mrd::Image<std::complex<double>>, mrd::AcquisitionBucket, mrd::ReconData, mrd::ImageArray, mrd::NdArray<uint16_t>, mrd::NdArray<int16_t>, mrd::NdArray<uint32_t>, mrd::NdArray<int32_t>, mrd::NdArray<float>, mrd::NdArray<double>, mrd::NdArray<std::complex<float>>, mrd::NdArray<std::complex<double>>> const& value) {
+struct adl_serializer<std::variant<mrd::Acquisition, mrd::Waveform<uint32_t>, mrd::Image<uint16_t>, mrd::Image<int16_t>, mrd::Image<uint32_t>, mrd::Image<int32_t>, mrd::Image<float>, mrd::Image<double>, mrd::Image<std::complex<float>>, mrd::Image<std::complex<double>>, mrd::AcquisitionBucket, mrd::ReconData, mrd::ImageArray, mrd::PulseqDefinitions, std::vector<mrd::Block>, mrd::RFEvent, mrd::ArbitraryGradient, mrd::TrapezoidalGradient, mrd::ADCEvent, mrd::Shape, mrd::NdArray<uint16_t>, mrd::NdArray<int16_t>, mrd::NdArray<uint32_t>, mrd::NdArray<int32_t>, mrd::NdArray<float>, mrd::NdArray<double>, mrd::NdArray<std::complex<float>>, mrd::NdArray<std::complex<double>>>> {
+  static void to_json(ordered_json& j, std::variant<mrd::Acquisition, mrd::Waveform<uint32_t>, mrd::Image<uint16_t>, mrd::Image<int16_t>, mrd::Image<uint32_t>, mrd::Image<int32_t>, mrd::Image<float>, mrd::Image<double>, mrd::Image<std::complex<float>>, mrd::Image<std::complex<double>>, mrd::AcquisitionBucket, mrd::ReconData, mrd::ImageArray, mrd::PulseqDefinitions, std::vector<mrd::Block>, mrd::RFEvent, mrd::ArbitraryGradient, mrd::TrapezoidalGradient, mrd::ADCEvent, mrd::Shape, mrd::NdArray<uint16_t>, mrd::NdArray<int16_t>, mrd::NdArray<uint32_t>, mrd::NdArray<int32_t>, mrd::NdArray<float>, mrd::NdArray<double>, mrd::NdArray<std::complex<float>>, mrd::NdArray<std::complex<double>>> const& value) {
     switch (value.index()) {
       case 0:
         j = ordered_json{ {"acquisition", std::get<mrd::Acquisition>(value)} };
@@ -439,27 +439,48 @@ struct adl_serializer<std::variant<mrd::Acquisition, mrd::Waveform<uint32_t>, mr
         j = ordered_json{ {"imageArray", std::get<mrd::ImageArray>(value)} };
         break;
       case 13:
-        j = ordered_json{ {"ndArrayUint16", std::get<mrd::NdArray<uint16_t>>(value)} };
+        j = ordered_json{ {"pulseqDefinitions", std::get<mrd::PulseqDefinitions>(value)} };
         break;
       case 14:
-        j = ordered_json{ {"ndArrayInt16", std::get<mrd::NdArray<int16_t>>(value)} };
+        j = ordered_json{ {"blocks", std::get<std::vector<mrd::Block>>(value)} };
         break;
       case 15:
-        j = ordered_json{ {"ndArrayUint32", std::get<mrd::NdArray<uint32_t>>(value)} };
+        j = ordered_json{ {"rf", std::get<mrd::RFEvent>(value)} };
         break;
       case 16:
-        j = ordered_json{ {"ndArrayInt32", std::get<mrd::NdArray<int32_t>>(value)} };
+        j = ordered_json{ {"arbitraryGradient", std::get<mrd::ArbitraryGradient>(value)} };
         break;
       case 17:
-        j = ordered_json{ {"ndArrayFloat", std::get<mrd::NdArray<float>>(value)} };
+        j = ordered_json{ {"trapezoidalGradient", std::get<mrd::TrapezoidalGradient>(value)} };
         break;
       case 18:
-        j = ordered_json{ {"ndArrayDouble", std::get<mrd::NdArray<double>>(value)} };
+        j = ordered_json{ {"adc", std::get<mrd::ADCEvent>(value)} };
         break;
       case 19:
-        j = ordered_json{ {"ndArrayComplexFloat", std::get<mrd::NdArray<std::complex<float>>>(value)} };
+        j = ordered_json{ {"shape", std::get<mrd::Shape>(value)} };
         break;
       case 20:
+        j = ordered_json{ {"ndArrayUint16", std::get<mrd::NdArray<uint16_t>>(value)} };
+        break;
+      case 21:
+        j = ordered_json{ {"ndArrayInt16", std::get<mrd::NdArray<int16_t>>(value)} };
+        break;
+      case 22:
+        j = ordered_json{ {"ndArrayUint32", std::get<mrd::NdArray<uint32_t>>(value)} };
+        break;
+      case 23:
+        j = ordered_json{ {"ndArrayInt32", std::get<mrd::NdArray<int32_t>>(value)} };
+        break;
+      case 24:
+        j = ordered_json{ {"ndArrayFloat", std::get<mrd::NdArray<float>>(value)} };
+        break;
+      case 25:
+        j = ordered_json{ {"ndArrayDouble", std::get<mrd::NdArray<double>>(value)} };
+        break;
+      case 26:
+        j = ordered_json{ {"ndArrayComplexFloat", std::get<mrd::NdArray<std::complex<float>>>(value)} };
+        break;
+      case 27:
         j = ordered_json{ {"ndArrayComplexDouble", std::get<mrd::NdArray<std::complex<double>>>(value)} };
         break;
       default:
@@ -467,7 +488,7 @@ struct adl_serializer<std::variant<mrd::Acquisition, mrd::Waveform<uint32_t>, mr
     }
   }
 
-  static void from_json(ordered_json const& j, std::variant<mrd::Acquisition, mrd::Waveform<uint32_t>, mrd::Image<uint16_t>, mrd::Image<int16_t>, mrd::Image<uint32_t>, mrd::Image<int32_t>, mrd::Image<float>, mrd::Image<double>, mrd::Image<std::complex<float>>, mrd::Image<std::complex<double>>, mrd::AcquisitionBucket, mrd::ReconData, mrd::ImageArray, mrd::NdArray<uint16_t>, mrd::NdArray<int16_t>, mrd::NdArray<uint32_t>, mrd::NdArray<int32_t>, mrd::NdArray<float>, mrd::NdArray<double>, mrd::NdArray<std::complex<float>>, mrd::NdArray<std::complex<double>>>& value) {
+  static void from_json(ordered_json const& j, std::variant<mrd::Acquisition, mrd::Waveform<uint32_t>, mrd::Image<uint16_t>, mrd::Image<int16_t>, mrd::Image<uint32_t>, mrd::Image<int32_t>, mrd::Image<float>, mrd::Image<double>, mrd::Image<std::complex<float>>, mrd::Image<std::complex<double>>, mrd::AcquisitionBucket, mrd::ReconData, mrd::ImageArray, mrd::PulseqDefinitions, std::vector<mrd::Block>, mrd::RFEvent, mrd::ArbitraryGradient, mrd::TrapezoidalGradient, mrd::ADCEvent, mrd::Shape, mrd::NdArray<uint16_t>, mrd::NdArray<int16_t>, mrd::NdArray<uint32_t>, mrd::NdArray<int32_t>, mrd::NdArray<float>, mrd::NdArray<double>, mrd::NdArray<std::complex<float>>, mrd::NdArray<std::complex<double>>>& value) {
     auto it = j.begin();
     std::string tag = it.key();
     if (tag == "acquisition") {
@@ -520,6 +541,34 @@ struct adl_serializer<std::variant<mrd::Acquisition, mrd::Waveform<uint32_t>, mr
     }
     if (tag == "imageArray") {
       value = it.value().get<mrd::ImageArray>();
+      return;
+    }
+    if (tag == "pulseqDefinitions") {
+      value = it.value().get<mrd::PulseqDefinitions>();
+      return;
+    }
+    if (tag == "blocks") {
+      value = it.value().get<std::vector<mrd::Block>>();
+      return;
+    }
+    if (tag == "rf") {
+      value = it.value().get<mrd::RFEvent>();
+      return;
+    }
+    if (tag == "arbitraryGradient") {
+      value = it.value().get<mrd::ArbitraryGradient>();
+      return;
+    }
+    if (tag == "trapezoidalGradient") {
+      value = it.value().get<mrd::TrapezoidalGradient>();
+      return;
+    }
+    if (tag == "adc") {
+      value = it.value().get<mrd::ADCEvent>();
+      return;
+    }
+    if (tag == "shape") {
+      value = it.value().get<mrd::Shape>();
       return;
     }
     if (tag == "ndArrayUint16") {
