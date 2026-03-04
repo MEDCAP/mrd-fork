@@ -682,8 +682,8 @@ struct IsTriviallySerializable<mrd::PulseqDefinitions> {
 };
 
 template <>
-struct IsTriviallySerializable<mrd::Block> {
-  using __T__ = mrd::Block;
+struct IsTriviallySerializable<mrd::SequenceBlock> {
+  using __T__ = mrd::SequenceBlock;
   static constexpr bool value = 
     std::is_standard_layout_v<__T__> &&
     IsTriviallySerializable<decltype(__T__::id)>::value &&
@@ -769,8 +769,8 @@ struct IsTriviallySerializable<mrd::ADCEvent> {
 };
 
 template <>
-struct IsTriviallySerializable<mrd::Shape> {
-  using __T__ = mrd::Shape;
+struct IsTriviallySerializable<mrd::SequenceShape> {
+  using __T__ = mrd::SequenceShape;
   static constexpr bool value = 
     std::is_standard_layout_v<__T__> &&
     IsTriviallySerializable<decltype(__T__::id)>::value &&
@@ -3051,8 +3051,8 @@ template<typename T, yardl::binary::Reader<T> ReadT>
   yardl::binary::ReadMap<std::string, std::string, yardl::binary::ReadString, yardl::binary::ReadString>(stream, value.custom);
 }
 
-[[maybe_unused]] void WriteBlock(yardl::binary::CodedOutputStream& stream, mrd::Block const& value) {
-  if constexpr (yardl::binary::IsTriviallySerializable<mrd::Block>::value) {
+[[maybe_unused]] void WriteSequenceBlock(yardl::binary::CodedOutputStream& stream, mrd::SequenceBlock const& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::SequenceBlock>::value) {
     yardl::binary::WriteTriviallySerializable(stream, value);
     return;
   }
@@ -3067,8 +3067,8 @@ template<typename T, yardl::binary::Reader<T> ReadT>
   yardl::binary::WriteInteger(stream, value.ext);
 }
 
-[[maybe_unused]] void ReadBlock(yardl::binary::CodedInputStream& stream, mrd::Block& value) {
-  if constexpr (yardl::binary::IsTriviallySerializable<mrd::Block>::value) {
+[[maybe_unused]] void ReadSequenceBlock(yardl::binary::CodedInputStream& stream, mrd::SequenceBlock& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::SequenceBlock>::value) {
     yardl::binary::ReadTriviallySerializable(stream, value);
     return;
   }
@@ -3215,8 +3215,8 @@ template<typename T, yardl::binary::Reader<T> ReadT>
   yardl::binary::ReadInteger(stream, value.phase_shape_id);
 }
 
-[[maybe_unused]] void WriteShape(yardl::binary::CodedOutputStream& stream, mrd::Shape const& value) {
-  if constexpr (yardl::binary::IsTriviallySerializable<mrd::Shape>::value) {
+[[maybe_unused]] void WriteSequenceShape(yardl::binary::CodedOutputStream& stream, mrd::SequenceShape const& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::SequenceShape>::value) {
     yardl::binary::WriteTriviallySerializable(stream, value);
     return;
   }
@@ -3226,8 +3226,8 @@ template<typename T, yardl::binary::Reader<T> ReadT>
   yardl::binary::WriteNDArray<double, yardl::binary::WriteFloatingPoint, 1>(stream, value.data);
 }
 
-[[maybe_unused]] void ReadShape(yardl::binary::CodedInputStream& stream, mrd::Shape& value) {
-  if constexpr (yardl::binary::IsTriviallySerializable<mrd::Shape>::value) {
+[[maybe_unused]] void ReadSequenceShape(yardl::binary::CodedInputStream& stream, mrd::SequenceShape& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::SequenceShape>::value) {
     yardl::binary::ReadTriviallySerializable(stream, value);
     return;
   }
@@ -3243,7 +3243,7 @@ template<typename T, yardl::binary::Reader<T> ReadT>
     return;
   }
 
-  WriteUnion<mrd::Acquisition, mrd::binary::WriteAcquisition, mrd::WaveformUint32, mrd::binary::WriteWaveformUint32, mrd::ImageUint16, mrd::binary::WriteImageUint16, mrd::ImageInt16, mrd::binary::WriteImageInt16, mrd::ImageUint32, mrd::binary::WriteImageUint32, mrd::ImageInt32, mrd::binary::WriteImageInt32, mrd::ImageFloat, mrd::binary::WriteImageFloat, mrd::ImageDouble, mrd::binary::WriteImageDouble, mrd::ImageComplexFloat, mrd::binary::WriteImageComplexFloat, mrd::ImageComplexDouble, mrd::binary::WriteImageComplexDouble, mrd::AcquisitionBucket, mrd::binary::WriteAcquisitionBucket, mrd::ReconData, mrd::binary::WriteReconData, mrd::ImageArray, mrd::binary::WriteImageArray, mrd::PulseqDefinitions, mrd::binary::WritePulseqDefinitions, std::vector<mrd::Block>, yardl::binary::WriteVector<mrd::Block, mrd::binary::WriteBlock>, mrd::RFEvent, mrd::binary::WriteRFEvent, mrd::ArbitraryGradient, mrd::binary::WriteArbitraryGradient, mrd::TrapezoidalGradient, mrd::binary::WriteTrapezoidalGradient, mrd::ADCEvent, mrd::binary::WriteADCEvent, mrd::Shape, mrd::binary::WriteShape, mrd::NdArrayUint16, mrd::binary::WriteNdArrayUint16, mrd::NdArrayInt16, mrd::binary::WriteNdArrayInt16, mrd::NdArrayUint32, mrd::binary::WriteNdArrayUint32, mrd::NdArrayInt32, mrd::binary::WriteNdArrayInt32, mrd::NdArrayFloat, mrd::binary::WriteNdArrayFloat, mrd::NdArrayDouble, mrd::binary::WriteNdArrayDouble, mrd::NdArrayComplexFloat, mrd::binary::WriteNdArrayComplexFloat, mrd::NdArrayComplexDouble, mrd::binary::WriteNdArrayComplexDouble>(stream, value);
+  WriteUnion<mrd::Acquisition, mrd::binary::WriteAcquisition, mrd::WaveformUint32, mrd::binary::WriteWaveformUint32, mrd::ImageUint16, mrd::binary::WriteImageUint16, mrd::ImageInt16, mrd::binary::WriteImageInt16, mrd::ImageUint32, mrd::binary::WriteImageUint32, mrd::ImageInt32, mrd::binary::WriteImageInt32, mrd::ImageFloat, mrd::binary::WriteImageFloat, mrd::ImageDouble, mrd::binary::WriteImageDouble, mrd::ImageComplexFloat, mrd::binary::WriteImageComplexFloat, mrd::ImageComplexDouble, mrd::binary::WriteImageComplexDouble, mrd::AcquisitionBucket, mrd::binary::WriteAcquisitionBucket, mrd::ReconData, mrd::binary::WriteReconData, mrd::ImageArray, mrd::binary::WriteImageArray, mrd::PulseqDefinitions, mrd::binary::WritePulseqDefinitions, std::vector<mrd::SequenceBlock>, yardl::binary::WriteVector<mrd::SequenceBlock, mrd::binary::WriteSequenceBlock>, mrd::RFEvent, mrd::binary::WriteRFEvent, mrd::ArbitraryGradient, mrd::binary::WriteArbitraryGradient, mrd::TrapezoidalGradient, mrd::binary::WriteTrapezoidalGradient, mrd::ADCEvent, mrd::binary::WriteADCEvent, mrd::SequenceShape, mrd::binary::WriteSequenceShape, mrd::NdArrayUint16, mrd::binary::WriteNdArrayUint16, mrd::NdArrayInt16, mrd::binary::WriteNdArrayInt16, mrd::NdArrayUint32, mrd::binary::WriteNdArrayUint32, mrd::NdArrayInt32, mrd::binary::WriteNdArrayInt32, mrd::NdArrayFloat, mrd::binary::WriteNdArrayFloat, mrd::NdArrayDouble, mrd::binary::WriteNdArrayDouble, mrd::NdArrayComplexFloat, mrd::binary::WriteNdArrayComplexFloat, mrd::NdArrayComplexDouble, mrd::binary::WriteNdArrayComplexDouble>(stream, value);
 }
 
 [[maybe_unused]] void ReadStreamItem(yardl::binary::CodedInputStream& stream, mrd::StreamItem& value) {
@@ -3252,7 +3252,7 @@ template<typename T, yardl::binary::Reader<T> ReadT>
     return;
   }
 
-  ReadUnion<mrd::Acquisition, mrd::binary::ReadAcquisition, mrd::WaveformUint32, mrd::binary::ReadWaveformUint32, mrd::ImageUint16, mrd::binary::ReadImageUint16, mrd::ImageInt16, mrd::binary::ReadImageInt16, mrd::ImageUint32, mrd::binary::ReadImageUint32, mrd::ImageInt32, mrd::binary::ReadImageInt32, mrd::ImageFloat, mrd::binary::ReadImageFloat, mrd::ImageDouble, mrd::binary::ReadImageDouble, mrd::ImageComplexFloat, mrd::binary::ReadImageComplexFloat, mrd::ImageComplexDouble, mrd::binary::ReadImageComplexDouble, mrd::AcquisitionBucket, mrd::binary::ReadAcquisitionBucket, mrd::ReconData, mrd::binary::ReadReconData, mrd::ImageArray, mrd::binary::ReadImageArray, mrd::PulseqDefinitions, mrd::binary::ReadPulseqDefinitions, std::vector<mrd::Block>, yardl::binary::ReadVector<mrd::Block, mrd::binary::ReadBlock>, mrd::RFEvent, mrd::binary::ReadRFEvent, mrd::ArbitraryGradient, mrd::binary::ReadArbitraryGradient, mrd::TrapezoidalGradient, mrd::binary::ReadTrapezoidalGradient, mrd::ADCEvent, mrd::binary::ReadADCEvent, mrd::Shape, mrd::binary::ReadShape, mrd::NdArrayUint16, mrd::binary::ReadNdArrayUint16, mrd::NdArrayInt16, mrd::binary::ReadNdArrayInt16, mrd::NdArrayUint32, mrd::binary::ReadNdArrayUint32, mrd::NdArrayInt32, mrd::binary::ReadNdArrayInt32, mrd::NdArrayFloat, mrd::binary::ReadNdArrayFloat, mrd::NdArrayDouble, mrd::binary::ReadNdArrayDouble, mrd::NdArrayComplexFloat, mrd::binary::ReadNdArrayComplexFloat, mrd::NdArrayComplexDouble, mrd::binary::ReadNdArrayComplexDouble>(stream, value);
+  ReadUnion<mrd::Acquisition, mrd::binary::ReadAcquisition, mrd::WaveformUint32, mrd::binary::ReadWaveformUint32, mrd::ImageUint16, mrd::binary::ReadImageUint16, mrd::ImageInt16, mrd::binary::ReadImageInt16, mrd::ImageUint32, mrd::binary::ReadImageUint32, mrd::ImageInt32, mrd::binary::ReadImageInt32, mrd::ImageFloat, mrd::binary::ReadImageFloat, mrd::ImageDouble, mrd::binary::ReadImageDouble, mrd::ImageComplexFloat, mrd::binary::ReadImageComplexFloat, mrd::ImageComplexDouble, mrd::binary::ReadImageComplexDouble, mrd::AcquisitionBucket, mrd::binary::ReadAcquisitionBucket, mrd::ReconData, mrd::binary::ReadReconData, mrd::ImageArray, mrd::binary::ReadImageArray, mrd::PulseqDefinitions, mrd::binary::ReadPulseqDefinitions, std::vector<mrd::SequenceBlock>, yardl::binary::ReadVector<mrd::SequenceBlock, mrd::binary::ReadSequenceBlock>, mrd::RFEvent, mrd::binary::ReadRFEvent, mrd::ArbitraryGradient, mrd::binary::ReadArbitraryGradient, mrd::TrapezoidalGradient, mrd::binary::ReadTrapezoidalGradient, mrd::ADCEvent, mrd::binary::ReadADCEvent, mrd::SequenceShape, mrd::binary::ReadSequenceShape, mrd::NdArrayUint16, mrd::binary::ReadNdArrayUint16, mrd::NdArrayInt16, mrd::binary::ReadNdArrayInt16, mrd::NdArrayUint32, mrd::binary::ReadNdArrayUint32, mrd::NdArrayInt32, mrd::binary::ReadNdArrayInt32, mrd::NdArrayFloat, mrd::binary::ReadNdArrayFloat, mrd::NdArrayDouble, mrd::binary::ReadNdArrayDouble, mrd::NdArrayComplexFloat, mrd::binary::ReadNdArrayComplexFloat, mrd::NdArrayComplexDouble, mrd::binary::ReadNdArrayComplexDouble>(stream, value);
 }
 
 } // namespace

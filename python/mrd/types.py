@@ -2326,7 +2326,7 @@ class PulseqDefinitions:
         return f"PulseqDefinitions(gradient_raster_time={repr(self.gradient_raster_time)}, radiofrequency_raster_time={repr(self.radiofrequency_raster_time)}, adc_raster_time={repr(self.adc_raster_time)}, block_duration_raster={repr(self.block_duration_raster)}, name={repr(self.name)}, fov={repr(self.fov)}, total_duration={repr(self.total_duration)}, custom={repr(self.custom)})"
 
 
-class Block:
+class SequenceBlock:
     """A sequence block that includes possible RF, gradient, and ADC events."""
 
     id: yardl.Int32
@@ -2375,7 +2375,7 @@ class Block:
 
     def __eq__(self, other: object) -> bool:
         return (
-            isinstance(other, Block)
+            isinstance(other, SequenceBlock)
             and self.id == other.id
             and self.duration == other.duration
             and self.rf == other.rf
@@ -2387,10 +2387,10 @@ class Block:
         )
 
     def __str__(self) -> str:
-        return f"Block(id={self.id}, duration={self.duration}, rf={self.rf}, gx={self.gx}, gy={self.gy}, gz={self.gz}, adc={self.adc}, ext={self.ext})"
+        return f"SequenceBlock(id={self.id}, duration={self.duration}, rf={self.rf}, gx={self.gx}, gy={self.gy}, gz={self.gz}, adc={self.adc}, ext={self.ext})"
 
     def __repr__(self) -> str:
-        return f"Block(id={repr(self.id)}, duration={repr(self.duration)}, rf={repr(self.rf)}, gx={repr(self.gx)}, gy={repr(self.gy)}, gz={repr(self.gz)}, adc={repr(self.adc)}, ext={repr(self.ext)})"
+        return f"SequenceBlock(id={repr(self.id)}, duration={repr(self.duration)}, rf={repr(self.rf)}, gx={repr(self.gx)}, gy={repr(self.gy)}, gz={repr(self.gz)}, adc={repr(self.adc)}, ext={repr(self.ext)})"
 
 
 class RFPulseUse(yardl.OutOfRangeEnum):
@@ -2695,7 +2695,7 @@ class ADCEvent:
         return f"ADCEvent(id={repr(self.id)}, num={repr(self.num)}, dwell={repr(self.dwell)}, delay={repr(self.delay)}, freq_ppm={repr(self.freq_ppm)}, phase_ppm={repr(self.phase_ppm)}, freq={repr(self.freq)}, phase={repr(self.phase)}, phase_shape_id={repr(self.phase_shape_id)})"
 
 
-class Shape:
+class SequenceShape:
     """A list of samples that is potentially compressed.
     If numSamples == size(data) then the shape is uncompressed.
     """
@@ -2723,17 +2723,17 @@ class Shape:
 
     def __eq__(self, other: object) -> bool:
         return (
-            isinstance(other, Shape)
+            isinstance(other, SequenceShape)
             and self.id == other.id
             and self.num_samples == other.num_samples
             and yardl.structural_equal(self.data, other.data)
         )
 
     def __str__(self) -> str:
-        return f"Shape(id={self.id}, num_samples={self.num_samples}, data={self.data})"
+        return f"SequenceShape(id={self.id}, num_samples={self.num_samples}, data={self.data})"
 
     def __repr__(self) -> str:
-        return f"Shape(id={repr(self.id)}, num_samples={repr(self.num_samples)}, data={repr(self.data)})"
+        return f"SequenceShape(id={repr(self.id)}, num_samples={repr(self.num_samples)}, data={repr(self.data)})"
 
 
 class StreamItem:
@@ -2751,12 +2751,12 @@ class StreamItem:
     ReconData: typing.ClassVar[type["StreamItemUnionCase[ReconData]"]]
     ImageArray: typing.ClassVar[type["StreamItemUnionCase[ImageArray]"]]
     PulseqDefinitions: typing.ClassVar[type["StreamItemUnionCase[PulseqDefinitions]"]]
-    Blocks: typing.ClassVar[type["StreamItemUnionCase[list[Block]]"]]
-    Rf: typing.ClassVar[type["StreamItemUnionCase[RFEvent]"]]
+    Blocks: typing.ClassVar[type["StreamItemUnionCase[list[SequenceBlock]]"]]
+    RfEvent: typing.ClassVar[type["StreamItemUnionCase[RFEvent]"]]
     ArbitraryGradient: typing.ClassVar[type["StreamItemUnionCase[ArbitraryGradient]"]]
     TrapezoidalGradient: typing.ClassVar[type["StreamItemUnionCase[TrapezoidalGradient]"]]
-    Adc: typing.ClassVar[type["StreamItemUnionCase[ADCEvent]"]]
-    Shape: typing.ClassVar[type["StreamItemUnionCase[Shape]"]]
+    AdcEvent: typing.ClassVar[type["StreamItemUnionCase[ADCEvent]"]]
+    Shape: typing.ClassVar[type["StreamItemUnionCase[SequenceShape]"]]
     NdArrayUint16: typing.ClassVar[type["StreamItemUnionCase[NdArrayUint16]"]]
     NdArrayInt16: typing.ClassVar[type["StreamItemUnionCase[NdArrayInt16]"]]
     NdArrayUint32: typing.ClassVar[type["StreamItemUnionCase[NdArrayUint32]"]]
@@ -2784,10 +2784,10 @@ StreamItem.ReconData = type("StreamItem.ReconData", (StreamItemUnionCase,), {"in
 StreamItem.ImageArray = type("StreamItem.ImageArray", (StreamItemUnionCase,), {"index": 12, "tag": "imageArray"})
 StreamItem.PulseqDefinitions = type("StreamItem.PulseqDefinitions", (StreamItemUnionCase,), {"index": 13, "tag": "pulseqDefinitions"})
 StreamItem.Blocks = type("StreamItem.Blocks", (StreamItemUnionCase,), {"index": 14, "tag": "blocks"})
-StreamItem.Rf = type("StreamItem.Rf", (StreamItemUnionCase,), {"index": 15, "tag": "rf"})
+StreamItem.RfEvent = type("StreamItem.RfEvent", (StreamItemUnionCase,), {"index": 15, "tag": "rfEvent"})
 StreamItem.ArbitraryGradient = type("StreamItem.ArbitraryGradient", (StreamItemUnionCase,), {"index": 16, "tag": "arbitraryGradient"})
 StreamItem.TrapezoidalGradient = type("StreamItem.TrapezoidalGradient", (StreamItemUnionCase,), {"index": 17, "tag": "trapezoidalGradient"})
-StreamItem.Adc = type("StreamItem.Adc", (StreamItemUnionCase,), {"index": 18, "tag": "adc"})
+StreamItem.AdcEvent = type("StreamItem.AdcEvent", (StreamItemUnionCase,), {"index": 18, "tag": "adcEvent"})
 StreamItem.Shape = type("StreamItem.Shape", (StreamItemUnionCase,), {"index": 19, "tag": "shape"})
 StreamItem.NdArrayUint16 = type("StreamItem.NdArrayUint16", (StreamItemUnionCase,), {"index": 20, "tag": "ndArrayUint16"})
 StreamItem.NdArrayInt16 = type("StreamItem.NdArrayInt16", (StreamItemUnionCase,), {"index": 21, "tag": "ndArrayInt16"})
@@ -2884,13 +2884,13 @@ def _mk_get_dtype():
     dtype_map.setdefault(NdArrayComplexDouble, get_dtype(types.GenericAlias(NdArray, (yardl.ComplexDouble,))))
     dtype_map.setdefault(AnyNdArray, np.dtype(np.object_))
     dtype_map.setdefault(PulseqDefinitions, np.dtype([('gradient_raster_time', np.dtype(np.float64)), ('radiofrequency_raster_time', np.dtype(np.float64)), ('adc_raster_time', np.dtype(np.float64)), ('block_duration_raster', np.dtype(np.float64)), ('name', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.object_))], align=True)), ('fov', np.dtype([('has_value', np.dtype(np.bool_)), ('value', get_dtype(ThreeDimensionalFloat))], align=True)), ('total_duration', np.dtype([('has_value', np.dtype(np.bool_)), ('value', np.dtype(np.float64))], align=True)), ('custom', np.dtype(np.object_))], align=True))
-    dtype_map.setdefault(Block, np.dtype([('id', np.dtype(np.int32)), ('duration', np.dtype(np.uint64)), ('rf', np.dtype(np.int32)), ('gx', np.dtype(np.int32)), ('gy', np.dtype(np.int32)), ('gz', np.dtype(np.int32)), ('adc', np.dtype(np.int32)), ('ext', np.dtype(np.int32))], align=True))
+    dtype_map.setdefault(SequenceBlock, np.dtype([('id', np.dtype(np.int32)), ('duration', np.dtype(np.uint64)), ('rf', np.dtype(np.int32)), ('gx', np.dtype(np.int32)), ('gy', np.dtype(np.int32)), ('gz', np.dtype(np.int32)), ('adc', np.dtype(np.int32)), ('ext', np.dtype(np.int32))], align=True))
     dtype_map.setdefault(RFPulseUse, np.dtype(np.int32))
     dtype_map.setdefault(RFEvent, np.dtype([('id', np.dtype(np.int32)), ('amp', np.dtype(np.float64)), ('mag_id', np.dtype(np.int32)), ('phase_id', np.dtype(np.int32)), ('time_id', np.dtype(np.int32)), ('center', np.dtype(np.float64)), ('delay', np.dtype(np.uint64)), ('freq_ppm', np.dtype(np.float64)), ('phase_ppm', np.dtype(np.float64)), ('freq_offset', np.dtype(np.float64)), ('phase_offset', np.dtype(np.float64)), ('use', get_dtype(RFPulseUse))], align=True))
     dtype_map.setdefault(ArbitraryGradient, np.dtype([('id', np.dtype(np.int32)), ('amp', np.dtype(np.float64)), ('first', np.dtype(np.float64)), ('last', np.dtype(np.float64)), ('shape_id', np.dtype(np.int32)), ('time_id', np.dtype(np.int32)), ('delay', np.dtype(np.uint64))], align=True))
     dtype_map.setdefault(TrapezoidalGradient, np.dtype([('id', np.dtype(np.int32)), ('amp', np.dtype(np.float64)), ('rise', np.dtype(np.uint64)), ('flat', np.dtype(np.uint64)), ('fall', np.dtype(np.uint64)), ('delay', np.dtype(np.uint64))], align=True))
     dtype_map.setdefault(ADCEvent, np.dtype([('id', np.dtype(np.int32)), ('num', np.dtype(np.uint64)), ('dwell', np.dtype(np.float32)), ('delay', np.dtype(np.uint64)), ('freq_ppm', np.dtype(np.float64)), ('phase_ppm', np.dtype(np.float64)), ('freq', np.dtype(np.float64)), ('phase', np.dtype(np.float64)), ('phase_shape_id', np.dtype(np.int32))], align=True))
-    dtype_map.setdefault(Shape, np.dtype([('id', np.dtype(np.int32)), ('num_samples', np.dtype(np.uint64)), ('data', np.dtype(np.object_))], align=True))
+    dtype_map.setdefault(SequenceShape, np.dtype([('id', np.dtype(np.int32)), ('num_samples', np.dtype(np.uint64)), ('data', np.dtype(np.object_))], align=True))
     dtype_map.setdefault(StreamItem, np.dtype(np.object_))
 
     return get_dtype

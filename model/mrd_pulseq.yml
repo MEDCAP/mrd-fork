@@ -29,7 +29,7 @@ PulseqDefinitions: !record
     custom: string->string
 
 # A sequence block that includes possible RF, gradient, and ADC events.
-Block: !record
+SequenceBlock: !record
   fields:
     # ID of the sequence block
     id: int32
@@ -190,7 +190,7 @@ ADCEvent: !record
 
 # A list of samples that is potentially compressed.
 # If numSamples == size(data) then the shape is uncompressed.
-Shape: !record
+SequenceShape: !record
   fields:
     # ID of the shape
     id: int32

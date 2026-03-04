@@ -14,12 +14,12 @@ StreamItem: !union
   reconData: ReconData
   imageArray: ImageArray
   pulseqDefinitions: PulseqDefinitions
-  blocks: Block*
-  rf: RFEvent
+  blocks: SequenceBlock*
+  rfEvent: RFEvent
   arbitraryGradient: ArbitraryGradient
   trapezoidalGradient: TrapezoidalGradient
-  adc: ADCEvent
-  shape: Shape
+  adcEvent: ADCEvent
+  shape: SequenceShape
   ndArrayUint16: NdArrayUint16
   ndArrayInt16: NdArrayInt16
   ndArrayUint32: NdArrayUint32

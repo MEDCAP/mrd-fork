@@ -1352,7 +1352,7 @@ struct PulseqDefinitions {
 };
 
 // A sequence block that includes possible RF, gradient, and ADC events.
-struct Block {
+struct SequenceBlock {
   // ID of the sequence block
   int32_t id{};
   // Duration of the block in units of Definitions.blockDurationRaster
@@ -1370,7 +1370,7 @@ struct Block {
   // ID of the extension table entry
   int32_t ext{};
 
-  bool operator==(const Block& other) const {
+  bool operator==(const SequenceBlock& other) const {
     return id == other.id &&
       duration == other.duration &&
       rf == other.rf &&
@@ -1381,7 +1381,7 @@ struct Block {
       ext == other.ext;
   }
 
-  bool operator!=(const Block& other) const {
+  bool operator!=(const SequenceBlock& other) const {
     return !(*this == other);
   }
 };
@@ -1551,7 +1551,7 @@ struct ADCEvent {
 
 // A list of samples that is potentially compressed.
 // If numSamples == size(data) then the shape is uncompressed.
-struct Shape {
+struct SequenceShape {
   // ID of the shape
   int32_t id{};
   // Number of samples of the uncompressed shape
@@ -1560,19 +1560,19 @@ struct Shape {
   // In the spec, this should be float32, but PyPulseq uses float64.
   yardl::NDArray<double, 1> data{};
 
-  bool operator==(const Shape& other) const {
+  bool operator==(const SequenceShape& other) const {
     return id == other.id &&
       num_samples == other.num_samples &&
       data == other.data;
   }
 
-  bool operator!=(const Shape& other) const {
+  bool operator!=(const SequenceShape& other) const {
     return !(*this == other);
   }
 };
 
 // Union of all primary types that can be streamed in the MRD Protocol
-using StreamItem = std::variant<mrd::Acquisition, mrd::WaveformUint32, mrd::ImageUint16, mrd::ImageInt16, mrd::ImageUint32, mrd::ImageInt32, mrd::ImageFloat, mrd::ImageDouble, mrd::ImageComplexFloat, mrd::ImageComplexDouble, mrd::AcquisitionBucket, mrd::ReconData, mrd::ImageArray, mrd::PulseqDefinitions, std::vector<mrd::Block>, mrd::RFEvent, mrd::ArbitraryGradient, mrd::TrapezoidalGradient, mrd::ADCEvent, mrd::Shape, mrd::NdArrayUint16, mrd::NdArrayInt16, mrd::NdArrayUint32, mrd::NdArrayInt32, mrd::NdArrayFloat, mrd::NdArrayDouble, mrd::NdArrayComplexFloat, mrd::NdArrayComplexDouble>;
+using StreamItem = std::variant<mrd::Acquisition, mrd::WaveformUint32, mrd::ImageUint16, mrd::ImageInt16, mrd::ImageUint32, mrd::ImageInt32, mrd::ImageFloat, mrd::ImageDouble, mrd::ImageComplexFloat, mrd::ImageComplexDouble, mrd::AcquisitionBucket, mrd::ReconData, mrd::ImageArray, mrd::PulseqDefinitions, std::vector<mrd::SequenceBlock>, mrd::RFEvent, mrd::ArbitraryGradient, mrd::TrapezoidalGradient, mrd::ADCEvent, mrd::SequenceShape, mrd::NdArrayUint16, mrd::NdArrayInt16, mrd::NdArrayUint32, mrd::NdArrayInt32, mrd::NdArrayFloat, mrd::NdArrayDouble, mrd::NdArrayComplexFloat, mrd::NdArrayComplexDouble>;
 
 } // namespace mrd
 
