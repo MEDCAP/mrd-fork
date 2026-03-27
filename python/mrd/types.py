@@ -1774,7 +1774,7 @@ class NoiseCovariance:
     """Comes from Header.acquisitionSystemInformation.relativeReceiverNoiseBandwidth"""
 
     noise_dwell_time_ns: yardl.UInt64
-    """Comes from Acquisition.sampleTimeUs"""
+    """Comes from Acquisition.sampleTimeNs"""
 
     sample_count: yardl.Size
     """Number of samples used to compute matrix"""
@@ -2151,16 +2151,24 @@ class ArrayDimension(yardl.OutOfRangeEnum):
     Y = 3
     X = 4
     FREQUENCY = 5
-    BASIS = 6
+    COILS = 6
     SAMPLES = 7
-    LOC = 8
-    S = 9
-    N = 10
-    E2 = 11
-    E1 = 12
-    E0 = 13
-    RGBA = 14
-    TIME_NS = 15
+    BASIS = 8
+    AVERAGE = 9
+    SLICE = 10
+    CONTRAST = 11
+    PHASE = 12
+    REPETITION = 13
+    SET = 14
+    SEGMENT = 15
+    LOC = 16
+    S = 17
+    N = 18
+    E2 = 19
+    E1 = 20
+    E0 = 21
+    RGBA = 22
+    TIME_NS = 23
 
 class NdArrayHeader:
     dimension_labels: list[ArrayDimension]

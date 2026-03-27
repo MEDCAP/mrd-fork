@@ -3338,8 +3338,16 @@ std::unordered_map<std::string, mrd::ArrayDimension> const __ArrayDimension_valu
   {"y", mrd::ArrayDimension::kY},
   {"x", mrd::ArrayDimension::kX},
   {"frequency", mrd::ArrayDimension::kFrequency},
-  {"basis", mrd::ArrayDimension::kBasis},
+  {"coils", mrd::ArrayDimension::kCoils},
   {"samples", mrd::ArrayDimension::kSamples},
+  {"basis", mrd::ArrayDimension::kBasis},
+  {"average", mrd::ArrayDimension::kAverage},
+  {"slice", mrd::ArrayDimension::kSlice},
+  {"contrast", mrd::ArrayDimension::kContrast},
+  {"phase", mrd::ArrayDimension::kPhase},
+  {"repetition", mrd::ArrayDimension::kRepetition},
+  {"set", mrd::ArrayDimension::kSet},
+  {"segment", mrd::ArrayDimension::kSegment},
   {"loc", mrd::ArrayDimension::kLoc},
   {"s", mrd::ArrayDimension::kS},
   {"n", mrd::ArrayDimension::kN},
@@ -3368,11 +3376,35 @@ void to_json(ordered_json& j, mrd::ArrayDimension const& value) {
     case mrd::ArrayDimension::kFrequency:
       j = "frequency";
       break;
-    case mrd::ArrayDimension::kBasis:
-      j = "basis";
+    case mrd::ArrayDimension::kCoils:
+      j = "coils";
       break;
     case mrd::ArrayDimension::kSamples:
       j = "samples";
+      break;
+    case mrd::ArrayDimension::kBasis:
+      j = "basis";
+      break;
+    case mrd::ArrayDimension::kAverage:
+      j = "average";
+      break;
+    case mrd::ArrayDimension::kSlice:
+      j = "slice";
+      break;
+    case mrd::ArrayDimension::kContrast:
+      j = "contrast";
+      break;
+    case mrd::ArrayDimension::kPhase:
+      j = "phase";
+      break;
+    case mrd::ArrayDimension::kRepetition:
+      j = "repetition";
+      break;
+    case mrd::ArrayDimension::kSet:
+      j = "set";
+      break;
+    case mrd::ArrayDimension::kSegment:
+      j = "segment";
       break;
     case mrd::ArrayDimension::kLoc:
       j = "loc";

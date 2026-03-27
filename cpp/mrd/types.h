@@ -1032,7 +1032,7 @@ struct NoiseCovariance {
   std::vector<mrd::CoilLabelType> coil_labels{};
   // Comes from Header.acquisitionSystemInformation.relativeReceiverNoiseBandwidth
   float receiver_noise_bandwidth{};
-  // Comes from Acquisition.sampleTimeUs
+  // Comes from Acquisition.sampleTimeNs
   uint64_t noise_dwell_time_ns{};
   // Number of samples used to compute matrix
   yardl::Size sample_count{};
@@ -1251,16 +1251,24 @@ enum class ArrayDimension {
   kY = 3,
   kX = 4,
   kFrequency = 5,
-  kBasis = 6,
+  kCoils = 6,
   kSamples = 7,
-  kLoc = 8,
-  kS = 9,
-  kN = 10,
-  kE2 = 11,
-  kE1 = 12,
-  kE0 = 13,
-  kRgba = 14,
-  kTimeNs = 15,
+  kBasis = 8,
+  kAverage = 9,
+  kSlice = 10,
+  kContrast = 11,
+  kPhase = 12,
+  kRepetition = 13,
+  kSet = 14,
+  kSegment = 15,
+  kLoc = 16,
+  kS = 17,
+  kN = 18,
+  kE2 = 19,
+  kE1 = 20,
+  kE0 = 21,
+  kRgba = 22,
+  kTimeNs = 23,
 };
 
 struct NdArrayHeader {
