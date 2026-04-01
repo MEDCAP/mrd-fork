@@ -33,8 +33,14 @@ classdef ArrayType < uint64
     function v = RGBA_MAP
       v = mrd.ArrayType(10);
     end
-    function v = USER_MAP
+    function v = NOISE
       v = mrd.ArrayType(11);
+    end
+    function v = PHANTOM
+      v = mrd.ArrayType(12);
+    end
+    function v = USER_MAP
+      v = mrd.ArrayType(13);
     end
 
     function z = zeros(varargin)

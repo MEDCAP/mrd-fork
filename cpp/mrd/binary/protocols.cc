@@ -646,11 +646,33 @@ struct IsTriviallySerializable<mrd::NdArrayHeader> {
   using __T__ = mrd::NdArrayHeader;
   static constexpr bool value = 
     std::is_standard_layout_v<__T__> &&
-    IsTriviallySerializable<decltype(__T__::dimension_labels)>::value &&
+    IsTriviallySerializable<decltype(__T__::flags)>::value &&
+    IsTriviallySerializable<decltype(__T__::measurement_uid)>::value &&
+    IsTriviallySerializable<decltype(__T__::measurement_frequency)>::value &&
+    IsTriviallySerializable<decltype(__T__::measurement_frequency_label)>::value &&
+    IsTriviallySerializable<decltype(__T__::field_of_view)>::value &&
+    IsTriviallySerializable<decltype(__T__::position)>::value &&
+    IsTriviallySerializable<decltype(__T__::col_dir)>::value &&
+    IsTriviallySerializable<decltype(__T__::line_dir)>::value &&
+    IsTriviallySerializable<decltype(__T__::slice_dir)>::value &&
+    IsTriviallySerializable<decltype(__T__::patient_table_position)>::value &&
+    IsTriviallySerializable<decltype(__T__::average)>::value &&
+    IsTriviallySerializable<decltype(__T__::slice)>::value &&
+    IsTriviallySerializable<decltype(__T__::contrast)>::value &&
+    IsTriviallySerializable<decltype(__T__::phase)>::value &&
+    IsTriviallySerializable<decltype(__T__::repetition)>::value &&
+    IsTriviallySerializable<decltype(__T__::set)>::value &&
+    IsTriviallySerializable<decltype(__T__::acquisition_time_stamp_ns)>::value &&
+    IsTriviallySerializable<decltype(__T__::physiology_time_stamp_ns)>::value &&
     IsTriviallySerializable<decltype(__T__::array_type)>::value &&
-    IsTriviallySerializable<decltype(__T__::meta)>::value &&
-    (sizeof(__T__) == (sizeof(__T__::dimension_labels) + sizeof(__T__::array_type) + sizeof(__T__::meta))) &&
-    offsetof(__T__, dimension_labels) < offsetof(__T__, array_type) && offsetof(__T__, array_type) < offsetof(__T__, meta);
+    IsTriviallySerializable<decltype(__T__::image_type)>::value &&
+    IsTriviallySerializable<decltype(__T__::image_index)>::value &&
+    IsTriviallySerializable<decltype(__T__::image_series_index)>::value &&
+    IsTriviallySerializable<decltype(__T__::user_int)>::value &&
+    IsTriviallySerializable<decltype(__T__::user_float)>::value &&
+    IsTriviallySerializable<decltype(__T__::dimension_labels)>::value &&
+    (sizeof(__T__) == (sizeof(__T__::flags) + sizeof(__T__::measurement_uid) + sizeof(__T__::measurement_frequency) + sizeof(__T__::measurement_frequency_label) + sizeof(__T__::field_of_view) + sizeof(__T__::position) + sizeof(__T__::col_dir) + sizeof(__T__::line_dir) + sizeof(__T__::slice_dir) + sizeof(__T__::patient_table_position) + sizeof(__T__::average) + sizeof(__T__::slice) + sizeof(__T__::contrast) + sizeof(__T__::phase) + sizeof(__T__::repetition) + sizeof(__T__::set) + sizeof(__T__::acquisition_time_stamp_ns) + sizeof(__T__::physiology_time_stamp_ns) + sizeof(__T__::array_type) + sizeof(__T__::image_type) + sizeof(__T__::image_index) + sizeof(__T__::image_series_index) + sizeof(__T__::user_int) + sizeof(__T__::user_float) + sizeof(__T__::dimension_labels))) &&
+    offsetof(__T__, flags) < offsetof(__T__, measurement_uid) && offsetof(__T__, measurement_uid) < offsetof(__T__, measurement_frequency) && offsetof(__T__, measurement_frequency) < offsetof(__T__, measurement_frequency_label) && offsetof(__T__, measurement_frequency_label) < offsetof(__T__, field_of_view) && offsetof(__T__, field_of_view) < offsetof(__T__, position) && offsetof(__T__, position) < offsetof(__T__, col_dir) && offsetof(__T__, col_dir) < offsetof(__T__, line_dir) && offsetof(__T__, line_dir) < offsetof(__T__, slice_dir) && offsetof(__T__, slice_dir) < offsetof(__T__, patient_table_position) && offsetof(__T__, patient_table_position) < offsetof(__T__, average) && offsetof(__T__, average) < offsetof(__T__, slice) && offsetof(__T__, slice) < offsetof(__T__, contrast) && offsetof(__T__, contrast) < offsetof(__T__, phase) && offsetof(__T__, phase) < offsetof(__T__, repetition) && offsetof(__T__, repetition) < offsetof(__T__, set) && offsetof(__T__, set) < offsetof(__T__, acquisition_time_stamp_ns) && offsetof(__T__, acquisition_time_stamp_ns) < offsetof(__T__, physiology_time_stamp_ns) && offsetof(__T__, physiology_time_stamp_ns) < offsetof(__T__, array_type) && offsetof(__T__, array_type) < offsetof(__T__, image_type) && offsetof(__T__, image_type) < offsetof(__T__, image_index) && offsetof(__T__, image_index) < offsetof(__T__, image_series_index) && offsetof(__T__, image_series_index) < offsetof(__T__, user_int) && offsetof(__T__, user_int) < offsetof(__T__, user_float) && offsetof(__T__, user_float) < offsetof(__T__, dimension_labels);
 };
 
 template <typename T>
@@ -660,8 +682,9 @@ struct IsTriviallySerializable<mrd::NdArray<T>> {
     std::is_standard_layout_v<__T__> &&
     IsTriviallySerializable<decltype(__T__::head)>::value &&
     IsTriviallySerializable<decltype(__T__::data)>::value &&
-    (sizeof(__T__) == (sizeof(__T__::head) + sizeof(__T__::data))) &&
-    offsetof(__T__, head) < offsetof(__T__, data);
+    IsTriviallySerializable<decltype(__T__::meta)>::value &&
+    (sizeof(__T__) == (sizeof(__T__::head) + sizeof(__T__::data) + sizeof(__T__::meta))) &&
+    offsetof(__T__, head) < offsetof(__T__, data) && offsetof(__T__, data) < offsetof(__T__, meta);
 };
 
 template <>
@@ -2777,6 +2800,72 @@ template<typename T, yardl::binary::Reader<T> ReadT>
   yardl::binary::ReadDynamicNDArray<T, ReadT>(stream, value);
 }
 
+[[maybe_unused]] void WriteNdArrayHeader(yardl::binary::CodedOutputStream& stream, mrd::NdArrayHeader const& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::NdArrayHeader>::value) {
+    yardl::binary::WriteTriviallySerializable(stream, value);
+    return;
+  }
+
+  yardl::binary::WriteFlags<mrd::ArrayFlags>(stream, value.flags);
+  yardl::binary::WriteInteger(stream, value.measurement_uid);
+  yardl::binary::WriteOptional<yardl::DynamicNDArray<uint32_t>, yardl::binary::WriteDynamicNDArray<uint32_t, yardl::binary::WriteInteger>>(stream, value.measurement_frequency);
+  yardl::binary::WriteOptional<yardl::DynamicNDArray<std::string>, yardl::binary::WriteDynamicNDArray<std::string, yardl::binary::WriteString>>(stream, value.measurement_frequency_label);
+  yardl::binary::WriteFixedNDArray<float, yardl::binary::WriteFloatingPoint, 3>(stream, value.field_of_view);
+  yardl::binary::WriteFixedNDArray<float, yardl::binary::WriteFloatingPoint, 3>(stream, value.position);
+  yardl::binary::WriteFixedNDArray<float, yardl::binary::WriteFloatingPoint, 3>(stream, value.col_dir);
+  yardl::binary::WriteFixedNDArray<float, yardl::binary::WriteFloatingPoint, 3>(stream, value.line_dir);
+  yardl::binary::WriteFixedNDArray<float, yardl::binary::WriteFloatingPoint, 3>(stream, value.slice_dir);
+  yardl::binary::WriteFixedNDArray<float, yardl::binary::WriteFloatingPoint, 3>(stream, value.patient_table_position);
+  yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.average);
+  yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.slice);
+  yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.contrast);
+  yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.phase);
+  yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.repetition);
+  yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.set);
+  yardl::binary::WriteOptional<uint64_t, yardl::binary::WriteInteger>(stream, value.acquisition_time_stamp_ns);
+  yardl::binary::WriteVector<uint64_t, yardl::binary::WriteInteger>(stream, value.physiology_time_stamp_ns);
+  yardl::binary::WriteOptional<mrd::ArrayType, yardl::binary::WriteEnum<mrd::ArrayType>>(stream, value.array_type);
+  yardl::binary::WriteOptional<mrd::ArrayImageType, yardl::binary::WriteEnum<mrd::ArrayImageType>>(stream, value.image_type);
+  yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.image_index);
+  yardl::binary::WriteOptional<uint32_t, yardl::binary::WriteInteger>(stream, value.image_series_index);
+  yardl::binary::WriteVector<int32_t, yardl::binary::WriteInteger>(stream, value.user_int);
+  yardl::binary::WriteVector<float, yardl::binary::WriteFloatingPoint>(stream, value.user_float);
+  yardl::binary::WriteVector<mrd::ArrayDimension, yardl::binary::WriteEnum<mrd::ArrayDimension>>(stream, value.dimension_labels);
+}
+
+[[maybe_unused]] void ReadNdArrayHeader(yardl::binary::CodedInputStream& stream, mrd::NdArrayHeader& value) {
+  if constexpr (yardl::binary::IsTriviallySerializable<mrd::NdArrayHeader>::value) {
+    yardl::binary::ReadTriviallySerializable(stream, value);
+    return;
+  }
+
+  yardl::binary::ReadFlags<mrd::ArrayFlags>(stream, value.flags);
+  yardl::binary::ReadInteger(stream, value.measurement_uid);
+  yardl::binary::ReadOptional<yardl::DynamicNDArray<uint32_t>, yardl::binary::ReadDynamicNDArray<uint32_t, yardl::binary::ReadInteger>>(stream, value.measurement_frequency);
+  yardl::binary::ReadOptional<yardl::DynamicNDArray<std::string>, yardl::binary::ReadDynamicNDArray<std::string, yardl::binary::ReadString>>(stream, value.measurement_frequency_label);
+  yardl::binary::ReadFixedNDArray<float, yardl::binary::ReadFloatingPoint, 3>(stream, value.field_of_view);
+  yardl::binary::ReadFixedNDArray<float, yardl::binary::ReadFloatingPoint, 3>(stream, value.position);
+  yardl::binary::ReadFixedNDArray<float, yardl::binary::ReadFloatingPoint, 3>(stream, value.col_dir);
+  yardl::binary::ReadFixedNDArray<float, yardl::binary::ReadFloatingPoint, 3>(stream, value.line_dir);
+  yardl::binary::ReadFixedNDArray<float, yardl::binary::ReadFloatingPoint, 3>(stream, value.slice_dir);
+  yardl::binary::ReadFixedNDArray<float, yardl::binary::ReadFloatingPoint, 3>(stream, value.patient_table_position);
+  yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.average);
+  yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.slice);
+  yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.contrast);
+  yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.phase);
+  yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.repetition);
+  yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.set);
+  yardl::binary::ReadOptional<uint64_t, yardl::binary::ReadInteger>(stream, value.acquisition_time_stamp_ns);
+  yardl::binary::ReadVector<uint64_t, yardl::binary::ReadInteger>(stream, value.physiology_time_stamp_ns);
+  yardl::binary::ReadOptional<mrd::ArrayType, yardl::binary::ReadEnum<mrd::ArrayType>>(stream, value.array_type);
+  yardl::binary::ReadOptional<mrd::ArrayImageType, yardl::binary::ReadEnum<mrd::ArrayImageType>>(stream, value.image_type);
+  yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.image_index);
+  yardl::binary::ReadOptional<uint32_t, yardl::binary::ReadInteger>(stream, value.image_series_index);
+  yardl::binary::ReadVector<int32_t, yardl::binary::ReadInteger>(stream, value.user_int);
+  yardl::binary::ReadVector<float, yardl::binary::ReadFloatingPoint>(stream, value.user_float);
+  yardl::binary::ReadVector<mrd::ArrayDimension, yardl::binary::ReadEnum<mrd::ArrayDimension>>(stream, value.dimension_labels);
+}
+
 [[maybe_unused]] void WriteArrayMetaValue(yardl::binary::CodedOutputStream& stream, mrd::ArrayMetaValue const& value) {
   if constexpr (yardl::binary::IsTriviallySerializable<mrd::ArrayMetaValue>::value) {
     yardl::binary::WriteTriviallySerializable(stream, value);
@@ -2813,28 +2902,6 @@ template<typename T, yardl::binary::Reader<T> ReadT>
   yardl::binary::ReadMap<std::string, std::vector<mrd::ArrayMetaValue>, yardl::binary::ReadString, yardl::binary::ReadVector<mrd::ArrayMetaValue, mrd::binary::ReadArrayMetaValue>>(stream, value);
 }
 
-[[maybe_unused]] void WriteNdArrayHeader(yardl::binary::CodedOutputStream& stream, mrd::NdArrayHeader const& value) {
-  if constexpr (yardl::binary::IsTriviallySerializable<mrd::NdArrayHeader>::value) {
-    yardl::binary::WriteTriviallySerializable(stream, value);
-    return;
-  }
-
-  yardl::binary::WriteVector<mrd::ArrayDimension, yardl::binary::WriteEnum<mrd::ArrayDimension>>(stream, value.dimension_labels);
-  yardl::binary::WriteOptional<mrd::ArrayType, yardl::binary::WriteEnum<mrd::ArrayType>>(stream, value.array_type);
-  mrd::binary::WriteArrayMeta(stream, value.meta);
-}
-
-[[maybe_unused]] void ReadNdArrayHeader(yardl::binary::CodedInputStream& stream, mrd::NdArrayHeader& value) {
-  if constexpr (yardl::binary::IsTriviallySerializable<mrd::NdArrayHeader>::value) {
-    yardl::binary::ReadTriviallySerializable(stream, value);
-    return;
-  }
-
-  yardl::binary::ReadVector<mrd::ArrayDimension, yardl::binary::ReadEnum<mrd::ArrayDimension>>(stream, value.dimension_labels);
-  yardl::binary::ReadOptional<mrd::ArrayType, yardl::binary::ReadEnum<mrd::ArrayType>>(stream, value.array_type);
-  mrd::binary::ReadArrayMeta(stream, value.meta);
-}
-
 template<typename T, yardl::binary::Writer<T> WriteT>
 [[maybe_unused]] void WriteNdArray(yardl::binary::CodedOutputStream& stream, mrd::NdArray<T> const& value) {
   if constexpr (yardl::binary::IsTriviallySerializable<mrd::NdArray<T>>::value) {
@@ -2844,6 +2911,7 @@ template<typename T, yardl::binary::Writer<T> WriteT>
 
   mrd::binary::WriteNdArrayHeader(stream, value.head);
   mrd::binary::WriteArray<T, WriteT>(stream, value.data);
+  mrd::binary::WriteArrayMeta(stream, value.meta);
 }
 
 template<typename T, yardl::binary::Reader<T> ReadT>
@@ -2855,6 +2923,7 @@ template<typename T, yardl::binary::Reader<T> ReadT>
 
   mrd::binary::ReadNdArrayHeader(stream, value.head);
   mrd::binary::ReadArray<T, ReadT>(stream, value.data);
+  mrd::binary::ReadArrayMeta(stream, value.meta);
 }
 
 [[maybe_unused]] void WriteNdArrayUint16(yardl::binary::CodedOutputStream& stream, mrd::NdArrayUint16 const& value) {

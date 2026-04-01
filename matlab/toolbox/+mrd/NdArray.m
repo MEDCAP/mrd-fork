@@ -4,6 +4,7 @@ classdef NdArray < handle
   properties
     head
     data
+    meta
   end
 
   methods
@@ -11,19 +12,22 @@ classdef NdArray < handle
       arguments
         kwargs.head = mrd.NdArrayHeader();
         kwargs.data;
+        kwargs.meta = yardl.Map;
       end
       self.head = kwargs.head;
       if ~isfield(kwargs, "data")
         throw(yardl.TypeError("Missing required keyword argument 'data'"))
       end
       self.data = kwargs.data;
+      self.meta = kwargs.meta;
     end
 
     function res = eq(self, other)
       res = ...
         isa(other, "mrd.NdArray") && ...
         isequal({self.head}, {other.head}) && ...
-        isequal({self.data}, {other.data});
+        isequal({self.data}, {other.data}) && ...
+        isequal({self.meta}, {other.meta});
     end
 
     function res = ne(self, other)

@@ -34,6 +34,8 @@ from .types import (
     ArbitraryGradient,
     Array,
     ArrayDimension,
+    ArrayFlags,
+    ArrayImageType,
     ArrayMeta,
     ArrayMetaValue,
     ArrayType,

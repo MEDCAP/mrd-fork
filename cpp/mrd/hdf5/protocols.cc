@@ -985,7 +985,26 @@ namespace {
   i = 10;
   t.insert("rgbaMap", &i);
   i = 11;
+  t.insert("noise", &i);
+  i = 12;
+  t.insert("phantom", &i);
+  i = 13;
   t.insert("userMap", &i);
+  return t;
+}
+
+[[maybe_unused]] H5::EnumType GetArrayImageTypeHdf5Ddl() {
+  H5::EnumType t(H5::PredType::NATIVE_UINT64);
+  uint64_t i = 1ULL;
+  t.insert("magnitude", &i);
+  i = 2ULL;
+  t.insert("phase", &i);
+  i = 3ULL;
+  t.insert("real", &i);
+  i = 4ULL;
+  t.insert("imag", &i);
+  i = 5ULL;
+  t.insert("complex", &i);
   return t;
 }
 
@@ -2009,20 +2028,86 @@ struct _Inner_ImageArray {
 struct _Inner_NdArrayHeader {
   _Inner_NdArrayHeader() {} 
   _Inner_NdArrayHeader(mrd::NdArrayHeader const& o) 
-      : dimension_labels(o.dimension_labels),
+      : flags(o.flags),
+      measurement_uid(o.measurement_uid),
+      measurement_frequency(o.measurement_frequency),
+      measurement_frequency_label(o.measurement_frequency_label),
+      field_of_view(o.field_of_view),
+      position(o.position),
+      col_dir(o.col_dir),
+      line_dir(o.line_dir),
+      slice_dir(o.slice_dir),
+      patient_table_position(o.patient_table_position),
+      average(o.average),
+      slice(o.slice),
+      contrast(o.contrast),
+      phase(o.phase),
+      repetition(o.repetition),
+      set(o.set),
+      acquisition_time_stamp_ns(o.acquisition_time_stamp_ns),
+      physiology_time_stamp_ns(o.physiology_time_stamp_ns),
       array_type(o.array_type),
-      meta(o.meta) {
+      image_type(o.image_type),
+      image_index(o.image_index),
+      image_series_index(o.image_series_index),
+      user_int(o.user_int),
+      user_float(o.user_float),
+      dimension_labels(o.dimension_labels) {
   }
 
   void ToOuter (mrd::NdArrayHeader& o) const {
-    yardl::hdf5::ToOuter(dimension_labels, o.dimension_labels);
+    yardl::hdf5::ToOuter(flags, o.flags);
+    yardl::hdf5::ToOuter(measurement_uid, o.measurement_uid);
+    yardl::hdf5::ToOuter(measurement_frequency, o.measurement_frequency);
+    yardl::hdf5::ToOuter(measurement_frequency_label, o.measurement_frequency_label);
+    yardl::hdf5::ToOuter(field_of_view, o.field_of_view);
+    yardl::hdf5::ToOuter(position, o.position);
+    yardl::hdf5::ToOuter(col_dir, o.col_dir);
+    yardl::hdf5::ToOuter(line_dir, o.line_dir);
+    yardl::hdf5::ToOuter(slice_dir, o.slice_dir);
+    yardl::hdf5::ToOuter(patient_table_position, o.patient_table_position);
+    yardl::hdf5::ToOuter(average, o.average);
+    yardl::hdf5::ToOuter(slice, o.slice);
+    yardl::hdf5::ToOuter(contrast, o.contrast);
+    yardl::hdf5::ToOuter(phase, o.phase);
+    yardl::hdf5::ToOuter(repetition, o.repetition);
+    yardl::hdf5::ToOuter(set, o.set);
+    yardl::hdf5::ToOuter(acquisition_time_stamp_ns, o.acquisition_time_stamp_ns);
+    yardl::hdf5::ToOuter(physiology_time_stamp_ns, o.physiology_time_stamp_ns);
     yardl::hdf5::ToOuter(array_type, o.array_type);
-    yardl::hdf5::ToOuter(meta, o.meta);
+    yardl::hdf5::ToOuter(image_type, o.image_type);
+    yardl::hdf5::ToOuter(image_index, o.image_index);
+    yardl::hdf5::ToOuter(image_series_index, o.image_series_index);
+    yardl::hdf5::ToOuter(user_int, o.user_int);
+    yardl::hdf5::ToOuter(user_float, o.user_float);
+    yardl::hdf5::ToOuter(dimension_labels, o.dimension_labels);
   }
 
-  yardl::hdf5::InnerVlen<mrd::ArrayDimension, mrd::ArrayDimension> dimension_labels;
+  mrd::ArrayFlags flags;
+  uint32_t measurement_uid;
+  yardl::hdf5::InnerOptional<yardl::hdf5::InnerDynamicNdArray<uint32_t, uint32_t>, yardl::DynamicNDArray<uint32_t>> measurement_frequency;
+  yardl::hdf5::InnerOptional<yardl::hdf5::InnerDynamicNdArray<yardl::hdf5::InnerVlenString, std::string>, yardl::DynamicNDArray<std::string>> measurement_frequency_label;
+  yardl::FixedNDArray<float, 3> field_of_view;
+  yardl::FixedNDArray<float, 3> position;
+  yardl::FixedNDArray<float, 3> col_dir;
+  yardl::FixedNDArray<float, 3> line_dir;
+  yardl::FixedNDArray<float, 3> slice_dir;
+  yardl::FixedNDArray<float, 3> patient_table_position;
+  yardl::hdf5::InnerOptional<uint32_t, uint32_t> average;
+  yardl::hdf5::InnerOptional<uint32_t, uint32_t> slice;
+  yardl::hdf5::InnerOptional<uint32_t, uint32_t> contrast;
+  yardl::hdf5::InnerOptional<uint32_t, uint32_t> phase;
+  yardl::hdf5::InnerOptional<uint32_t, uint32_t> repetition;
+  yardl::hdf5::InnerOptional<uint32_t, uint32_t> set;
+  yardl::hdf5::InnerOptional<uint64_t, uint64_t> acquisition_time_stamp_ns;
+  yardl::hdf5::InnerVlen<uint64_t, uint64_t> physiology_time_stamp_ns;
   yardl::hdf5::InnerOptional<mrd::ArrayType, mrd::ArrayType> array_type;
-  yardl::hdf5::InnerMap<yardl::hdf5::InnerVlenString, std::string, yardl::hdf5::InnerVlen<::InnerUnion3<yardl::hdf5::InnerVlenString, std::string, int64_t, int64_t, double, double>, mrd::ArrayMetaValue>, std::vector<mrd::ArrayMetaValue>> meta;
+  yardl::hdf5::InnerOptional<mrd::ArrayImageType, mrd::ArrayImageType> image_type;
+  yardl::hdf5::InnerOptional<uint32_t, uint32_t> image_index;
+  yardl::hdf5::InnerOptional<uint32_t, uint32_t> image_series_index;
+  yardl::hdf5::InnerVlen<int32_t, int32_t> user_int;
+  yardl::hdf5::InnerVlen<float, float> user_float;
+  yardl::hdf5::InnerVlen<mrd::ArrayDimension, mrd::ArrayDimension> dimension_labels;
 };
 
 template <typename _T_Inner, typename T>
@@ -2030,16 +2115,19 @@ struct _Inner_NdArray {
   _Inner_NdArray() {} 
   _Inner_NdArray(mrd::NdArray<T> const& o) 
       : head(o.head),
-      data(o.data) {
+      data(o.data),
+      meta(o.meta) {
   }
 
   void ToOuter (mrd::NdArray<T>& o) const {
     yardl::hdf5::ToOuter(head, o.head);
     yardl::hdf5::ToOuter(data, o.data);
+    yardl::hdf5::ToOuter(meta, o.meta);
   }
 
   mrd::hdf5::_Inner_NdArrayHeader head;
   yardl::hdf5::InnerDynamicNdArray<_T_Inner, T> data;
+  yardl::hdf5::InnerMap<yardl::hdf5::InnerVlenString, std::string, yardl::hdf5::InnerVlen<::InnerUnion3<yardl::hdf5::InnerVlenString, std::string, int64_t, int64_t, double, double>, mrd::ArrayMetaValue>, std::vector<mrd::ArrayMetaValue>> meta;
 };
 
 struct _Inner_PulseqDefinitions {
@@ -2599,9 +2687,31 @@ template <typename _T_Inner, typename T>
 [[maybe_unused]] H5::CompType GetNdArrayHeaderHdf5Ddl() {
   using RecordType = mrd::hdf5::_Inner_NdArrayHeader;
   H5::CompType t(sizeof(RecordType));
-  t.insertMember("dimensionLabels", HOFFSET(RecordType, dimension_labels), yardl::hdf5::InnerVlenDdl(mrd::hdf5::GetArrayDimensionHdf5Ddl()));
+  t.insertMember("flags", HOFFSET(RecordType, flags), H5::PredType::NATIVE_UINT64);
+  t.insertMember("measurementUid", HOFFSET(RecordType, measurement_uid), H5::PredType::NATIVE_UINT32);
+  t.insertMember("measurementFrequency", HOFFSET(RecordType, measurement_frequency), yardl::hdf5::OptionalTypeDdl<yardl::hdf5::InnerDynamicNdArray<uint32_t, uint32_t>, yardl::DynamicNDArray<uint32_t>>(yardl::hdf5::DynamicNDArrayDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32)));
+  t.insertMember("measurementFrequencyLabel", HOFFSET(RecordType, measurement_frequency_label), yardl::hdf5::OptionalTypeDdl<yardl::hdf5::InnerDynamicNdArray<yardl::hdf5::InnerVlenString, std::string>, yardl::DynamicNDArray<std::string>>(yardl::hdf5::DynamicNDArrayDdl<yardl::hdf5::InnerVlenString, std::string>(yardl::hdf5::InnerVlenStringDdl())));
+  t.insertMember("fieldOfView", HOFFSET(RecordType, field_of_view), yardl::hdf5::FixedNDArrayDdl(H5::PredType::NATIVE_FLOAT, {3}));
+  t.insertMember("position", HOFFSET(RecordType, position), yardl::hdf5::FixedNDArrayDdl(H5::PredType::NATIVE_FLOAT, {3}));
+  t.insertMember("colDir", HOFFSET(RecordType, col_dir), yardl::hdf5::FixedNDArrayDdl(H5::PredType::NATIVE_FLOAT, {3}));
+  t.insertMember("lineDir", HOFFSET(RecordType, line_dir), yardl::hdf5::FixedNDArrayDdl(H5::PredType::NATIVE_FLOAT, {3}));
+  t.insertMember("sliceDir", HOFFSET(RecordType, slice_dir), yardl::hdf5::FixedNDArrayDdl(H5::PredType::NATIVE_FLOAT, {3}));
+  t.insertMember("patientTablePosition", HOFFSET(RecordType, patient_table_position), yardl::hdf5::FixedNDArrayDdl(H5::PredType::NATIVE_FLOAT, {3}));
+  t.insertMember("average", HOFFSET(RecordType, average), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
+  t.insertMember("slice", HOFFSET(RecordType, slice), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
+  t.insertMember("contrast", HOFFSET(RecordType, contrast), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
+  t.insertMember("phase", HOFFSET(RecordType, phase), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
+  t.insertMember("repetition", HOFFSET(RecordType, repetition), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
+  t.insertMember("set", HOFFSET(RecordType, set), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
+  t.insertMember("acquisitionTimeStampNs", HOFFSET(RecordType, acquisition_time_stamp_ns), yardl::hdf5::OptionalTypeDdl<uint64_t, uint64_t>(H5::PredType::NATIVE_UINT64));
+  t.insertMember("physiologyTimeStampNs", HOFFSET(RecordType, physiology_time_stamp_ns), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_UINT64));
   t.insertMember("arrayType", HOFFSET(RecordType, array_type), yardl::hdf5::OptionalTypeDdl<mrd::ArrayType, mrd::ArrayType>(mrd::hdf5::GetArrayTypeHdf5Ddl()));
-  t.insertMember("meta", HOFFSET(RecordType, meta), yardl::hdf5::InnerMapDdl<yardl::hdf5::InnerVlenString, yardl::hdf5::InnerVlen<::InnerUnion3<yardl::hdf5::InnerVlenString, std::string, int64_t, int64_t, double, double>, mrd::ArrayMetaValue>>(yardl::hdf5::InnerVlenStringDdl(), yardl::hdf5::InnerVlenDdl(::InnerUnion3Ddl<yardl::hdf5::InnerVlenString, std::string, int64_t, int64_t, double, double>(false, yardl::hdf5::InnerVlenStringDdl(), "string", H5::PredType::NATIVE_INT64, "int64", H5::PredType::NATIVE_DOUBLE, "float64"))));
+  t.insertMember("imageType", HOFFSET(RecordType, image_type), yardl::hdf5::OptionalTypeDdl<mrd::ArrayImageType, mrd::ArrayImageType>(mrd::hdf5::GetArrayImageTypeHdf5Ddl()));
+  t.insertMember("imageIndex", HOFFSET(RecordType, image_index), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
+  t.insertMember("imageSeriesIndex", HOFFSET(RecordType, image_series_index), yardl::hdf5::OptionalTypeDdl<uint32_t, uint32_t>(H5::PredType::NATIVE_UINT32));
+  t.insertMember("userInt", HOFFSET(RecordType, user_int), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_INT32));
+  t.insertMember("userFloat", HOFFSET(RecordType, user_float), yardl::hdf5::InnerVlenDdl(H5::PredType::NATIVE_FLOAT));
+  t.insertMember("dimensionLabels", HOFFSET(RecordType, dimension_labels), yardl::hdf5::InnerVlenDdl(mrd::hdf5::GetArrayDimensionHdf5Ddl()));
   return t;
 }
 
@@ -2611,6 +2721,7 @@ template <typename _T_Inner, typename T>
   H5::CompType t(sizeof(RecordType));
   t.insertMember("head", HOFFSET(RecordType, head), mrd::hdf5::GetNdArrayHeaderHdf5Ddl());
   t.insertMember("data", HOFFSET(RecordType, data), yardl::hdf5::DynamicNDArrayDdl<_T_Inner, T>(T_type));
+  t.insertMember("meta", HOFFSET(RecordType, meta), yardl::hdf5::InnerMapDdl<yardl::hdf5::InnerVlenString, yardl::hdf5::InnerVlen<::InnerUnion3<yardl::hdf5::InnerVlenString, std::string, int64_t, int64_t, double, double>, mrd::ArrayMetaValue>>(yardl::hdf5::InnerVlenStringDdl(), yardl::hdf5::InnerVlenDdl(::InnerUnion3Ddl<yardl::hdf5::InnerVlenString, std::string, int64_t, int64_t, double, double>(false, yardl::hdf5::InnerVlenStringDdl(), "string", H5::PredType::NATIVE_INT64, "int64", H5::PredType::NATIVE_DOUBLE, "float64"))));
   return t;
 }
 

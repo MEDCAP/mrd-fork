@@ -5,6 +5,7 @@ classdef NdArraySerializer < yardl.binary.RecordSerializer
     function self = NdArraySerializer(t_serializer)
       field_serializers{1} = mrd.binary.NdArrayHeaderSerializer();
       field_serializers{2} = yardl.binary.DynamicNDArraySerializer(t_serializer);
+      field_serializers{3} = yardl.binary.MapSerializer(yardl.binary.StringSerializer, yardl.binary.VectorSerializer(yardl.binary.UnionSerializer('mrd.ArrayMetaValue', {yardl.binary.StringSerializer, yardl.binary.Int64Serializer, yardl.binary.Float64Serializer}, {@mrd.ArrayMetaValue.String, @mrd.ArrayMetaValue.Int64, @mrd.ArrayMetaValue.Float64})));
       self@yardl.binary.RecordSerializer('mrd.NdArray', field_serializers);
     end
 
@@ -14,12 +15,12 @@ classdef NdArraySerializer < yardl.binary.RecordSerializer
         outstream (1,1) yardl.binary.CodedOutputStream
         value (1,1) mrd.NdArray
       end
-      self.write_(outstream, value.head, value.data);
+      self.write_(outstream, value.head, value.data, value.meta);
     end
 
     function value = read(self, instream)
       fields = self.read_(instream);
-      value = mrd.NdArray(head=fields{1}, data=fields{2});
+      value = mrd.NdArray(head=fields{1}, data=fields{2}, meta=fields{3});
     end
   end
 end
