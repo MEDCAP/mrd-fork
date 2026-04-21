@@ -122,11 +122,9 @@ def generate_cartesian_phantom(output_file: Optional[str] = PhantomDefaults.outp
                 mrd.ArrayDimension.Y,
                 mrd.ArrayDimension.X
             ]
-            arr_head.array_type = mrd.ArrayType.USER_MAP
-            arr_head.meta = mrd.ArrayMeta({
-                "description": [mrd.ArrayMetaValue.String("shepp-logan phantom")]
-            })
-            w.write_data([mrd.StreamItem.NdArrayComplexFloat(mrd.NdArray(head=arr_head, data=phan))])
+            arr_head.array_type = mrd.ArrayType.PHANTOM
+            arr_meta = mrd.ArrayMeta({"description": [mrd.ArrayMetaValue.String("shepp-logan phantom")]})
+            w.write_data([mrd.StreamItem.NdArrayComplexFloat(mrd.NdArray(head=arr_head, data=phan, meta=arr_meta))])
 
     csm = simulation.generate_birdcage_sensitivities(ny, ncoils, 1.5)
     if output_csm is not None:
@@ -140,10 +138,8 @@ def generate_cartesian_phantom(output_file: Optional[str] = PhantomDefaults.outp
                 mrd.ArrayDimension.X
             ]
             arr_head.array_type = mrd.ArrayType.SENSITIVITY_MAP
-            arr_head.meta = mrd.ArrayMeta({
-                "description": [mrd.ArrayMetaValue.String("birdcage coil sensitivities")]
-            })
-            w.write_data([mrd.StreamItem.NdArrayComplexFloat(mrd.NdArray(head=arr_head, data=csm))])
+            arr_meta = mrd.ArrayMeta({"description": [mrd.ArrayMetaValue.String("birdcage coil sensitivities")]})
+            w.write_data([mrd.StreamItem.NdArrayComplexFloat(mrd.NdArray(head=arr_head, data=csm, meta=arr_meta))])
 
     coil_images = phan * csm
     if oversampling > 1:
@@ -163,10 +159,8 @@ def generate_cartesian_phantom(output_file: Optional[str] = PhantomDefaults.outp
                 mrd.ArrayDimension.X
             ]
             arr_head.array_type = mrd.ArrayType.USER_MAP
-            arr_head.meta = mrd.ArrayMeta({
-                "description": [mrd.ArrayMetaValue.String("coil images")]
-            })
-            w.write_data([mrd.StreamItem.NdArrayComplexFloat(mrd.NdArray(head=arr_head, data=coil_images))])
+            arr_meta = mrd.ArrayMeta({"description": [mrd.ArrayMetaValue.String("coil images")]})
+            w.write_data([mrd.StreamItem.NdArrayComplexFloat(mrd.NdArray(head=arr_head, data=coil_images, meta=arr_meta))])
 
     coil_images = image_to_kspace(coil_images, dim=(-1, -2)).astype(np.complex64)
 

@@ -105,9 +105,9 @@ if kwargs.output_phantom ~= ""
         mrd.ArrayDimension.Y,
         mrd.ArrayDimension.X
     ];
-    arr_head.array_type = mrd.ArrayType.USER_MAP;
-    arr_head.meta = mrd.ArrayMeta("description", [mrd.ArrayMetaValue.String("shepp-logan phantom")]);
-    w.write_data([mrd.StreamItem.NdArrayComplexFloat(mrd.NdArray(head=arr_head, data=phan))]);
+    arr_head.array_type = mrd.ArrayType.PHANTOM;
+    arr_meta = mrd.ArrayMeta("description", [mrd.ArrayMetaValue.String("shepp-logan phantom")]);
+    w.write_data([mrd.StreamItem.NdArrayComplexFloat(mrd.NdArray(head=arr_head, data=phan, meta=arr_meta))]);
     w.end_data();
     w.close();
 end
@@ -123,8 +123,8 @@ if kwargs.output_csm ~= ""
         mrd.ArrayDimension.X
     ];
     arr_head.array_type = mrd.ArrayType.SENSITIVITY_MAP;
-    arr_head.meta = mrd.ArrayMeta("description", [mrd.ArrayMetaValue.String("birdcage sensitivities")]);
-    w.write_data([mrd.StreamItem.NdArrayComplexFloat(mrd.NdArray(head=arr_head, data=csm))]);
+    arr_meta = mrd.ArrayMeta("description", [mrd.ArrayMetaValue.String("birdcage sensitivities")]);
+    w.write_data([mrd.StreamItem.NdArrayComplexFloat(mrd.NdArray(head=arr_head, data=csm, meta=arr_meta))]);
     w.end_data();
     w.close();
 end
@@ -140,8 +140,8 @@ if kwargs.output_coils ~= ""
         mrd.ArrayDimension.X
     ];
     arr_head.array_type = mrd.ArrayType.USER_MAP;
-    arr_head.meta = mrd.ArrayMeta("description", [mrd.ArrayMetaValue.String("coil images")]);
-    w.write_data([mrd.StreamItem.NdArrayComplexFloat(mrd.NdArray(head=arr_head, data=coil_images))]);
+    arr_meta = mrd.ArrayMeta("description", [mrd.ArrayMetaValue.String("coil images")]);
+    w.write_data([mrd.StreamItem.NdArrayComplexFloat(mrd.NdArray(head=arr_head, data=coil_images, meta=arr_meta))]);
     w.end_data();
     w.close();
 end

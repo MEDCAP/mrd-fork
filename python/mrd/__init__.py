@@ -33,6 +33,8 @@ from .types import (
     AnyNdArray,
     Array,
     ArrayDimension,
+    ArrayFlags,
+    ArrayImageType,
     ArrayMeta,
     ArrayMetaValue,
     ArrayType,

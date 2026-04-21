@@ -47,29 +47,20 @@ classdef ArrayDimension < uint64
     function v = SEGMENT
       v = mrd.ArrayDimension(15);
     end
-    function v = LOC
+    function v = E2
       v = mrd.ArrayDimension(16);
     end
-    function v = S
+    function v = E1
       v = mrd.ArrayDimension(17);
     end
-    function v = N
+    function v = E0
       v = mrd.ArrayDimension(18);
     end
-    function v = E2
+    function v = RGBA
       v = mrd.ArrayDimension(19);
     end
-    function v = E1
-      v = mrd.ArrayDimension(20);
-    end
-    function v = E0
-      v = mrd.ArrayDimension(21);
-    end
-    function v = RGBA
-      v = mrd.ArrayDimension(22);
-    end
     function v = TIME_NS
-      v = mrd.ArrayDimension(23);
+      v = mrd.ArrayDimension(20);
     end
 
     function z = zeros(varargin)

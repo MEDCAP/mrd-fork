@@ -310,6 +310,7 @@ int main(int argc, char** argv) {
       NdArray<std::complex<float>> nd_arr;
       nd_arr.head.dimension_labels = {mrd::ArrayDimension::kChannel, mrd::ArrayDimension::kZ, mrd::ArrayDimension::kY, mrd::ArrayDimension::kX};
       nd_arr.data = arr;
+      nd_arr.meta = mrd::ArrayMeta{{"description", {filename}}};
       w.WriteData(nd_arr);
       w.EndData();
       w.Close();
