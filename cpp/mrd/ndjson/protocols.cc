@@ -3558,9 +3558,6 @@ std::unordered_map<std::string, mrd::ArrayDimension> const __ArrayDimension_valu
   {"repetition", mrd::ArrayDimension::kRepetition},
   {"set", mrd::ArrayDimension::kSet},
   {"segment", mrd::ArrayDimension::kSegment},
-  {"loc", mrd::ArrayDimension::kLoc},
-  {"s", mrd::ArrayDimension::kS},
-  {"n", mrd::ArrayDimension::kN},
   {"e2", mrd::ArrayDimension::kE2},
   {"e1", mrd::ArrayDimension::kE1},
   {"e0", mrd::ArrayDimension::kE0},
@@ -3615,15 +3612,6 @@ void to_json(ordered_json& j, mrd::ArrayDimension const& value) {
       break;
     case mrd::ArrayDimension::kSegment:
       j = "segment";
-      break;
-    case mrd::ArrayDimension::kLoc:
-      j = "loc";
-      break;
-    case mrd::ArrayDimension::kS:
-      j = "s";
-      break;
-    case mrd::ArrayDimension::kN:
-      j = "n";
       break;
     case mrd::ArrayDimension::kE2:
       j = "e2";

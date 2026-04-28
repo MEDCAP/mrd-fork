@@ -47,15 +47,6 @@ classdef ArrayDimension < uint64
     function v = SEGMENT
       v = mrd.ArrayDimension(15);
     end
-    function v = LOC
-      v = mrd.ArrayDimension(16);
-    end
-    function v = S
-      v = mrd.ArrayDimension(17);
-    end
-    function v = N
-      v = mrd.ArrayDimension(18);
-    end
     function v = E2
       v = mrd.ArrayDimension(19);
     end

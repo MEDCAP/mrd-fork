@@ -1040,12 +1040,6 @@ namespace {
   t.insert("set", &i);
   i = 15;
   t.insert("segment", &i);
-  i = 16;
-  t.insert("loc", &i);
-  i = 17;
-  t.insert("s", &i);
-  i = 18;
-  t.insert("n", &i);
   i = 19;
   t.insert("e2", &i);
   i = 20;

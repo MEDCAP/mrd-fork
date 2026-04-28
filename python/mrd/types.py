@@ -2178,9 +2178,6 @@ class ArrayDimension(yardl.OutOfRangeEnum):
     REPETITION = 13
     SET = 14
     SEGMENT = 15
-    LOC = 16
-    S = 17
-    N = 18
     E2 = 19
     E1 = 20
     E0 = 21

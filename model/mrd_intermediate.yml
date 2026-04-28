@@ -128,9 +128,6 @@ ArrayDimension: !enum   # labels for each dimension of NDArray in the order
     repetition: 13
     set: 14
     segment: 15
-    loc: 16
-    s: 17
-    n: 18
     e2: 19
     e1: 20
     e0: 21
