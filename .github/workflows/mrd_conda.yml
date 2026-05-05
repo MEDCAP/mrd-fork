@@ -13,7 +13,7 @@ jobs:
     name: Test and Build Conda Packages
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-26]
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -31,14 +31,14 @@ jobs:
           miniforge-version: 25.11.0-1
 
       - name: Set up just command runner
-        uses: extractions/setup-just@f8a3cce218d9f83db3a2ecd90e41ac3de6cdfd9b
+        uses: extractions/setup-just@v4
 
       - name: Build C++ conda package
         run: |
           just build-cpp-conda-package
 
       - name: Build Python conda package
-        if: startsWith(matrix.os, 'ubuntu')
+        if: matrix.os == 'ubuntu-24.04'
         run: |
           just build-python-conda-package
 
